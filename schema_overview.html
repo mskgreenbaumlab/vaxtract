@@ -1,0 +1,448 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>antVacDB extraction schema (v2.7.1)</title>
+<style>
+  :root { --ink:#1a1a1a; --dim:#666; --line:#e2e2e2; --accent:#0b5; --bg:#fafafa; }
+  * { box-sizing:border-box; }
+  body { font-family:Arial,Helvetica,sans-serif; color:var(--ink); background:var(--bg);
+         margin:0; line-height:1.5; }
+  .wrap { max-width:1040px; margin:0 auto; padding:32px 24px 80px; }
+  h1 { font-size:30px; margin:0 0 4px; }
+  .sub { color:var(--dim); margin:0 0 18px; }
+  .intro { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; margin:18px 0; }
+  .intro h2 { font-size:16px; margin:0 0 8px; }
+  .intro ul { margin:6px 0 0; padding-left:20px; }
+  .toc { font-size:13px; color:var(--dim); line-height:2; }
+  .toc a { color:#06c; text-decoration:none; }
+  h2.sec { font-size:20px; border-bottom:2px solid var(--ink); padding-bottom:4px; margin:34px 0 10px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; margin:14px 0; }
+  .card h3 { font-size:18px; margin:0 0 6px; }
+  .nf { font-size:12px; font-weight:normal; color:var(--dim); }
+  .doc { color:#333; margin:0 0 12px; white-space:pre-wrap; }
+  table.fields { border-collapse:collapse; width:100%; font-size:13px; }
+  table.fields th { text-align:left; color:var(--dim); font-weight:600; border-bottom:1px solid var(--line);
+                     padding:4px 8px; }
+  table.fields td { border-bottom:1px solid #f0f0f0; padding:5px 8px; vertical-align:top; }
+  td.fn code { font-weight:700; }
+  code { font-family:"SF Mono",Menlo,Consolas,monospace; background:#f3f3f3; padding:1px 5px;
+          border-radius:4px; font-size:12px; }
+  a { color:#06c; }
+  .lit code { background:#eef7f0; }
+  .opt, .optn { color:var(--dim); font-style:italic; }
+  .req { color:var(--accent); font-weight:600; }
+  .def { color:var(--dim); }
+  .ty { color:#555; }
+  .fmt { color:var(--dim); font-size:11px; }
+  .fmt code { background:#f7f7f7; font-size:10px; word-break:break-all; }
+  .vocab { display:flex; gap:14px; padding:8px 0; border-bottom:1px solid #f0f0f0; align-items:baseline; }
+  .vn { flex:0 0 230px; font-weight:700; font-size:13px; }
+  .vc { flex:1; } .vc code { margin:2px; display:inline-block; }
+</style></head><body><div class="wrap">
+  <h1>antVacDB — what we extract from each paper</h1>
+  <p class="sub">Pydantic schema <b>v2.7.1</b> · 13 entity types · 26 controlled vocabularies. One paper → one <code>ExtractedPaper</code> record.</p>
+
+  <div class="intro">
+    <h2>How to read this</h2>
+    <ul>
+      <li>Every paper becomes one <b>ExtractedPaper</b>, which holds lists of the entities below
+          (patients, peptides, epitopes, evidence rows, survival outcomes…).</li>
+      <li><b>Two peptide levels:</b> an <b>ImmunizingPeptide</b> is the long peptide actually given;
+          a <b>MinimalEpitope</b> is the short MHC-binding stretch within it (one long peptide can yield several).</li>
+      <li><b>Nothing is invented.</b> A value not stated in the paper is left empty. Numbers read off a
+          figure are kept lossless (the raw reading is preserved, flagged low-confidence, never a clean number).</li>
+      <li><b>Controlled vocabularies</b> (bottom) are the only allowed values for the categorical fields —
+          they keep extractions comparable across papers.</li>
+    </ul>
+    <p class='toc'><a href='#m-extractedpaper'>ExtractedPaper</a> · <a href='#m-extractedpatient'>ExtractedPatient</a> · <a href='#m-immunizingpeptide'>ImmunizingPeptide</a> · <a href='#m-minimalepitope'>MinimalEpitope</a> · <a href='#m-extractedevidence'>ExtractedEvidence</a> · <a href='#m-extractedpeptidepool'>ExtractedPeptidePool</a> · <a href='#m-survivaloutcome'>SurvivalOutcome</a> · <a href='#m-preclinicalefficacy'>PreclinicalEfficacy</a> · <a href='#m-concomitantimmunosuppression'>ConcomitantImmunosuppression</a> · <a href='#m-curatornote'>CuratorNote</a> · <a href='#m-measurement'>Measurement</a> · <a href='#m-responsemagnitude'>ResponseMagnitude</a> · <a href='#m-provenance'>Provenance</a> · <a href='#vocab'>Controlled vocabularies</a></p>
+  </div>
+
+  <h2 class="sec">Entities</h2>
+  
+    <section class="card" id="m-extractedpaper">
+      <h3>ExtractedPaper <span class="nf">17 fields</span></h3>
+      <p class="doc">Top-level container: one paper, all extracted entities.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>pmid</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>doi</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^10\.\d{4,9}/[-._;()/:A-Z0-9a-z]+$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>pmcid</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^PMC\d+$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>nct_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^NCT\d{8}$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>journal</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>year</code></td><td class='ft'><span class='ty'>int</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>title</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>cohort_size</code></td><td class='ft'><span class='ty'>int</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_enrolled</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>indication_summary</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>patients</code></td><td class='ft'>list of <a href='#m-extractedpatient'>ExtractedPatient</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>immunizing_peptides</code></td><td class='ft'>list of <a href='#m-immunizingpeptide'>ImmunizingPeptide</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>epitopes</code></td><td class='ft'>list of <a href='#m-minimalepitope'>MinimalEpitope</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>pools</code></td><td class='ft'>list of <a href='#m-extractedpeptidepool'>ExtractedPeptidePool</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>evidence</code></td><td class='ft'>list of <a href='#m-extractedevidence'>ExtractedEvidence</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>survival_outcomes</code></td><td class='ft'>list of <a href='#m-survivaloutcome'>SurvivalOutcome</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>curator_notes</code></td><td class='ft'>list of <a href='#m-curatornote'>CuratorNote</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-extractedpatient">
+      <h3>ExtractedPatient <span class="nf">20 fields</span></h3>
+      <p class="doc">One trial subject as reported in the paper.
+
+`paper_local_id` is whatever the paper itself uses (&#x27;P1&#x27;, &#x27;Patient
+3&#x27;, &#x27;pt07&#x27;). The fully-qualified `patient_id` written to the DB is
+`pmid:&lt;PMID&gt;:&lt;paper_local_id&gt;` — assembled at ingest time, not
+by the LLM.
+
+Patient identifiers must be paper-local labels — never names,
+initials, or medical record numbers. The Phase D validators reject
+fields that look name-like.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>section_ref</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>provenance</code></td><td class='ft'>list of <a href='#m-provenance'>Provenance</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>paper_local_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>indication</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>species</code></td><td class='ft'><span class='lit'>one of: <code>human</code> · <code>mouse</code> · <code>rat</code> · <code>non_human_primate</code> · <code>other</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default human</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>model_system</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>vaccine_platform</code></td><td class='ft'><span class='lit'>one of: <code>dna</code> · <code>rna</code> · <code>synthetic_long_peptide</code> · <code>short_peptide</code> · <code>dendritic_cell</code> · <code>viral_vector</code> · <code>other</code> · <code>unspecified</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default unspecified</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>vaccine_platform_detail</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤200 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hla_alleles</code></td><td class='ft'>list of <span class='ty'>str</span> <span class='fmt'>format <code>^(HLA-[A-Z][A-Z0-9]*\*\d{2,3}:\d{2,3}|HLA-D[PQ]A1\*\d{2,3}:\d{2,3}/D[PQ]B1\*\d{2,3}:\d{2,3}|H-2[KDLQ][a-z]\d?|H-2I[AE][a-z]|I-[AE][a-z])$</code></span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_peptides_synthesized</code></td><td class='ft'><span class='ty'>int</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_peptides_administered</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_peptides_immunogenic</code></td><td class='ft'><span class='ty'>int</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>immunogenicity_assessed</code></td><td class='ft'><span class='ty'>bool</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>clinical_outcome</code></td><td class='ft'><span class='lit'>one of: <code>CR</code> · <code>PR</code> · <code>SD</code> · <code>PD</code> · <code>not_reported</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>best_response</code></td><td class='ft'><span class='lit'>one of: <code>CR</code> · <code>PR</code> · <code>SD</code> · <code>PD</code> · <code>not_reported</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>immunosuppression</code></td><td class='ft'>list of <a href='#m-concomitantimmunosuppression'>ConcomitantImmunosuppression</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>preclinical_efficacy</code></td><td class='ft'>list of <a href='#m-preclinicalefficacy'>PreclinicalEfficacy</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-immunizingpeptide">
+      <h3>ImmunizingPeptide <span class="nf">15 fields</span></h3>
+      <p class="doc">One long peptide actually synthesized/administered — the *pool member*.
+
+This is the entity `ExtractedPeptidePool.member_peptide_ids` points at and
+`MinimalEpitope.parent_peptide_ids` points back to. For personalized
+neoantigen vaccines the peptide belongs to one patient; `patient_paper_id`
+records that (None for shared/off-the-shelf antigens). When set, it powers
+the per-patient count reconciliation in `ExtractedPaper` (v2 P8).</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>section_ref</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>provenance</code></td><td class='ft'>list of <a href='#m-provenance'>Provenance</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>paper_local_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>sequence</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>gene_symbol</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>uniprot_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>is_neoantigen</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>mutation</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>variant_type</code></td><td class='ft'><span class='lit'>one of: <code>missense</code> · <code>frameshift</code> · <code>inframe_indel</code> · <code>stop_loss</code> · <code>splice</code> · <code>fusion</code> · <code>other</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>protein_change</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^p\.\(?[A-Za-z0-9_*=&gt;]+\)?$</code> · ≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hla_allele</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^(HLA-[A-Z][A-Z0-9]*\*\d{2,3}:\d{2,3}|HLA-D[PQ]A1\*\d{2,3}:\d{2,3}/D[PQ]B1\*\d{2,3}:\d{2,3}|H-2[KDLQ][a-z]\d?|H-2I[AE][a-z]|I-[AE][a-z])$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>patient_paper_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-minimalepitope">
+      <h3>MinimalEpitope <span class="nf">19 fields</span></h3>
+      <p class="doc">A minimal epitope WITHIN one or more immunizing peptides (v2 P1/P2/P3).
+
+`parent_peptide_ids` is MANY-TO-MANY: overlapping/tiling long peptides can
+share an epitope (confirmed in Keskin Supp Table 5 — e.g. EPT2B sits in
+IMP02/03/04). Empty list = the paper reported the epitope without resolving
+which long peptide it came from (preserved honestly, not invented).
+
+`mhc_class` is mandatory because it governs which other fields are even
+meaningful: a class-I epitope (8–14mer) carries a NetMHCpan nM affinity or
+%rank; a class-II / CD4 epitope does NOT carry a class-I affinity and is
+typically restricted by HLA-DR/DQ/DP (often un-typed in the paper).
+
+Q9 (unchanged): in-silico prediction metadata are PREDICTIONS, never
+evidence — they must NEVER seed an ExtractedEvidence row. If the only thing
+known about an epitope is its predicted affinity, it has zero evidence rows
+(predicted/T0 tier), not a &#x27;presented&#x27;/&#x27;positive&#x27; row.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>section_ref</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>provenance</code></td><td class='ft'>list of <a href='#m-provenance'>Provenance</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>paper_local_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>sequence</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>gene_symbol</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>uniprot_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>is_neoantigen</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>mutation</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>variant_type</code></td><td class='ft'><span class='lit'>one of: <code>missense</code> · <code>frameshift</code> · <code>inframe_indel</code> · <code>stop_loss</code> · <code>splice</code> · <code>fusion</code> · <code>other</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>protein_change</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^p\.\(?[A-Za-z0-9_*=&gt;]+\)?$</code> · ≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hla_allele</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^(HLA-[A-Z][A-Z0-9]*\*\d{2,3}:\d{2,3}|HLA-D[PQ]A1\*\d{2,3}:\d{2,3}/D[PQ]B1\*\d{2,3}:\d{2,3}|H-2[KDLQ][a-z]\d?|H-2I[AE][a-z]|I-[AE][a-z])$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>parent_peptide_ids</code></td><td class='ft'>list of <span class='ty'>str</span> <span class='fmt'>≥1 chars</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>mhc_class</code></td><td class='ft'><span class='lit'>one of: <code>I</code> · <code>II</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>wild_type_sequence</code></td><td class='ft'><span class='ty'>str</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>predicted_affinity</code></td><td class='ft'><a href='#m-measurement'>Measurement</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>wild_type_affinity</code></td><td class='ft'><a href='#m-measurement'>Measurement</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-extractedevidence">
+      <h3>ExtractedEvidence <span class="nf">22 fields</span></h3>
+      <p class="doc">One evidence row linking a patient × target to an assay outcome.
+
+The (assay, stimulation, antigen_format, timepoint) tuple identifies a
+distinct *measurement* — two timepoints of the same assay on the same
+peptide×patient are two evidence rows, not one. See the v2 design doc.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>section_ref</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>provenance</code></td><td class='ft'>list of <a href='#m-provenance'>Provenance</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>patient_paper_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>target_kind</code></td><td class='ft'><span class='lit'>one of: <code>immunizing_peptide</code> · <code>epitope</code> · <code>pool</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default epitope</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>immunizing_peptide_paper_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>epitope_paper_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>pool_paper_id</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hla_allele</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>format <code>^(HLA-[A-Z][A-Z0-9]*\*\d{2,3}:\d{2,3}|HLA-D[PQ]A1\*\d{2,3}:\d{2,3}/D[PQ]B1\*\d{2,3}:\d{2,3}|H-2[KDLQ][a-z]\d?|H-2I[AE][a-z]|I-[AE][a-z])$</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hla_source</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>assay</code></td><td class='ft'><span class='lit'>one of: <code>elispot</code> · <code>tetramer</code> · <code>ics</code> · <code>flow_cytometry</code> · <code>ms</code> · <code>binding</code> · <code>tcr_reporter</code> · <code>vaccine_response</code> · <code>clinical_response</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>outcome</code></td><td class='ft'><span class='lit'>one of: <code>immunogenic</code> · <code>not_immunogenic</code> · <code>pre_existing</code> · <code>not_assessed</code> · <code>positive</code> · <code>negative</code> · <code>presented</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>vaccine_induced</code></td><td class='ft'><span class='ty'>bool</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>mutation_specific</code></td><td class='ft'><span class='ty'>bool</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>assay_stimulation</code></td><td class='ft'><span class='lit'>one of: <code>ex_vivo</code> · <code>in_vitro_expanded</code> · <code>unspecified</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>assay_antigen_format</code></td><td class='ft'><span class='lit'>one of: <code>peptide_pulsed</code> · <code>minigene</code> · <code>autologous_tumor</code> · <code>tetramer</code> · <code>unspecified</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>timepoint_phase</code></td><td class='ft'><span class='lit'>one of: <code>pre_vaccine</code> · <code>on_treatment</code> · <code>post_vaccine</code> · <code>memory</code> · <code>unspecified</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>timepoint_label</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>assay_detail</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤200 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>magnitude</code></td><td class='ft'><a href='#m-responsemagnitude'>ResponseMagnitude</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-extractedpeptidepool">
+      <h3>ExtractedPeptidePool <span class="nf">8 fields</span></h3>
+      <p class="doc">A named immunizing pool within a paper (e.g. Keskin&#x27;s pool &#x27;A&#x27;..&#x27;D&#x27;).
+
+Pools are per-patient here. A pool-target ExtractedEvidence row references
+`paper_local_id`. peptide &lt;-&gt; pool is MANY-TO-MANY (a peptide can sit in
+multiple pools — confirmed in Keskin Supp Table 5): `member_peptide_ids`
+holds every peptide in the pool; the DB join table is built from it.
+
+PATCH (v2 P1): `member_peptide_ids` now references `ImmunizingPeptide`
+paper_local_ids (the long, injected peptides) — NOT minimal epitopes. A pool
+physically contains long peptides; epitopes live inside those.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>section_ref</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>provenance</code></td><td class='ft'>list of <a href='#m-provenance'>Provenance</a></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>paper_local_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>patient_paper_id</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>member_peptide_ids</code></td><td class='ft'>list of <span class='ty'>str</span> <span class='fmt'>≥1 chars</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-survivaloutcome">
+      <h3>SurvivalOutcome <span class="nf">16 fields</span></h3>
+      <p class="doc">One reported time-to-event outcome — the human analog of
+PreclinicalEfficacy, for endpoints RANO cannot express (RFS/OS/...).
+
+Modeled as ONE record per (endpoint x arm). A two-arm comparison is two
+records: the experimental arm carries the comparison stats (hazard_ratio,
+p_value, comparator_label); the reference arm is a plain median record.
+Lives at the PAPER level — a between-group comparison spans patient groups,
+not a single patient. Per-patient IPD (if a paper ever reports it) would be
+a separate per-patient addition; this captures what trials actually print.
+
+Rojas RFS-by-response:
+  - arm=&#x27;vaccine responders&#x27;, n=8, not_reached=True, comparator=&#x27;non-responders&#x27;,
+    hazard_ratio=0.08, hr_ci=&#x27;0.01-0.4&#x27;, p_value=0.003, test=&#x27;log-rank&#x27;,
+    stratifier=&#x27;vaccine response&#x27;, median_followup_value=18.0
+  - arm=&#x27;non-responders&#x27;, n=8, median_value=13.4   (reference arm)</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>endpoint</code></td><td class='ft'><span class='lit'>one of: <code>rfs</code> · <code>os</code> · <code>landmark_rfs</code> · <code>dfs</code> · <code>pfs</code> · <code>efs</code> · <code>ttr</code> · <code>other</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>arm_label</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_patients</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>median_value</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>time_unit</code></td><td class='ft'><span class='lit'>one of: <code>months</code> · <code>weeks</code> · <code>days</code> · <code>years</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default months</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>not_reached</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default False</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>events</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>median_followup_value</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>comparator_label</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hazard_ratio</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>hr_ci</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤40 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>p_value</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>statistical_test</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤48 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>stratifier</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤80 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>note</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤300 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-preclinicalefficacy">
+      <h3>PreclinicalEfficacy <span class="nf">11 fields</span></h3>
+      <p class="doc">One antitumor-efficacy experiment arm, as reported — the preclinical
+analog of `clinical_outcome`. Recorded as a FACT (arm -&gt; readout -&gt; result),
+not the paper&#x27;s causal story.
+
+A list because efficacy depends on the treatment ARM. Li et al. 2021, E0771:
+  - vaccine alone           -&gt; readout=&#x27;tumor_growth&#x27;, result=&#x27;no_effect&#x27;,
+                               combination=&#x27;monotherapy&#x27;
+  - vaccine + anti-PD-L1    -&gt; result=&#x27;growth_inhibition&#x27;,
+                               combination=&#x27;plus_checkpoint_inhibitor&#x27;
+4T1.2: vaccine alone -&gt; &#x27;partial_inhibition&#x27; (note: model is anti-PD-L1
+resistant; combination not yet tested). For HUMAN cohorts the primary
+outcome belongs in `clinical_outcome`/`best_response`; leave this empty.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>readout</code></td><td class='ft'><span class='lit'>one of: <code>tumor_growth</code> · <code>survival</code> · <code>tumor_free_fraction</code> · <code>metastasis</code> · <code>other</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>result</code></td><td class='ft'><span class='lit'>one of: <code>no_effect</code> · <code>partial_inhibition</code> · <code>growth_inhibition</code> · <code>tumor_regression</code> · <code>complete_response</code> · <code>prolonged_survival</code> · <code>not_reported</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>setting</code></td><td class='ft'><span class='lit'>one of: <code>prophylactic</code> · <code>therapeutic</code> · <code>unspecified</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default unspecified</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>combination</code></td><td class='ft'><span class='lit'>one of: <code>monotherapy</code> · <code>plus_checkpoint_inhibitor</code> · <code>plus_chemotherapy</code> · <code>plus_radiotherapy</code> · <code>plus_other</code> · <code>unspecified</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default monotherapy</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>combination_detail</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤120 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>comparator</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤120 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>n_animals</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>timepoint</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>statistic</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤120 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>note</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤300 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-concomitantimmunosuppression">
+      <h3>ConcomitantImmunosuppression <span class="nf">5 fields</span></h3>
+      <p class="doc">One immunosuppressive exposure during the vaccine window, recorded as a
+FACT — never the paper&#x27;s interpretation of its effect.
+
+Keskin Supp Table 4a: 6/8 patients on dexamethasone 2-4 mg/day during
+vaccine priming  -&gt;  agent_class=&#x27;corticosteroid&#x27;, agent=&#x27;dexamethasone&#x27;,
+dose=&#x27;2-4 mg/day&#x27;, timing=&#x27;during_priming&#x27;. The schema does NOT store
+&quot;this caused the response to fail&quot; — that correlation is derived across the
+corpus (steroid-during-priming vs n_peptides_immunogenic == 0), not asserted.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>agent_class</code></td><td class='ft'><span class='lit'>one of: <code>corticosteroid</code> · <code>chemotherapy</code> · <code>calcineurin_inhibitor</code> · <code>mtor_inhibitor</code> · <code>antimetabolite</code> · <code>anti_tnf</code> · <code>other_immunosuppressant</code> · <code>unspecified</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>agent</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>dose</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤64 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>timing</code></td><td class='ft'><span class='lit'>one of: <code>pre_vaccine</code> · <code>during_priming</code> · <code>during_boost</code> · <code>throughout</code> · <code>post_vaccine</code> · <code>unspecified</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default unspecified</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-curatornote">
+      <h3>CuratorNote <span class="nf">6 fields</span></h3>
+      <p class="doc">One piece of curatorial commentary about the paper. Optional, paper-level,
+and rendered verbatim — see the anti-hallucination note above. Empty for every
+record unless a human/scoped pass deliberately adds one.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>kind</code></td><td class='ft'><span class='lit'>one of: <code>challenge</code> · <code>decision</code> · <code>caveat</code> · <code>highlight</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>text</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>refs</code></td><td class='ft'>list of <span class='ty'>str</span> <span class='fmt'>≥1 chars</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>needs_review</code></td><td class='ft'><span class='ty'>bool</span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default True</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-measurement">
+      <h3>Measurement <span class="nf">8 fields</span></h3>
+      <p class="doc">A single quantitative measurement or prediction — unit-explicit and lossless.
+
+Replaces bare ``*_nm: float`` fields. Three reasons:
+
+1. UNIT IS DATA. nM and NetMHCpan %rank are different scales that live in
+   the SAME source column (Keskin Supp Table 5 mixes them — ARHGAP35, a
+   validated hit, is reported as %rank). Carrying the unit on the value
+   makes &quot;0.80 (%rank)&quot; un-confusable with 0.80 nM, which collapses the
+   former two-field P3 split into one well-typed object.
+2. LOSSLESS. ``raw`` keeps the verbatim source token regardless of whether
+   parsing succeeded, so a future/better parser can re-derive ``value`` and
+   retroactively upgrade already-stored records. ``value`` may be None
+   (parse failed) as long as ``raw`` survives — a measurement is never
+   silently dropped or coerced.
+3. PROVENANCED CLAIM. method + version + tier + source let contradictory
+   claims about the same quantity (NetMHCpan v2.4 vs v4.1 vs the paper&#x27;s
+   own printed value) coexist side by side instead of overwriting.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>value</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>unit</code></td><td class='ft'><span class='lit'>one of: <code>nM</code> · <code>pct_rank</code> · <code>unknown</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>raw</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>len 1–2000</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>method</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≥1 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>method_version</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤32 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>tier</code></td><td class='ft'><span class='lit'>one of: <code>predicted</code> · <code>reported</code> · <code>validated</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default predicted</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-responsemagnitude">
+      <h3>ResponseMagnitude <span class="nf">9 fields</span></h3>
+      <p class="doc">How big a measured T-cell response was — the structured home for the
+ELISpot / ICS / tetramer magnitude that previously fell into
+`ExtractedEvidence.assay_detail` free text. Attaches to ONE evidence row
+(one assay x timepoint).
+
+Any lane may be filled: a parsed `value` + `unit` (e.g. 2459 sfc_per_1e6);
+an ordinal `grade` (murine -/+/++/+++/++++ -&gt; negative/low/moderate/high/
+very_high); or — losslessly — only `raw`, when the paper gives a magnitude
+that can&#x27;t be parsed or mapped (a per-patient SFC set without gene labels).
+At least one of value / grade / raw must be present (never an empty size).</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>value</code></td><td class='ft'><span class='ty'>float</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>unit</code></td><td class='ft'><span class='lit'>one of: <code>sfc_per_1e6</code> · <code>percent_of_parent</code> · <code>stimulation_index</code> · <code>unknown</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default unknown</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>grade</code></td><td class='ft'><span class='lit'>one of: <code>negative</code> · <code>low</code> · <code>moderate</code> · <code>high</code> · <code>very_high</code></span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>raw</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>len 1–2000</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>background_subtracted</code></td><td class='ft'><span class='ty'>bool</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>denominator</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>≤48 chars</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>tier</code></td><td class='ft'><span class='lit'>one of: <code>predicted</code> · <code>reported</code> · <code>validated</code></span></td><td class='fr'><span class='optn'>optional</span> <span class='def'>default reported</span></td><td class='fd'></td></tr>
+<tr><td class='fn'><code>source</code></td><td class='ft'><a href='#m-provenance'>Provenance</a> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>confidence</code></td><td class='ft'><span class='ty'>int</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+    <section class="card" id="m-provenance">
+      <h3>Provenance <span class="nf">3 fields</span></h3>
+      <p class="doc">One structured source pointer for an extracted fact.
+
+The legacy `quoted_text` + `section_ref` on each row remain the required,
+human-readable anchor. `Provenance` adds a *typed, repeatable* pointer so a
+fact backed by several places (e.g. Keskin dexamethasone in BOTH Supp
+Table 4a and the Results prose) records all of them, and so Phase D can
+weight a table-sourced value differently from a figure-read one.</p>
+      <table class="fields">
+        <thead><tr><th>field</th><th>type</th><th>presence</th><th>notes</th></tr></thead>
+        <tbody><tr><td class='fn'><code>kind</code></td><td class='ft'><span class='lit'>one of: <code>table</code> · <code>figure</code> · <code>prose</code> · <code>lookup</code></span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>locator</code></td><td class='ft'><span class='ty'>str</span></td><td class='fr'><span class='req'>required</span> </td><td class='fd'></td></tr>
+<tr><td class='fn'><code>quoted_text</code></td><td class='ft'><span class='ty'>str</span> <span class='fmt'>len 1–2000</span> <span class='opt'>(optional)</span></td><td class='fr'><span class='optn'>optional</span> </td><td class='fd'></td></tr></tbody>
+      </table>
+    </section>
+
+  <h2 class="sec" id="vocab">Controlled vocabularies</h2>
+  <p class="sub">The allowed values for each categorical axis (the extractor cannot use anything else).</p>
+  <div class='vocab'><div class='vn'>ASSAYS</div><div class='vc'><code>elispot</code> <code>tetramer</code> <code>ics</code> <code>flow_cytometry</code> <code>ms</code> <code>binding</code> <code>tcr_reporter</code> <code>vaccine_response</code> <code>clinical_response</code></div></div>
+<div class='vocab'><div class='vn'>ASSAY_ANTIGEN_FORMAT</div><div class='vc'><code>peptide_pulsed</code> <code>minigene</code> <code>autologous_tumor</code> <code>tetramer</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>ASSAY_STIMULATION</div><div class='vc'><code>ex_vivo</code> <code>in_vitro_expanded</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>COMBINATION_CLASSES</div><div class='vc'><code>monotherapy</code> <code>plus_checkpoint_inhibitor</code> <code>plus_chemotherapy</code> <code>plus_radiotherapy</code> <code>plus_other</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>CURATOR_NOTE_KINDS</div><div class='vc'><code>challenge</code> <code>decision</code> <code>caveat</code> <code>highlight</code></div></div>
+<div class='vocab'><div class='vn'>EFFICACY_READOUTS</div><div class='vc'><code>tumor_growth</code> <code>survival</code> <code>tumor_free_fraction</code> <code>metastasis</code> <code>other</code></div></div>
+<div class='vocab'><div class='vn'>EFFICACY_RESULTS</div><div class='vc'><code>no_effect</code> <code>partial_inhibition</code> <code>growth_inhibition</code> <code>tumor_regression</code> <code>complete_response</code> <code>prolonged_survival</code> <code>not_reported</code></div></div>
+<div class='vocab'><div class='vn'>EFFICACY_SETTINGS</div><div class='vc'><code>prophylactic</code> <code>therapeutic</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>EVIDENCE_TARGETS</div><div class='vc'><code>immunizing_peptide</code> <code>epitope</code> <code>pool</code></div></div>
+<div class='vocab'><div class='vn'>IMMUNOSUPPRESSANT_CLASSES</div><div class='vc'><code>corticosteroid</code> <code>chemotherapy</code> <code>calcineurin_inhibitor</code> <code>mtor_inhibitor</code> <code>antimetabolite</code> <code>anti_tnf</code> <code>other_immunosuppressant</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>IMMUNOSUPPRESSION_TIMING</div><div class='vc'><code>pre_vaccine</code> <code>during_priming</code> <code>during_boost</code> <code>throughout</code> <code>post_vaccine</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>LAYER2_ASSAYS</div><div class='vc'><code>elispot</code> <code>tetramer</code> <code>ics</code> <code>flow_cytometry</code> <code>tcr_reporter</code></div></div>
+<div class='vocab'><div class='vn'>LAYER2_OUTCOMES</div><div class='vc'><code>immunogenic</code> <code>not_immunogenic</code> <code>pre_existing</code> <code>not_assessed</code></div></div>
+<div class='vocab'><div class='vn'>MEASUREMENT_TIERS</div><div class='vc'><code>predicted</code> <code>reported</code> <code>validated</code></div></div>
+<div class='vocab'><div class='vn'>MEASUREMENT_UNITS</div><div class='vc'><code>nM</code> <code>pct_rank</code> <code>unknown</code></div></div>
+<div class='vocab'><div class='vn'>MHC_CLASSES</div><div class='vc'><code>I</code> <code>II</code></div></div>
+<div class='vocab'><div class='vn'>OUTCOMES</div><div class='vc'><code>immunogenic</code> <code>not_immunogenic</code> <code>pre_existing</code> <code>not_assessed</code> <code>positive</code> <code>negative</code> <code>presented</code></div></div>
+<div class='vocab'><div class='vn'>PROVENANCE_KINDS</div><div class='vc'><code>table</code> <code>figure</code> <code>prose</code> <code>lookup</code></div></div>
+<div class='vocab'><div class='vn'>RESPONSE_GRADES</div><div class='vc'><code>negative</code> <code>low</code> <code>moderate</code> <code>high</code> <code>very_high</code></div></div>
+<div class='vocab'><div class='vn'>RESPONSE_MAGNITUDE_UNITS</div><div class='vc'><code>sfc_per_1e6</code> <code>percent_of_parent</code> <code>stimulation_index</code> <code>unknown</code></div></div>
+<div class='vocab'><div class='vn'>SPECIES</div><div class='vc'><code>human</code> <code>mouse</code> <code>rat</code> <code>non_human_primate</code> <code>other</code></div></div>
+<div class='vocab'><div class='vn'>SURVIVAL_ENDPOINTS</div><div class='vc'><code>rfs</code> <code>os</code> <code>landmark_rfs</code> <code>dfs</code> <code>pfs</code> <code>efs</code> <code>ttr</code> <code>other</code></div></div>
+<div class='vocab'><div class='vn'>SURVIVAL_TIME_UNITS</div><div class='vc'><code>months</code> <code>weeks</code> <code>days</code> <code>years</code></div></div>
+<div class='vocab'><div class='vn'>TIMEPOINT_PHASE</div><div class='vc'><code>pre_vaccine</code> <code>on_treatment</code> <code>post_vaccine</code> <code>memory</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>VACCINE_PLATFORMS</div><div class='vc'><code>dna</code> <code>rna</code> <code>synthetic_long_peptide</code> <code>short_peptide</code> <code>dendritic_cell</code> <code>viral_vector</code> <code>other</code> <code>unspecified</code></div></div>
+<div class='vocab'><div class='vn'>VARIANT_TYPES</div><div class='vc'><code>missense</code> <code>frameshift</code> <code>inframe_indel</code> <code>stop_loss</code> <code>splice</code> <code>fusion</code> <code>other</code></div></div>
+</div></body></html>

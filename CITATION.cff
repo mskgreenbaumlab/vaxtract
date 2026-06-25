@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use vaxtract, please cite it using these metadata."
+title: "vaxtract: schema-validated extraction of neoantigen cancer-vaccine immunogenicity data from primary papers"
+type: software
+authors:
+  - given-names: Samuel
+    family-names: Ahuno
+    email: ekwame001@gmail.com
+    orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO: replace with real ORCID
+version: 0.1.0
+date-released: "2026-06-18"
+license: MIT
+repository-code: "https://github.com/mskgreenbaumlab/vaxtract"
+url: "https://github.com/mskgreenbaumlab/vaxtract"
+keywords:
+  - neoantigen
+  - cancer vaccine
+  - immunogenicity
+  - information extraction
+  - large language model
+  - bioinformatics
+# doi: 10.5281/zenodo.XXXXXXX   # TODO: add the Zenodo concept DOI after the first release

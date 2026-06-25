@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 800" font-family="Arial, Helvetica, sans-serif">
+  <rect width="1120" height="800" fill="#FBF7F0"/>
+
+  <!-- TITLE -->
+  <text x="560" y="46" text-anchor="middle" font-size="27" font-weight="700" fill="#26221E">How a cancer-vaccine paper becomes database-ready data</text>
+  <text x="560" y="74" text-anchor="middle" font-size="15" fill="#5A534A">A reading assistant copies what each study reports — it never invents — and a person signs off before anything counts.</text>
+
+  <!-- ARROWS DEFS -->
+  <defs>
+    <marker id="flow" markerWidth="11" markerHeight="11" refX="8" refY="5.5" orient="auto"><path d="M0 0 L11 5.5 L0 11 z" fill="#9A6A1A"/></marker>
+  </defs>
+
+  <!-- STAGE 1: THE PAPER -->
+  <rect x="30" y="110" width="235" height="250" rx="14" fill="#fff" stroke="#1F6F6B" stroke-width="2"/>
+  <text x="147" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1F6F6B">1 · THE PUBLISHED PAPER</text>
+  <g fill="none" stroke="#1F6F6B" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M134 150 h18 l10 10 v28 h-28 z" fill="#E2F0EE"/>
+    <path d="M152 150 v10 h10"/>
+    <line x1="140" y1="172" x2="156" y2="172"/>
+    <line x1="140" y1="180" x2="156" y2="180"/>
+  </g>
+  <text x="147" y="214" text-anchor="middle" font-size="14" fill="#26221E">The main article (PDF)</text>
+  <text x="147" y="238" text-anchor="middle" font-size="14" fill="#26221E">+ supplementary</text>
+  <text x="147" y="258" text-anchor="middle" font-size="14" fill="#26221E">tables &amp; figures</text>
+  <text x="147" y="298" text-anchor="middle" font-size="12.5" fill="#5A534A">Everything the study</text>
+  <text x="147" y="316" text-anchor="middle" font-size="12.5" fill="#5A534A">reported about its</text>
+  <text x="147" y="334" text-anchor="middle" font-size="12.5" fill="#5A534A">patients and the vaccine</text>
+
+  <!-- STAGE 2: AI READING ASSISTANT -->
+  <rect x="305" y="110" width="235" height="250" rx="14" fill="#E2F0EE" stroke="#1F6F6B" stroke-width="2.5"/>
+  <text x="422" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1F6F6B">2 · AI READING ASSISTANT</text>
+  <g fill="none" stroke="#1F6F6B" stroke-width="3" stroke-linecap="round">
+    <circle cx="417" cy="163" r="13"/>
+    <line x1="427" y1="173" x2="437" y2="183"/>
+  </g>
+  <text x="422" y="210" text-anchor="middle" font-size="13" fill="#26221E">Reads the paper against</text>
+  <text x="422" y="228" text-anchor="middle" font-size="13" fill="#26221E">a fixed rulebook</text>
+  <text x="422" y="256" text-anchor="middle" font-size="13" font-weight="700" fill="#9A3B1A">Copies only what is</text>
+  <text x="422" y="274" text-anchor="middle" font-size="13" font-weight="700" fill="#9A3B1A">written — never guesses</text>
+  <text x="422" y="306" text-anchor="middle" font-size="12.5" fill="#5A534A">Order of trust:</text>
+  <text x="422" y="324" text-anchor="middle" font-size="12.5" fill="#5A534A">exact data tables &#8594;</text>
+  <text x="422" y="342" text-anchor="middle" font-size="12.5" fill="#5A534A">text &#8594; figures</text>
+
+  <!-- STAGE 3: STRUCTURED RECORD -->
+  <rect x="580" y="110" width="235" height="250" rx="14" fill="#E2EFE7" stroke="#2F6B4F" stroke-width="2.5"/>
+  <text x="697" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#2F6B4F">3 · A STRUCTURED RECORD</text>
+  <g fill="#2F6B4F">
+    <rect x="679" y="170" width="9" height="16" rx="1.5"/>
+    <rect x="692" y="160" width="9" height="26" rx="1.5"/>
+    <rect x="705" y="151" width="9" height="35" rx="1.5"/>
+  </g>
+  <text x="697" y="208" text-anchor="middle" font-size="13" fill="#26221E">&#8226; Patients in the trial</text>
+  <text x="697" y="228" text-anchor="middle" font-size="13" fill="#26221E">&#8226; Vaccine peptides given</text>
+  <text x="697" y="248" text-anchor="middle" font-size="13" fill="#26221E">&#8226; Immune responses</text>
+  <text x="697" y="268" text-anchor="middle" font-size="13" fill="#26221E">&#8226; Survival outcomes</text>
+  <text x="697" y="300" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2F6B4F">Every value is linked</text>
+  <text x="697" y="318" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2F6B4F">back to the exact quote,</text>
+  <text x="697" y="336" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2F6B4F">table cell, or figure</text>
+
+  <!-- STAGE 4: HUMAN REVIEW -> DATABASE -->
+  <rect x="855" y="110" width="235" height="250" rx="14" fill="#fff" stroke="#9A6A1A" stroke-width="2.5"/>
+  <text x="972" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#9A6A1A">4 · HUMAN REVIEW</text>
+  <g>
+    <rect x="957" y="150" width="30" height="37" rx="3" fill="#fff" stroke="#9A6A1A" stroke-width="2.6"/>
+    <rect x="965" y="145" width="14" height="8" rx="2.5" fill="#9A6A1A"/>
+    <path d="M962 169 l6 6 l11 -13" fill="none" stroke="#2F6B4F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="972" y="210" text-anchor="middle" font-size="13" fill="#26221E">A curator reads a plain-</text>
+  <text x="972" y="228" text-anchor="middle" font-size="13" fill="#26221E">language report</text>
+  <text x="972" y="256" text-anchor="middle" font-size="13" fill="#26221E">Flagged &amp; uncertain</text>
+  <text x="972" y="274" text-anchor="middle" font-size="13" fill="#26221E">items are highlighted</text>
+  <text x="972" y="306" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9A3B1A">Nothing enters the</text>
+  <text x="972" y="324" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9A3B1A">database until a person</text>
+  <text x="972" y="342" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9A3B1A">signs off</text>
+
+  <!-- flow arrows between stages -->
+  <line x1="268" y1="235" x2="302" y2="235" stroke="#9A6A1A" stroke-width="2.4" marker-end="url(#flow)"/>
+  <line x1="543" y1="235" x2="577" y2="235" stroke="#9A6A1A" stroke-width="2.4" marker-end="url(#flow)"/>
+  <line x1="818" y1="235" x2="852" y2="235" stroke="#9A6A1A" stroke-width="2.4" marker-end="url(#flow)"/>
+
+  <!-- DATABASE chip under stage 4 -->
+  <rect x="892" y="372" width="160" height="30" rx="8" fill="#2F6B4F"/>
+  <text x="972" y="392" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">&#10003; into the database</text>
+
+  <!-- GUARANTEES BAND -->
+  <rect x="30" y="430" width="1060" height="180" rx="14" fill="#fff" stroke="#E4DCCD" stroke-width="1.5"/>
+  <text x="50" y="460" font-size="16" font-weight="700" fill="#26221E">What this guarantees</text>
+
+  <text x="50" y="494" font-size="14" font-weight="700" fill="#1F6F6B">Nothing is invented</text>
+  <text x="50" y="516" font-size="12.5" fill="#5A534A">If the paper does not say it,</text>
+  <text x="50" y="534" font-size="12.5" fill="#5A534A">the field stays blank — no</text>
+  <text x="50" y="552" font-size="12.5" fill="#5A534A">guessing, no rounding-up.</text>
+
+  <text x="320" y="494" font-size="14" font-weight="700" fill="#2F6B4F">Fully traceable</text>
+  <text x="320" y="516" font-size="12.5" fill="#5A534A">Every value can be traced</text>
+  <text x="320" y="534" font-size="12.5" fill="#5A534A">straight back to its quote,</text>
+  <text x="320" y="552" font-size="12.5" fill="#5A534A">table cell, or figure panel.</text>
+
+  <text x="590" y="494" font-size="14" font-weight="700" fill="#9A6A1A">Uncertainty is visible</text>
+  <text x="590" y="516" font-size="12.5" fill="#5A534A">Anything read off a figure or</text>
+  <text x="590" y="534" font-size="12.5" fill="#5A534A">not clearly stated is flagged</text>
+  <text x="590" y="552" font-size="12.5" fill="#5A534A">for review — never hidden.</text>
+
+  <text x="860" y="494" font-size="14" font-weight="700" fill="#9A3B1A">A human decides</text>
+  <text x="860" y="516" font-size="12.5" fill="#5A534A">A reviewer signs off before</text>
+  <text x="860" y="534" font-size="12.5" fill="#5A534A">any record counts. The AI</text>
+  <text x="860" y="552" font-size="12.5" fill="#5A534A">proposes; a person disposes.</text>
+
+  <line x1="50" y1="572" x2="1070" y2="572" stroke="#F0EADD" stroke-width="1"/>
+  <text x="50" y="594" font-size="12" fill="#5A534A">The assistant reads and copies under strict rules; it does not diagnose, recommend, or draw conclusions. It turns a paper into a checkable table — a person verifies it.</text>
+
+  <!-- WORKED EXAMPLE BAND -->
+  <rect x="30" y="628" width="1060" height="146" rx="14" fill="#F0EADD" stroke="#B5701A" stroke-width="1.5"/>
+  <text x="50" y="658" font-size="16" font-weight="700" fill="#B5701A">Worked example &#183; Rojas et al. &#8212; personalized mRNA vaccine in pancreatic cancer</text>
+
+  <text x="60" y="704" text-anchor="middle" font-size="26" font-weight="700" fill="#26221E">16</text>
+  <text x="60" y="724" text-anchor="middle" font-size="11.5" fill="#5A534A">patients</text>
+  <text x="240" y="704" text-anchor="middle" font-size="26" font-weight="700" fill="#26221E">232</text>
+  <text x="240" y="724" text-anchor="middle" font-size="11.5" fill="#5A534A">vaccine peptides</text>
+  <text x="430" y="704" text-anchor="middle" font-size="26" font-weight="700" fill="#26221E">464</text>
+  <text x="430" y="724" text-anchor="middle" font-size="11.5" fill="#5A534A">immune targets</text>
+  <text x="620" y="704" text-anchor="middle" font-size="26" font-weight="700" fill="#26221E">30</text>
+  <text x="620" y="724" text-anchor="middle" font-size="11.5" fill="#5A534A">measured responses</text>
+  <text x="800" y="704" text-anchor="middle" font-size="26" font-weight="700" fill="#26221E">6</text>
+  <text x="800" y="724" text-anchor="middle" font-size="11.5" fill="#5A534A">survival outcomes</text>
+
+  <line x1="900" y1="678" x2="900" y2="752" stroke="#D8C9AC" stroke-width="1"/>
+  <text x="995" y="690" text-anchor="middle" font-size="12.5" fill="#26221E">Each one checked,</text>
+  <text x="995" y="710" text-anchor="middle" font-size="12.5" fill="#26221E">cell-by-cell, against</text>
+  <text x="995" y="730" text-anchor="middle" font-size="12.5" fill="#26221E">the paper's own</text>
+  <text x="995" y="750" text-anchor="middle" font-size="12.5" fill="#26221E">data table.</text>
+
+  <text x="50" y="766" font-size="11" fill="#9A3B1A">Pending a curator's final sign-off &#8212; the same human-review step every record passes through.</text>
+</svg>

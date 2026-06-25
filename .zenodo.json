@@ -1,0 +1,18 @@
+{
+  "title": "vaxtract: schema-validated extraction of neoantigen cancer-vaccine immunogenicity data from primary papers",
+  "description": "<p>An LLM agent (built on the Claude Agent SDK) that extracts schema-validated, provenance-tracked neoantigen cancer-vaccine immunogenicity data from primary papers (PDF/XLSX/DOCX, including figure-locked tables), with a self-validating repair loop and faithfulness guards. Bring-your-own-key; output is silver (for curator review). The open-source extraction engine behind the NeoVax Atlas.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    { "name": "Ahuno, Samuel", "affiliation": "" }
+  ],
+  "keywords": [
+    "neoantigen",
+    "cancer vaccine",
+    "immunogenicity",
+    "information extraction",
+    "large language model",
+    "bioinformatics"
+  ]
+}

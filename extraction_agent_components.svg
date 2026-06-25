@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 900" font-family="'IBM Plex Mono', monospace">
+  <rect width="980" height="900" fill="#FBF7F0"/>
+  <text x="490" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#26221E" font-family="Georgia, serif">antVacDB extraction agent — components (2026-06-04)</text>
+  <text x="490" y="60" text-anchor="middle" font-size="12" fill="#5A534A">one paper-dir in → one validated *_extracted.json out · sandboxed Claude Agent SDK · slim prompt · incremental on-disk assembly</text>
+
+  <!-- INPUT -->
+  <rect x="28" y="90" width="200" height="120" rx="10" fill="#fff" stroke="#E4DCCD" stroke-width="1.5"/>
+  <text x="128" y="113" text-anchor="middle" font-size="12" font-weight="700" fill="#1F6F6B">INPUT: paper dir</text>
+  <text x="128" y="136" text-anchor="middle" font-size="11" fill="#26221E">main.pdf</text>
+  <text x="128" y="156" text-anchor="middle" font-size="11" fill="#26221E">supplementary/*.xlsx</text>
+  <text x="128" y="176" text-anchor="middle" font-size="11" fill="#26221E">supplementary/*.pdf</text>
+  <text x="128" y="197" text-anchor="middle" font-size="9.5" fill="#5A534A">tables = highest fidelity</text>
+
+  <!-- CONTRACT -->
+  <rect x="28" y="232" width="200" height="250" rx="10" fill="#F0EADD" stroke="#B5701A" stroke-width="1.5"/>
+  <text x="128" y="255" text-anchor="middle" font-size="12" font-weight="700" fill="#B5701A">THE CONTRACT (read-only)</text>
+  <text x="128" y="279" text-anchor="middle" font-size="11" fill="#26221E">schema.py + vocab.py</text>
+  <text x="128" y="295" text-anchor="middle" font-size="9.5" fill="#5A534A">the success criterion (v2.7.1)</text>
+  <line x1="48" y1="308" x2="208" y2="308" stroke="#D8C9AC" stroke-width="1"/>
+  <text x="128" y="328" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B5701A">↓ rendered into the prompt as</text>
+  <text x="128" y="350" text-anchor="middle" font-size="10.5" fill="#26221E">schema_digest.py</text>
+  <text x="128" y="365" text-anchor="middle" font-size="9.5" fill="#5A534A">~9KB field/type/vocab digest</text>
+  <text x="128" y="378" text-anchor="middle" font-size="9.5" fill="#5A534A">(NOT the 70KB source)</text>
+  <text x="128" y="402" text-anchor="middle" font-size="10.5" fill="#26221E">layer2_prompt_deltas.md</text>
+  <text x="128" y="416" text-anchor="middle" font-size="9.5" fill="#5A534A">field guidance (L1-trimmed:</text>
+  <text x="128" y="428" text-anchor="middle" font-size="9.5" fill="#5A534A">no version-history prose)</text>
+  <text x="128" y="452" text-anchor="middle" font-size="10.5" fill="#26221E">reference records</text>
+  <text x="128" y="466" text-anchor="middle" font-size="9.5" fill="#5A534A">rojas / li / keskin .json</text>
+
+  <!-- AGENT BOX -->
+  <rect x="252" y="90" width="478" height="600" rx="14" fill="#fff" stroke="#1F6F6B" stroke-width="2.5"/>
+  <text x="491" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#1F6F6B">THE AGENT  (Claude Agent SDK · subscription or API key)</text>
+  <text x="491" y="132" text-anchor="middle" font-size="9.5" fill="#5A534A">system prompt ≈ 20KB = rules + rendered deltas + schema digest</text>
+
+  <!-- sandbox banner -->
+  <rect x="268" y="144" width="446" height="34" rx="7" fill="#FBEEE6" stroke="#9A3B1A" stroke-width="1.2"/>
+  <text x="491" y="160" text-anchor="middle" font-size="9.5" font-weight="700" fill="#9A3B1A">SANDBOX: setting_sources=[] (no host hooks/skills) ·</text>
+  <text x="491" y="172" text-anchor="middle" font-size="9.5" fill="#9A3B1A">can_use_tool → allow ONLY mcp__antvac__* (no host Bash/Read/Write)</text>
+
+  <!-- READ tools -->
+  <text x="276" y="200" font-size="10.5" font-weight="700" fill="#26221E">READ  (source priority ① → ② → ③)</text>
+  <rect x="268" y="208" width="446" height="58" rx="8" fill="#E2F0EE" stroke="#1F6F6B" stroke-width="1.1"/>
+  <text x="282" y="226" font-size="10.5" font-weight="700" fill="#1F6F6B">read_table(path, sheet, max_rows)  ·  read_pdf_text(path)</text>
+  <text x="282" y="242" font-size="9.5" fill="#26221E">① xlsx → row preview (cap 500)   ② main-text / methods / legends</text>
+  <text x="282" y="258" font-size="9" fill="#B5701A">③ read_figure — 2-step vision (page→crop); value=null+raw, conf≤2, needs_review</text>
+
+  <!-- BULK ADD -->
+  <text x="276" y="288" font-size="10.5" font-weight="700" fill="#2C5A86">BULK TRANSCRIPTION  ★ the throughput fix</text>
+  <rect x="268" y="296" width="446" height="64" rx="8" fill="#E5EEF6" stroke="#2C5A86" stroke-width="1.6"/>
+  <text x="282" y="314" font-size="10.5" font-weight="700" fill="#2C5A86">add_table(section, path, mapping_json)</text>
+  <text x="282" y="330" font-size="9.5" fill="#26221E">model gives a column→field mapping ONCE; Python reads ALL rows,</text>
+  <text x="282" y="345" font-size="9.5" fill="#26221E">validates + appends atomically. closed DSL: col / const / template /</text>
+  <text x="282" y="357" font-size="9" fill="#5A534A">template_list + filter(equals/in/not_empty). ~3 calls vs ~15 turns of typing.</text>
+
+  <!-- INCREMENTAL ASSEMBLY -->
+  <text x="276" y="386" font-size="10.5" font-weight="700" fill="#2F6B4F">INCREMENTAL ASSEMBLY  (on-disk partial — survives compaction)</text>
+  <rect x="268" y="394" width="446" height="74" rx="8" fill="#E2EFE7" stroke="#2F6B4F" stroke-width="1.4"/>
+  <text x="282" y="412" font-size="10.5" font-weight="700" fill="#2F6B4F">init_record → add_entities / add_table → finalize</text>
+  <text x="282" y="428" font-size="9.5" fill="#26221E">partial_status (resume after a context summary) · clear_entities (fix)</text>
+  <text x="282" y="444" font-size="9.5" fill="#26221E">writes &lt;out&gt;.partial.json each step → the record is built across turns</text>
+  <text x="282" y="460" font-size="9" fill="#5A534A">finalize = full ExtractedPaper validation + outer-guard, then write</text>
+
+  <!-- deprecated -->
+  <rect x="268" y="476" width="446" height="30" rx="7" fill="#F2EEE7" stroke="#C9BFAE" stroke-width="1"/>
+  <text x="282" y="495" font-size="9.5" fill="#8A8276">deprecated single-shot (small records only): validate(json) · save_extraction(json)</text>
+
+  <!-- THE LOOP -->
+  <rect x="268" y="516" width="446" height="156" rx="10" fill="#FCFAF5" stroke="#2C5A86" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="491" y="537" text-anchor="middle" font-size="11" font-weight="700" fill="#2C5A86">THE LOOP  (what makes it an agent)</text>
+  <text x="284" y="560" font-size="10" fill="#26221E">1. init_record with the paper-level fields</text>
+  <text x="284" y="578" font-size="10" fill="#26221E">2. read the supplementary tables / PDF text</text>
+  <text x="284" y="596" font-size="10" fill="#26221E">3. add_table for peptides/epitopes (bulk) · add_entities for judgment rows</text>
+  <text x="284" y="614" font-size="10" fill="#26221E">4. finalize → if errors, clear_entities/add + finalize again</text>
+  <text x="284" y="632" font-size="10" fill="#26221E">5. bounded by max_turns; partial persists if context is summarized</text>
+  <text x="284" y="652" font-size="9" fill="#9A3B1A">final ResultMessage inspected → warn on error_max_turns; never trust self-report</text>
+  <text x="491" y="668" text-anchor="middle" font-size="9" fill="#5A534A">code does bulk typing; the model does judgment (which rows, filters, evidence, survival)</text>
+
+  <!-- RIGHT: OUTER GUARD -->
+  <rect x="752" y="120" width="200" height="74" rx="10" fill="#FBEEE6" stroke="#9A3B1A" stroke-width="1.6"/>
+  <text x="852" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#9A3B1A">OUTER GUARD</text>
+  <text x="852" y="162" text-anchor="middle" font-size="9" fill="#26221E">re-validate the written file</text>
+  <text x="852" y="178" text-anchor="middle" font-size="9" fill="#26221E">invalid → *.QUARANTINED</text>
+
+  <!-- OUTPUT -->
+  <rect x="752" y="214" width="200" height="96" rx="10" fill="#E2EFE7" stroke="#2F6B4F" stroke-width="2"/>
+  <text x="852" y="238" text-anchor="middle" font-size="11" font-weight="700" fill="#2F6B4F">OUTPUT</text>
+  <text x="852" y="262" text-anchor="middle" font-size="10.5" fill="#26221E">rojas_extracted.json</text>
+  <text x="852" y="284" text-anchor="middle" font-size="9" fill="#5A534A">validated &amp; schema-stamped</text>
+  <text x="852" y="298" text-anchor="middle" font-size="9" fill="#5A534A">(schema_version + run_id)</text>
+
+  <!-- DOWNSTREAM -->
+  <rect x="752" y="330" width="200" height="76" rx="10" fill="#fff" stroke="#E4DCCD" stroke-width="1.5"/>
+  <text x="852" y="354" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F6F6B">make_report.py</text>
+  <text x="852" y="374" text-anchor="middle" font-size="9" fill="#5A534A">→ review.html (verbatim,</text>
+  <text x="852" y="388" text-anchor="middle" font-size="9" fill="#5A534A">no LLM at render)</text>
+
+  <rect x="752" y="422" width="200" height="76" rx="10" fill="#fff" stroke="#E4DCCD" stroke-width="1.5"/>
+  <text x="852" y="446" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2C5A86">predeploy_gate.py</text>
+  <text x="852" y="466" text-anchor="middle" font-size="9" fill="#5A534A">corpus back-compat + guards</text>
+  <text x="852" y="480" text-anchor="middle" font-size="9" fill="#5A534A">→ exit 0 / 1</text>
+
+  <!-- arrows -->
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#1F6F6B"/></marker>
+    <marker id="b" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#2F6B4F"/></marker>
+    <marker id="c" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#B5701A"/></marker>
+  </defs>
+  <line x1="228" y1="150" x2="250" y2="180" stroke="#1F6F6B" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="228" y1="350" x2="250" y2="330" stroke="#B5701A" stroke-width="1.6" marker-end="url(#c)"/>
+  <line x1="730" y1="300" x2="750" y2="200" stroke="#9A3B1A" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="852" y1="194" x2="852" y2="212" stroke="#2F6B4F" stroke-width="1.6" marker-end="url(#b)"/>
+  <line x1="852" y1="310" x2="852" y2="328" stroke="#2F6B4F" stroke-width="1.6" marker-end="url(#b)"/>
+  <line x1="852" y1="406" x2="852" y2="420" stroke="#2F6B4F" stroke-width="1.6" marker-end="url(#b)"/>
+
+  <!-- WHAT CHANGED note -->
+  <rect x="28" y="712" width="924" height="166" rx="10" fill="#fff" stroke="#E4DCCD" stroke-width="1.5"/>
+  <text x="44" y="735" font-size="12" font-weight="700" fill="#26221E">What changed vs the original scaffold</text>
+  <text x="44" y="758" font-size="10.5" fill="#26221E">• Prompt slimmed 84KB → ~20KB: embeds a generated schema DIGEST, not the full source; deltas trimmed of engineer/version prose.</text>
+  <text x="44" y="778" font-size="10.5" fill="#26221E">• Sandboxed: host config/hooks/skills excluded; the agent can ONLY call the antvac tools (no escaping to Bash).</text>
+  <text x="44" y="798" font-size="10.5" fill="#26221E">• Save is incremental + on-disk (init → add → finalize), so big records build across turns and survive context compaction.</text>
+  <text x="44" y="818" font-size="10.5" fill="#26221E">• add_table does deterministic bulk row→entity transcription — the fix for hand-typing ~700 entities blowing the turn budget.</text>
+  <text x="44" y="838" font-size="10.5" fill="#5A534A">• Scaling unchanged: one SLURM array task per paper-dir → reducer ingests (pass → DB, fail → quarantine); quarantine rate = health.</text>
+  <text x="44" y="860" font-size="9.5" fill="#9A3B1A">read_figure = 2-step vision (page→crop, conservative record) · validate/save_extraction kept but deprecated · schema.py never edited (contract is canonical)</text>
+</svg>

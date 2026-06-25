@@ -1,0 +1,27 @@
+# Validation batch for the schema 2.11.4 fixes (companion_paper_ref + sheets-first guidance).
+# 2026-06-09. Subscription/serial (-j 1). One PMID per line; '#' starts a comment.
+# Each must have sources at <data_root>/<PMID>/. Ordered by relevance to today's fixes.
+# Point scale/config.yaml `pmids_file` here (or pass --config override) to run THIS set
+# instead of the full corpus/pmids.txt.
+
+# --- PRIMARY: the companion_paper_ref fix target ---
+39972124   # Sethna 2025 Nature — FOLLOW-UP of Rojas 37165196 (same trial/patients/vaccine).
+           # EXPECT: agent sets companion_paper_ref=Rojas/PMID 37165196; peptide-recall +
+           # immunogenic-recall anchors RELAXED; finalizes CLEAN (extracted/) — NOT the prior
+           # needs_review driven by allow_peptide_count_mismatch + allow_evidence_count_mismatch.
+           # WATCH: does it still trip allow_regimen_divergence? (legitimate QC if so.)
+
+# --- companion paper itself + primary regression anchor ---
+37165196   # Rojas 2023 Nature — autogene cevumeran, adjuvant PDAC. REGRESSION: stay 16/232/464/30/6,
+           # companion_paper_ref must stay NULL (it is the primary, not a secondary analysis).
+
+# --- Item #1: multi-sheet add_table sheets=[...] + evidence breadth ---
+33064988   # 48 pat / large multi-supp (≈34 IAP per-patient sheets). WATCH: does the agent now use
+           # ONE add_table sheets=[...] call instead of a per-sheet read_table loop? coverage stays
+           # complete (34/34 monitored); clean lane.
+
+# --- clean-paper regressions (no spurious needs_review) ---
+39910301   # 9 pat / 130 IMP / funnel (adjuvant) — P20 clonality showcase. REGRESSION: finalizes CLEAN.
+34903219   # 10 pat / HCC, figure-locked ELISpot (pool-grain). REGRESSION: stable pool-grain evidence.
+30568305   # Keskin 2019 Nature — NeoVax GBM. REGRESSION: 8/103/121/26/27/2; not_immunogenic=4.
+33879241   # Li 2021 Genome Medicine — DNA vs SLP. REGRESSION: funnel populated; 50 epitopes.

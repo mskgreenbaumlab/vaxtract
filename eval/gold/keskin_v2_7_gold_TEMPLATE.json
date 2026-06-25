@@ -1,0 +1,1264 @@
+{
+  "pmid": "30559424",
+  "paper": "Neoantigen vaccine generates intratumoral T cell responses i",
+  "source_refs": "Supp Tables 2,3a,3b,4a,5; Results; Fig 1b (PFS/OS); Fig 2a (pool ELISPOT)",
+  "verified": false,
+  "verified_by": null,
+  "cohort_size": 8,
+  "n_enrolled": 10,
+  "per_patient_immunogenic": {
+    "Pt1": 0,
+    "Pt2": 0,
+    "Pt3": 0,
+    "Pt4": 0,
+    "Pt5": 0,
+    "Pt6": 0,
+    "Pt7": 3,
+    "Pt8": 3
+  },
+  "neoantigens": [
+    {
+      "patient": "Pt1",
+      "gene": "ATP10B",
+      "mutation": "R821Q",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "MAGEC3",
+      "mutation": "W21L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "TBX18",
+      "mutation": "F152L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "ACTR3C",
+      "mutation": "S166Y",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "DOK7",
+      "mutation": "Q151K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "DOK7",
+      "mutation": "Q151K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "CD22",
+      "mutation": "R739T",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "NDST4",
+      "mutation": "V84M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "SYNGAP1",
+      "mutation": "D203E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "SYNGAP1",
+      "mutation": "D203E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "SEMA3B",
+      "mutation": "V371I",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "SEMA3B",
+      "mutation": "V371I",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt1",
+      "gene": "AZI1",
+      "mutation": "V161M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "PCDHB6",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "BMP5",
+      "mutation": "A74V",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "FAM118A",
+      "mutation": "R96W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "ALPK3",
+      "mutation": "R1248H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "BTD",
+      "mutation": "V39L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "BTD",
+      "mutation": "V39L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "AMDHD2",
+      "mutation": "V421I",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "TMEM246",
+      "mutation": "R345H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "SUGP1",
+      "mutation": "R44W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt2",
+      "gene": "SUGP1",
+      "mutation": "R44W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "TYRP1",
+      "mutation": "T352fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "ME1",
+      "mutation": "R541H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "DOCK5",
+      "mutation": "E177K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "SETBP1",
+      "mutation": "A1375fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "SETBP1",
+      "mutation": "A1375fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "ENOX2",
+      "mutation": "E587K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "TFRC",
+      "mutation": "208_209insRR",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "TFRC",
+      "mutation": "208_209insRR",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "PTEN",
+      "mutation": "A39fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "ERRFI1",
+      "mutation": "P235fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "LRP3",
+      "mutation": "M476V",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "HDDC2",
+      "mutation": "W35R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "EGFRviii",
+      "mutation": "V30del223,insG",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "EGFRviii",
+      "mutation": "V30del223,insG",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "EGFRviii",
+      "mutation": "V30del223,insG",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "FFAR3",
+      "mutation": "R46H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "HEMK1",
+      "mutation": "G156R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "HEMK1",
+      "mutation": "G156R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "EGFRviii",
+      "mutation": "V30del223,insG",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt3",
+      "gene": "EGFRviii",
+      "mutation": "V30del223,insG",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "ZNF599",
+      "mutation": "K309fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "AXDND1",
+      "mutation": "T627M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "TP53",
+      "mutation": "F341Y",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "KIF18B",
+      "mutation": "R139C",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "CPT1C",
+      "mutation": "G103E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "LAMA3",
+      "mutation": "R1975H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt4",
+      "gene": "FAM193A",
+      "mutation": "Q1202K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "AHI1",
+      "mutation": "T253fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "ZNF366",
+      "mutation": "P336L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "SERPINH1",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "SERPINH1",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "PLXNB3",
+      "mutation": "P599L",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "SFMBT2",
+      "mutation": "R741W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "CTNND2",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "NIM1",
+      "mutation": "R272W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "C9orf78",
+      "mutation": "F8fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "SPIN3",
+      "mutation": "T16M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt5",
+      "gene": "HUWE1",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "TYRP1",
+      "mutation": "T352fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "GTF3C1",
+      "mutation": "T498R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "PRSS35",
+      "mutation": "A49T",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "TANC1",
+      "mutation": "K14R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "ITGA8",
+      "mutation": "V93I",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "ITGA8",
+      "mutation": "V93I",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "ZNF85",
+      "mutation": "H416R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "UGGT1",
+      "mutation": "P1549R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "ISOC1",
+      "mutation": "T261M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "PTPN9",
+      "mutation": "NeoORF",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "POLDIP3",
+      "mutation": "R381Q",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "DNMT3B",
+      "mutation": "P740A",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "DNMT3B",
+      "mutation": "P740A",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "PTPN11",
+      "mutation": "T507K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt6",
+      "gene": "NHSL1",
+      "mutation": "S198W",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "EP300",
+      "mutation": "L782fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "EP300",
+      "mutation": "L782fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "EP300",
+      "mutation": "L782fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "KIFC3",
+      "mutation": "R788H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "EP400",
+      "mutation": "V1678M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "PARP8",
+      "mutation": "S583fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "PARP8",
+      "mutation": "S583fs",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "DSTYK",
+      "mutation": "K800R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "ADAR",
+      "mutation": "S1114Y",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "PIK3R1",
+      "mutation": "G376R",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "ARHGAP35",
+      "mutation": "T1313M",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt7",
+      "gene": "GPC1",
+      "mutation": "E84K",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt7",
+      "gene": "GPC1",
+      "mutation": "E84K",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "SLX4",
+      "mutation": "R1814H",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt7",
+      "gene": "SLX4",
+      "mutation": "R1814H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "PTPN11",
+      "mutation": "R220H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt7",
+      "gene": "PTPN11",
+      "mutation": "R220H",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "COX18",
+      "mutation": "V289M",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt8",
+      "gene": "SVEP1",
+      "mutation": "V3430I",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt8",
+      "gene": "FZD9",
+      "mutation": "R225Q",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "COX18",
+      "mutation": "V289M",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "SHANK2",
+      "mutation": "G486S",
+      "immunogenic": true
+    },
+    {
+      "patient": "Pt8",
+      "gene": "SHANK2",
+      "mutation": "G486S",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "PTEN",
+      "mutation": "A148E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "PTEN",
+      "mutation": "A148E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "PTEN",
+      "mutation": "A148E",
+      "immunogenic": false
+    },
+    {
+      "patient": "Pt8",
+      "gene": "ZMYND15",
+      "mutation": "L247V",
+      "immunogenic": false
+    }
+  ],
+  "epitopes": [
+    {
+      "sequence": "QTQKHLDLY",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "FSDGSLGQLV",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "ELWKRLHEI",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "FANPDSMEY",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "TGKWKLSDL",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "TGKWKLSDL",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "NKKVRTAPL",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "KTDPTVLLFM",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "DEESIIKPVH",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "DEESIIKPVH",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "VSYQGRIPY",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "VSYQGRIPY",
+      "mhc_class": "I",
+      "allele": "HLA-A*01:01"
+    },
+    {
+      "sequence": "GPRRKECTM",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "MLLKYQKLL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "KQVSSAPLF",
+      "mhc_class": "I",
+      "allele": "HLA-B*47:01"
+    },
+    {
+      "sequence": "VVAHDLIWK",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "RLTGLLDHEV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "YLVALGAHT",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "YLVALGAHT",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "IQATYISGPV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "MLFPAPAAHR",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "EELIAQKKW",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "EELIAQKKW",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "TVSETQWKV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "KEAFVHSQMY",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "ILDPDKTSTI",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "AQCYLSLLHL",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "AQCYLSLLHL",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "KMTGVGASL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "RRLVYLVEN",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "RRLVYLVEN",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "LLQVPGSPVV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "KRVPRTGRVY",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "KLQRHPVAV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "VRSPGSPLI",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "VRSPGSPLI",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:12"
+    },
+    {
+      "sequence": "KLFTTAPHLL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "KLFTTAPHL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "FTTAPHLLNI",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "LENLEFPDM",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "NLEFPDMPL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "EMYRELNEAL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "RGRERFEMY",
+      "mhc_class": "I",
+      "allele": "HLA-A*30:02"
+    },
+    {
+      "sequence": "EMYRELNEA",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "YLTTVELYRC",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "REVLAAALF",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "GLREVLAAAL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "REWAEAQHMM",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "REWAEAQHM",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "KVVGITDDV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:02"
+    },
+    {
+      "sequence": "LQLDQFLQI",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "QLDQFLQILI",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "DQFLQILIKM",
+      "mhc_class": "I",
+      "allele": "HLA-B*18:01"
+    },
+    {
+      "sequence": "QLDQFLQIL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "LQLDQFLQIL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "MMQHSEVKL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "SLAHVEGLHV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "SEETGSELW",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "GTMPFWAETV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "TMPFWAETV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "RMGAGHGSV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "TVSETQWKV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "RRASANLRPK",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "SPAIEADAKM",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "KSREGGRGGK",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "AIYYCPWPA",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "DIVEGGAIY",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "DIVEGGAIYY",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "DIVEGGAIY",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "KRKIIHTGEK",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "KTKEPSREGR",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "TMSEAVLLQL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "ARTGIIVTM",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "IIVTMSEAV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "LARTGIIVTM",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "GIIVTMSEAV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "LQLSDSPSM",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "QLSDSPSMKK",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "QLSDSPSMK",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "ARYFWGNLA",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "ARYFWGNLAG",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "NLAGMNRPV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "ARYFWGNLA",
+      "mhc_class": "I",
+      "allele": "HLA-B*27:05"
+    },
+    {
+      "sequence": "RSQRSGMVQK",
+      "mhc_class": "I",
+      "allele": "HLA-A*03:01"
+    },
+    {
+      "sequence": "QTNWTKWLPL",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:01"
+    },
+    {
+      "sequence": "NVTNIPLLR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "MNVTNIPLLR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "MNVTNIPLLR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "MNVTNIPLLR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "HSVELGPGLR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "VPGRMAVNAL",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:02"
+    },
+    {
+      "sequence": "VPGRMAVNAL",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:03"
+    },
+    {
+      "sequence": "VIFEPYPSGR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "VIFEPYPSGR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "KITDLGFCR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "RVSIYDYKR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "YTLTLRKGR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "MVNTVAGAM",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:02"
+    },
+    {
+      "sequence": "MVNTVAGAM",
+      "mhc_class": "I",
+      "allele": "HLA-B*35:03"
+    },
+    {
+      "sequence": "MVNTVAGAMK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "HAKLETALR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "NLANRSHAK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "NLANRSHAK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "ITFTTAATHR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "FTTAATHREK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "TTAATHREK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "TFTTAATHR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "FTTAATHREK",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "HINAAEIESR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "HINAAEIESR",
+      "mhc_class": "I",
+      "allele": "HLA-A*68:01"
+    },
+    {
+      "sequence": "FMGLSQNLLL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "FMGLSQNLL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "VENAIARGI",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "SQRDKDFAL",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "WLCSSFMGL",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    },
+    {
+      "sequence": "SDRVKVLSI",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "SDRVKVLSI",
+      "mhc_class": "I",
+      "allele": "HLA-B*08:01"
+    },
+    {
+      "sequence": "KEQEALDFY",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "KEQEALDFY",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "KEQEALDFY",
+      "mhc_class": "I",
+      "allele": "HLA-B*44:02"
+    },
+    {
+      "sequence": "DLAPWAYAV",
+      "mhc_class": "I",
+      "allele": "HLA-A*02:01"
+    }
+  ],
+  "magnitudes": [],
+  "survival": [
+    {
+      "endpoint": "pfs",
+      "arm": "all vaccinated",
+      "median": 7.6,
+      "not_reached": false,
+      "hazard_ratio": null
+    },
+    {
+      "endpoint": "os",
+      "arm": "all vaccinated",
+      "median": 16.8,
+      "not_reached": false,
+      "hazard_ratio": null
+    }
+  ],
+  "notes": "AUTO-DERIVED FROM A PRIOR EXTRACTION (Claude's read of source) \u2014 NOT GROUND TRUTH. A human must verify every field against the paper/supplement and set verified=true. IMMUNOGENIC neoantigens here = peptide/epitope-specific responses only (pool-level positivity is NOT propagated to members); verify the named responders (Pt7: ARHGAP35, GPC1, SLX4; Pt8: SHANK2, SVEP1, COX18). MAGNITUDE: Keskin reports magnitude ONLY as pool-level bar charts (Fig 2a, SFC x10^2/10^6 PBMCs; positivity >=55 SFC/10^6 or >=3x baseline); NO per-peptide SFC table. This key carries NO numeric magnitude (dropped 0 figure-only value=null entries). Verify magnitude QUALITATIVELY: Pt7 pool C positive; Pt8 pools A,B positive, pool C below threshold; Pt4,5,6 negative (dexamethasone). Do NOT read SFC off the chart for grading; request Fig 2a source data if numeric gold needed."
+}

@@ -1,0 +1,70 @@
+# scale/Snakefile — HPC-scale cancer-vaccine extraction (one task per PMID).
+#
+# This is a NETWORK/quota-bound fan-out, NOT a compute job: each task is mostly idle waiting on
+# the Claude API, so it asks for tiny CPU/mem and LONG walltime. The scaling ceiling is the
+# subscription's rolling-window cap, not the cluster — so concurrency is pinned to 1 (see config).
+#
+# Run (from the repo root, with your SLURM profile):
+#   snakemake -s scale/Snakefile --configfile scale/config.yaml \
+#       --workflow-profile profiles/workflow_profiles/snakemakes/slurmMinimal -j 1
+#
+# Resumable + quota-safe: the rule output is a terminal MARKER written only for ok/invalid papers
+# (see scale/extract_one.py). A quota stop or network blip leaves no marker, so re-running the
+# same command picks up exactly where it left off — re-run it each time the usage window resets.
+
+import pathlib
+
+configfile: "scale/config.yaml"
+
+REPO    = config["repo"]
+RESULTS = config["results"]
+DATA    = config["data_root"]
+
+def _load_pmids(path):
+    p = pathlib.Path(path)
+    if not p.exists():
+        raise WorkflowError(f"pmids_file not found: {path}")
+    return [ln.split("#", 1)[0].strip() for ln in p.read_text().splitlines()
+            if ln.split("#", 1)[0].strip()]
+
+PMIDS = _load_pmids(config["pmids_file"])
+
+# --- subscription auth plumbing (a no-op string on the api_key lane) ---
+if config.get("auth", "subscription") == "subscription":
+    _AUTH_FLAG = "--subscription"
+    _CREDS_BIND = f",{config['creds_dir']}:{config['creds_mount']}"
+    _CREDS_ENV  = f"--env CLAUDE_CONFIG_DIR={config['creds_mount']}"
+else:
+    _AUTH_FLAG, _CREDS_BIND, _CREDS_ENV = "--api-key", "", ""   # ANTHROPIC_API_KEY inherited from job env
+
+
+rule all:
+    input: expand(f"{RESULTS}/markers/{{pmid}}.done", pmid=PMIDS)
+
+
+rule extract:
+    """Extract one paper. Output is the terminal marker; the JSON lands in extracted/ (ok) or
+    needs_review/ (invalid). Missing marker => re-run later (quota/transient)."""
+    input:
+        paper = f"{DATA}/{{pmid}}"
+    output:
+        marker = f"{RESULTS}/markers/{{pmid}}.done"
+    log:
+        f"{RESULTS}/snakelogs/{{pmid}}.snake.log"
+    resources:
+        cpus_per_task = 2,
+        mem_mb = 8000,
+        runtime = 360,            # minutes: long walltime for API latency, NOT compute
+        slurm_account = "your-slurm-account",
+        slurm_partition = "componc_cpu",
+    shell:
+        r"""
+        singularity exec --bind {config[binds]}{_CREDS_BIND} {_CREDS_ENV} {config[sif]} \
+            python {REPO}/scale/extract_one.py \
+                --pmid {wildcards.pmid} \
+                --paper-dir {input.paper} \
+                --repo {REPO} \
+                --results {RESULTS} \
+                {_AUTH_FLAG} \
+            > {log} 2>&1
+        """

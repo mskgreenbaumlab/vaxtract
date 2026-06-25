@@ -1,0 +1,33 @@
+# scale/config.yaml — HPC batch-extraction config. Edit the absolute paths for your cluster.
+# Auth is SUBSCRIPTION for now (no API budget). To flip to the paid lane later: set auth: api_key
+# and provide ANTHROPIC_API_KEY in the job env (and raise `-j`); nothing else changes.
+
+# Absolute path to the extractor repo (holds extraction_agent.py, agent_core.py, cancervac_packet/).
+repo: /path/to/vaxtract
+
+# Singularity image built from scale/singularity/antvac_extractor.def
+sif: /path/to/containers/antvac_extractor.sif
+
+# Where each paper's source pdf/xlsx live: <data_root>/<PMID>/{main.pdf,supps/*}
+data_root: /path/to/corpus/pubmed
+
+# Results root (extracted/ needs_review/ markers/ logs/ + ledger.csv are created under here).
+results: /path/to/results/extraction
+
+# The corpus to process (one PMID per line; '#' comments allowed).
+pmids_file: scale/corpus/pmids.txt
+
+# --- auth ---
+auth: subscription            # subscription | api_key
+# Host dir holding the `claude` CLI login (run `claude login` once on the login node).
+# Must be on a filesystem the COMPUTE nodes can see (shared home). Bind-mounted read-write
+# (tokens auto-refresh) and exposed inside the container as CLAUDE_CONFIG_DIR.
+creds_dir: $HOME/.claude
+creds_mount: /root/.claude    # path inside the container; set CLAUDE_CONFIG_DIR to this
+
+# Bind mounts the container needs (the data lives under /path/to/data here).
+binds: /path/to/data
+
+# Concurrency. SUBSCRIPTION MUST STAY AT 1 (one login can't be shared across parallel jobs and
+# token refresh races). Only raise this on the api_key/Bedrock lane.
+max_concurrent: 1

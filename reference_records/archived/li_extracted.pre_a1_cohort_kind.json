@@ -1,0 +1,3615 @@
+{
+  "pmid": "33879241",
+  "doi": "10.1186/s13073-021-00872-4",
+  "journal": "Genome Medicine",
+  "year": 2021,
+  "title": "Optimized polyepitope neoantigen DNA vaccines elicit neoantigen-specific immune responses in preclinical models and in clinical translation",
+  "cohort_size": 4,
+  "n_enrolled": 1,
+  "indication_summary": "Optimized polyepitope neoantigen DNA vaccine tested in preclinical mouse breast cancer models (E0771, 4T1.2) and an HLA-A2 model-antigen system, plus clinical translation in one patient with metastatic pancreatic neuroendocrine tumor.",
+  "patients": [
+    {
+      "quoted_text": "We first established a model system to optimize the polyepitope DNA vaccine platform by using eight well-characterized HLA-A2-restricted epitopes.",
+      "section_ref": "Results: Optimizing the design of polyepitope neoantigen DNA vaccines",
+      "provenance": [
+        {
+          "kind": "prose",
+          "locator": "Results, p5",
+          "quoted_text": "eight well-characterized HLA-A2-restricted epitopes"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "paper_local_id": "P1",
+      "indication": "HLA-A2 model-antigen optimization (viral and gp100 epitopes)",
+      "species": "mouse",
+      "model_system": "HHD-II transgenic (chimeric HLA-A*02:01/H-2Db)",
+      "vaccine_platform": "dna",
+      "vaccine_platform_detail": "polyepitope model-antigen DNA vaccine (Ubmut-P20), 8 HLA-A2-restricted epitopes; gene gun (Helios), 4 ug x3 (days 0,3,6)",
+      "hla_alleles": [],
+      "n_peptides_synthesized": 8,
+      "n_peptides_administered": 8,
+      "n_peptides_immunogenic": 2,
+      "immunogenicity_assessed": true,
+      "clinical_outcome": "not_reported",
+      "immunosuppression": [],
+      "preclinical_efficacy": []
+    },
+    {
+      "quoted_text": "Neoantigen-specific T cell responses were detected by IFN-γ ELISpot assay for three neoantigens (Lrrc27 G330A, Plekho1 P251S, and Pttg1 V53L) encoded in the Ubmut-E0771 polyepitope DNA vaccine (Fig. 2a).",
+      "section_ref": "Results / Fig. 2a; Table S2",
+      "provenance": [
+        {
+          "kind": "prose",
+          "locator": "Results, p6",
+          "quoted_text": "three neoantigens (Lrrc27 G330A, Plekho1 P251S, and Pttg1 V53L)"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "paper_local_id": "P2",
+      "indication": "Estrogen receptor-positive breast cancer (E0771 model)",
+      "species": "mouse",
+      "model_system": "E0771 / C57BL/6J (H-2b)",
+      "vaccine_platform": "dna",
+      "vaccine_platform_detail": "Ubmut-E0771 polyepitope neoantigen DNA vaccine; gene gun (Helios), 4 ug x3 (days 0,3,6)",
+      "hla_alleles": [],
+      "n_peptides_synthesized": 13,
+      "n_peptides_administered": 13,
+      "n_peptides_immunogenic": 3,
+      "immunogenicity_assessed": true,
+      "clinical_outcome": "not_reported",
+      "immunosuppression": [],
+      "preclinical_efficacy": [
+        {
+          "readout": "tumor_growth",
+          "result": "no_effect",
+          "setting": "unspecified",
+          "combination": "monotherapy",
+          "comparator": "empty vector",
+          "note": "polyepitope Ubmut-E0771 DNA vaccine alone had only a marginal impact on E0771 tumor growth in either prophylactic or therapeutic settings (data not shown)",
+          "source": {
+            "kind": "prose",
+            "locator": "Results, p7-8",
+            "quoted_text": "polyepitope Ubmut-E0771 DNA vaccine alone, in either prophylactic or therapeutic settings, had only a marginal impact on subcutaneously transplanted E0771 tumor growth"
+          }
+        },
+        {
+          "readout": "tumor_growth",
+          "result": "growth_inhibition",
+          "setting": "prophylactic",
+          "combination": "plus_checkpoint_inhibitor",
+          "combination_detail": "anti-PD-L1 (clone 10F.9G2)",
+          "comparator": "isotype control / vaccine alone",
+          "n_animals": 15,
+          "note": "combined with anti-PD-L1 ICB suppressed E0771 tumor growth for the duration of the experiment; persistent neoantigen-specific T cells at day 26 only with anti-PD-L1",
+          "source": {
+            "kind": "figure",
+            "locator": "Fig. 3a,b",
+            "quoted_text": "the polyepitope Ubmut-E0771 neoantigen DNA vaccine was able to enhance the antitumor response and suppress E0771 tumor growth"
+          }
+        }
+      ]
+    },
+    {
+      "quoted_text": "Neoantigen-specific T cell responses were also detected by IFN-γ ELISpot assay for four neoantigens (Gyk K505R, Gpld1 R829W, Pram1 Q572L and Aars2 A697P) encoded in the Ubmut-4T1.2 polyepitope DNA vaccine (Fig. 2b).",
+      "section_ref": "Results / Fig. 2b; Table S3",
+      "provenance": [
+        {
+          "kind": "prose",
+          "locator": "Results, p6",
+          "quoted_text": "four neoantigens (Gyk K505R, Gpld1 R829W, Pram1 Q572L and Aars2 A697P)"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "paper_local_id": "P3",
+      "indication": "Triple-negative breast cancer (4T1.2 model)",
+      "species": "mouse",
+      "model_system": "4T1.2 / BALB/cJ (H-2d)",
+      "vaccine_platform": "dna",
+      "vaccine_platform_detail": "Ubmut-4T1.2 polyepitope neoantigen DNA vaccine; gene gun (Helios), 4 ug x3 (days 0,3,6)",
+      "hla_alleles": [],
+      "n_peptides_synthesized": 16,
+      "n_peptides_administered": 16,
+      "n_peptides_immunogenic": 11,
+      "immunogenicity_assessed": true,
+      "clinical_outcome": "not_reported",
+      "immunosuppression": [],
+      "preclinical_efficacy": [
+        {
+          "readout": "tumor_growth",
+          "result": "partial_inhibition",
+          "setting": "therapeutic",
+          "combination": "monotherapy",
+          "note": "Ubmut-4T1.2 polyepitope DNA vaccine alone partially inhibited tumor growth in vivo in a pilot study (Fig. S3b); 4T1.2 is resistant to anti-PD-L1 monotherapy (Fig. S3a)",
+          "source": {
+            "kind": "figure",
+            "locator": "Fig. S3b",
+            "quoted_text": "Ubmut-4T1.2 polyepitope DNA vaccine alone was able to partially inhibit tumor growth in vivo"
+          }
+        }
+      ]
+    },
+    {
+      "quoted_text": "For this patient, 13 neoantigens were targeted by the DNA vaccine. Specific responses above background were demonstrated against three neoantigens (TBC1D22A:p.R437S, TRPC4AP:p.T63M, and ZNF611:p.D404G, Fig. 5).",
+      "section_ref": "Results / Fig. 5; Table S4",
+      "provenance": [
+        {
+          "kind": "prose",
+          "locator": "Results, p8-9",
+          "quoted_text": "13 neoantigens were targeted by the DNA vaccine. Specific responses above background were demonstrated against three neoantigens"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": true,
+      "paper_local_id": "P4",
+      "indication": "Metastatic pancreatic neuroendocrine tumor (Lynch syndrome-associated, microsatellite instability-high)",
+      "species": "human",
+      "vaccine_platform": "dna",
+      "vaccine_platform_detail": "pGTB16 polyepitope neoantigen DNA vaccine; intramuscular electroporation (TDS-IM, Ichor Medical Systems); 3 vaccinations >=21 days apart; GMP-manufactured",
+      "hla_alleles": [],
+      "n_peptides_synthesized": 13,
+      "n_peptides_administered": 13,
+      "n_peptides_immunogenic": 3,
+      "immunogenicity_assessed": true,
+      "clinical_outcome": "not_reported",
+      "best_response": "not_reported",
+      "immunosuppression": [],
+      "preclinical_efficacy": []
+    }
+  ],
+  "immunizing_peptides": [
+    {
+      "quoted_text": "Tmem101.G96V QLASTYTAYIVGYVHYGDWLK",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "QLASTYTAYIVGYVHYGDWLK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Tmem101",
+      "sequence": "QLASTYTAYIVGYVHYGDWLK",
+      "gene_symbol": "Tmem101",
+      "is_neoantigen": true,
+      "mutation": "G96V",
+      "variant_type": "missense",
+      "protein_change": "p.G96V",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Pank3.G321W NEKINRVVFVWNFLRVNTLSM",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "NEKINRVVFVWNFLRVNTLSM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Pank3",
+      "sequence": "NEKINRVVFVWNFLRVNTLSM",
+      "gene_symbol": "Pank3",
+      "is_neoantigen": true,
+      "mutation": "G321W",
+      "variant_type": "missense",
+      "protein_change": "p.G321W",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Plekho1.P251S RPWEKPDKGASYTPQALKKFP",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "RPWEKPDKGASYTPQALKKFP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Plekho1",
+      "sequence": "RPWEKPDKGASYTPQALKKFP",
+      "gene_symbol": "Plekho1",
+      "is_neoantigen": true,
+      "mutation": "P251S",
+      "variant_type": "missense",
+      "protein_change": "p.P251S",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Exoc4.E901V ADLDFARQYYVMLYNTADELL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "ADLDFARQYYVMLYNTADELL"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Exoc4",
+      "sequence": "ADLDFARQYYVMLYNTADELL",
+      "gene_symbol": "Exoc4",
+      "is_neoantigen": true,
+      "mutation": "E901V",
+      "variant_type": "missense",
+      "protein_change": "p.E901V",
+      "hla_allele": "H-2Db"
+    },
+    {
+      "quoted_text": "Lrrc27.G330A FKGILPNLPSAYQNTVHANRM",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "FKGILPNLPSAYQNTVHANRM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Lrrc27",
+      "sequence": "FKGILPNLPSAYQNTVHANRM",
+      "gene_symbol": "Lrrc27",
+      "is_neoantigen": true,
+      "mutation": "G330A",
+      "variant_type": "missense",
+      "protein_change": "p.G330A",
+      "hla_allele": "H-2Db"
+    },
+    {
+      "quoted_text": "Xpo4.V611L TDSVIRLLSALLRVSEVESRA",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "TDSVIRLLSALLRVSEVESRA"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Xpo4",
+      "sequence": "TDSVIRLLSALLRVSEVESRA",
+      "gene_symbol": "Xpo4",
+      "is_neoantigen": true,
+      "mutation": "V611L",
+      "variant_type": "missense",
+      "protein_change": "p.V611L",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Pttg1.V53L RVGKVFNAPALPKASRKALGT",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "RVGKVFNAPALPKASRKALGT"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Pttg1",
+      "sequence": "RVGKVFNAPALPKASRKALGT",
+      "gene_symbol": "Pttg1",
+      "is_neoantigen": true,
+      "mutation": "V53L",
+      "variant_type": "missense",
+      "protein_change": "p.V53L",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Neil3.P90H LGKELFMYFGHRALRIHFGMK",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LGKELFMYFGHRALRIHFGMK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Neil3",
+      "sequence": "LGKELFMYFGHRALRIHFGMK",
+      "gene_symbol": "Neil3",
+      "is_neoantigen": true,
+      "mutation": "P90H",
+      "variant_type": "missense",
+      "protein_change": "p.P90H",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Hist1h3e.H114N LFEDTNLCAINAKRVTIMPKD",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LFEDTNLCAINAKRVTIMPKD"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Hist1h3e",
+      "sequence": "LFEDTNLCAINAKRVTIMPKD",
+      "gene_symbol": "Hist1h3e",
+      "is_neoantigen": true,
+      "mutation": "H114N",
+      "variant_type": "missense",
+      "protein_change": "p.H114N",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Prkag1.R268L DVSVTKALQHLSHYFEGVLKC",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "DVSVTKALQHLSHYFEGVLKC"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Prkag1",
+      "sequence": "DVSVTKALQHLSHYFEGVLKC",
+      "gene_symbol": "Prkag1",
+      "is_neoantigen": true,
+      "mutation": "R268L",
+      "variant_type": "missense",
+      "protein_change": "p.R268L",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "BC057079.V1474M LVSMPLWAKHMSDEQIQGFVE",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LVSMPLWAKHMSDEQIQGFVE"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_BC057079",
+      "sequence": "LVSMPLWAKHMSDEQIQGFVE",
+      "gene_symbol": "BC057079",
+      "is_neoantigen": true,
+      "mutation": "V1474M",
+      "variant_type": "missense",
+      "protein_change": "p.V1474M",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Met.I851M EPFEKPVMISMGNENVVEIKG",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "EPFEKPVMISMGNENVVEIKG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Met",
+      "sequence": "EPFEKPVMISMGNENVVEIKG",
+      "gene_symbol": "Met",
+      "is_neoantigen": true,
+      "mutation": "I851M",
+      "variant_type": "missense",
+      "protein_change": "p.I851M",
+      "hla_allele": "H-2Db"
+    },
+    {
+      "quoted_text": "Map3k6.T552A LEIQGTDPVSAVTLSLLDPET",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LEIQGTDPVSAVTLSLLDPET"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_E0771_Map3k6",
+      "sequence": "LEIQGTDPVSAVTLSLLDPET",
+      "gene_symbol": "Map3k6",
+      "is_neoantigen": true,
+      "mutation": "T552A",
+      "variant_type": "missense",
+      "protein_change": "p.T552A",
+      "hla_allele": "H-2Kb"
+    },
+    {
+      "quoted_text": "Aars2.A697P VGQDKPVFMEEVPLPHTARIPGLRSLDEV",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "VGQDKPVFMEEVPLPHTARIPGLRSLDEV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Aars2",
+      "sequence": "VGQDKPVFMEEVPLPHTARIPGLRSLDEV",
+      "gene_symbol": "Aars2",
+      "is_neoantigen": true,
+      "mutation": "A697P",
+      "variant_type": "missense",
+      "protein_change": "p.A697P",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "Dync1h1.Y3123C SKMDLEKPNYIVPDCMPVVYDKLPQPPTH",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "SKMDLEKPNYIVPDCMPVVYDKLPQPPTH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Dync1h1",
+      "sequence": "SKMDLEKPNYIVPDCMPVVYDKLPQPPTH",
+      "gene_symbol": "Dync1h1",
+      "is_neoantigen": true,
+      "mutation": "Y3123C",
+      "variant_type": "missense",
+      "protein_change": "p.Y3123C",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "Dtx2.P365L LSRAPRPTGPPASRLASKSHSSVKRLRKM",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "LSRAPRPTGPPASRLASKSHSSVKRLRKM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Dtx2",
+      "sequence": "LSRAPRPTGPPASRLASKSHSSVKRLRKM",
+      "gene_symbol": "Dtx2",
+      "is_neoantigen": true,
+      "mutation": "P365L",
+      "variant_type": "missense",
+      "protein_change": "p.P365L",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Pram1.Q572L QPQQLPATDPKLLKLIRKAEKAEREFRKK",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "QPQQLPATDPKLLKLIRKAEKAEREFRKK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Pram1",
+      "sequence": "QPQQLPATDPKLLKLIRKAEKAEREFRKK",
+      "gene_symbol": "Pram1",
+      "is_neoantigen": true,
+      "mutation": "Q572L",
+      "variant_type": "missense",
+      "protein_change": "p.Q572L",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Cenpf.D1327E RVEKLQLESELNESRTECITATSQMTA",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "RVEKLQLESELNESRTECITATSQMTA"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Cenpf",
+      "sequence": "RVEKLQLESELNESRTECITATSQMTA",
+      "gene_symbol": "Cenpf",
+      "is_neoantigen": true,
+      "mutation": "D1327E",
+      "variant_type": "missense",
+      "protein_change": "p.D1327E",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Gyk.K505R INAEESEIRYSTWKRAVMKSIGWVTTQSP",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "INAEESEIRYSTWKRAVMKSIGWVTTQSP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Gyk",
+      "sequence": "INAEESEIRYSTWKRAVMKSIGWVTTQSP",
+      "gene_symbol": "Gyk",
+      "is_neoantigen": true,
+      "mutation": "K505R",
+      "variant_type": "missense",
+      "protein_change": "p.K505R",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Gprc5a.F119L FAICFSCLLAHALNLIKLVRGRKPLSW",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FAICFSCLLAHALNLIKLVRGRKPLSW"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Gprc5a",
+      "sequence": "FAICFSCLLAHALNLIKLVRGRKPLSW",
+      "gene_symbol": "Gprc5a",
+      "is_neoantigen": true,
+      "mutation": "F119L",
+      "variant_type": "missense",
+      "protein_change": "p.F119L",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Itprip.A15G MAMELFRVCLVVVTGIINHPLLFPRENAT",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "MAMELFRVCLVVVTGIINHPLLFPRENAT"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Itprip",
+      "sequence": "MAMELFRVCLVVVTGIINHPLLFPRENAT",
+      "gene_symbol": "Itprip",
+      "is_neoantigen": true,
+      "mutation": "A15G",
+      "variant_type": "missense",
+      "protein_change": "p.A15G",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "Zfp142.R1119C EGCRGGRGQKRKRGCPQTHAVVLPLNNGD",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "EGCRGGRGQKRKRGCPQTHAVVLPLNNGD"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Zfp142",
+      "sequence": "EGCRGGRGQKRKRGCPQTHAVVLPLNNGD",
+      "gene_symbol": "Zfp142",
+      "is_neoantigen": true,
+      "mutation": "R1119C",
+      "variant_type": "missense",
+      "protein_change": "p.R1119C",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "Dhx58.R654L LETPRGKIQAKKWSLVPFSIPVFDILQDC",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "LETPRGKIQAKKWSLVPFSIPVFDILQDC"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Dhx58",
+      "sequence": "LETPRGKIQAKKWSLVPFSIPVFDILQDC",
+      "gene_symbol": "Dhx58",
+      "is_neoantigen": true,
+      "mutation": "R654L",
+      "variant_type": "missense",
+      "protein_change": "p.R654L",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Isoc2a.S195G FKEIQKIIKEPVPDSGLLGLFQGQSPLTS",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FKEIQKIIKEPVPDSGLLGLFQGQSPLTS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Isoc2a",
+      "sequence": "FKEIQKIIKEPVPDSGLLGLFQGQSPLTS",
+      "gene_symbol": "Isoc2a",
+      "is_neoantigen": true,
+      "mutation": "S195G",
+      "variant_type": "missense",
+      "protein_change": "p.S195G",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Gen1.K707N IPHNPRVAVKTTNNLVMKNSVCLERDS",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "IPHNPRVAVKTTNNLVMKNSVCLERDS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Gen1",
+      "sequence": "IPHNPRVAVKTTNNLVMKNSVCLERDS",
+      "gene_symbol": "Gen1",
+      "is_neoantigen": true,
+      "mutation": "K707N",
+      "variant_type": "missense",
+      "protein_change": "p.K707N",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Gpld1.R829W GRNQVVVAAGRSSWGAWLSGALHVYSFSS",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "GRNQVVVAAGRSSWGAWLSGALHVYSFSS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Gpld1",
+      "sequence": "GRNQVVVAAGRSSWGAWLSGALHVYSFSS",
+      "gene_symbol": "Gpld1",
+      "is_neoantigen": true,
+      "mutation": "R829W",
+      "variant_type": "missense",
+      "protein_change": "p.R829W",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Igsf9.S813R DSVTKFKLQGSPVPRLRQSLLWGEPARP",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "DSVTKFKLQGSPVPRLRQSLLWGEPARP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Igsf9",
+      "sequence": "DSVTKFKLQGSPVPRLRQSLLWGEPARP",
+      "gene_symbol": "Igsf9",
+      "is_neoantigen": true,
+      "mutation": "S813R",
+      "variant_type": "missense",
+      "protein_change": "p.S813R",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "Lta4h.V420I GFLKAYVKKFSYQSITTDDWKSFLYSHFK",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "GFLKAYVKKFSYQSITTDDWKSFLYSHFK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Lta4h",
+      "sequence": "GFLKAYVKKFSYQSITTDDWKSFLYSHFK",
+      "gene_symbol": "Lta4h",
+      "is_neoantigen": true,
+      "mutation": "V420I",
+      "variant_type": "missense",
+      "protein_change": "p.V420I",
+      "hla_allele": "H-2Kd"
+    },
+    {
+      "quoted_text": "Qars.E530D FTLTALRRRGFPPDAINNFCARVGVTV",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FTLTALRRRGFPPDAINNFCARVGVTV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_4T1_Qars",
+      "sequence": "FTLTALRRRGFPPDAINNFCARVGVTV",
+      "gene_symbol": "Qars",
+      "is_neoantigen": true,
+      "mutation": "E530D",
+      "variant_type": "missense",
+      "protein_change": "p.E530D",
+      "hla_allele": "H-2Ld"
+    },
+    {
+      "quoted_text": "PDIA5:p.H416R GDNFRETLKKKKRTLVMFYAPWCPH",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "GDNFRETLKKKKRTLVMFYAPWCPH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_PDIA5",
+      "sequence": "GDNFRETLKKKKRTLVMFYAPWCPH",
+      "gene_symbol": "PDIA5",
+      "is_neoantigen": true,
+      "mutation": "H416R",
+      "variant_type": "missense",
+      "protein_change": "p.H416R",
+      "hla_allele": "HLA-B*57:01"
+    },
+    {
+      "quoted_text": "TBC1D22A:p.R437S LLMREVPLRCTISLWDTYQSEPDGF",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "LLMREVPLRCTISLWDTYQSEPDGF"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_TBC1D22A",
+      "sequence": "LLMREVPLRCTISLWDTYQSEPDGF",
+      "gene_symbol": "TBC1D22A",
+      "is_neoantigen": true,
+      "mutation": "R437S",
+      "variant_type": "missense",
+      "protein_change": "p.R437S",
+      "hla_allele": "HLA-A*01:01"
+    },
+    {
+      "quoted_text": "GZF1:p.G253C TRRLREQQKTAECDVGDYRCPQDQS",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "TRRLREQQKTAECDVGDYRCPQDQS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_GZF1",
+      "sequence": "TRRLREQQKTAECDVGDYRCPQDQS",
+      "gene_symbol": "GZF1",
+      "is_neoantigen": true,
+      "mutation": "G253C",
+      "variant_type": "missense",
+      "protein_change": "p.G253C",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "TRPC4AP:p.T63M LVRAVQFTETFLMERDKQSKWSGIP",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "LVRAVQFTETFLMERDKQSKWSGIP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_TRPC4AP",
+      "sequence": "LVRAVQFTETFLMERDKQSKWSGIP",
+      "gene_symbol": "TRPC4AP",
+      "is_neoantigen": true,
+      "mutation": "T63M",
+      "variant_type": "missense",
+      "protein_change": "p.T63M",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "PCGF2:p.D128G EVLEQEKGALSDGEIVSLSIEFYEG",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "EVLEQEKGALSDGEIVSLSIEFYEG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_PCGF2",
+      "sequence": "EVLEQEKGALSDGEIVSLSIEFYEG",
+      "gene_symbol": "PCGF2",
+      "is_neoantigen": true,
+      "mutation": "D128G",
+      "variant_type": "missense",
+      "protein_change": "p.D128G",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "CLPB:p.R679H PSPQAEKRLPKLHLEIIDKDSKTRR",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "PSPQAEKRLPKLHLEIIDKDSKTRR"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_CLPB",
+      "sequence": "PSPQAEKRLPKLHLEIIDKDSKTRR",
+      "gene_symbol": "CLPB",
+      "is_neoantigen": true,
+      "mutation": "R679H",
+      "variant_type": "missense",
+      "protein_change": "p.R679H",
+      "hla_allele": "HLA-A*32:01"
+    },
+    {
+      "quoted_text": "SIPA1L3:p.T687A VKTDSTGTHSLYAMYQDYEIMFHVS",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "VKTDSTGTHSLYAMYQDYEIMFHVS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_SIPA1L3",
+      "sequence": "VKTDSTGTHSLYAMYQDYEIMFHVS",
+      "gene_symbol": "SIPA1L3",
+      "is_neoantigen": true,
+      "mutation": "T687A",
+      "variant_type": "missense",
+      "protein_change": "p.T687A",
+      "hla_allele": "HLA-A*32:01"
+    },
+    {
+      "quoted_text": "TBC1D20:p.A390T ALGAAALAVVKSTLEWAPKFQLQLF",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "ALGAAALAVVKSTLEWAPKFQLQLF"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_TBC1D20",
+      "sequence": "ALGAAALAVVKSTLEWAPKFQLQLF",
+      "gene_symbol": "TBC1D20",
+      "is_neoantigen": true,
+      "mutation": "A390T",
+      "variant_type": "missense",
+      "protein_change": "p.A390T",
+      "hla_allele": "HLA-A*32:01"
+    },
+    {
+      "quoted_text": "SDHA:p.H407R VTKEPIPVLPTVRYNMGGIPTNYKG",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "VTKEPIPVLPTVRYNMGGIPTNYKG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_SDHA",
+      "sequence": "VTKEPIPVLPTVRYNMGGIPTNYKG",
+      "gene_symbol": "SDHA",
+      "is_neoantigen": true,
+      "mutation": "H407R",
+      "variant_type": "missense",
+      "protein_change": "p.H407R",
+      "hla_allele": "HLA-C*06:02"
+    },
+    {
+      "quoted_text": "CCDC6:p.R216H NTLEQEQEALVNHLWKRMDKLEAEK",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "NTLEQEQEALVNHLWKRMDKLEAEK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_CCDC6",
+      "sequence": "NTLEQEQEALVNHLWKRMDKLEAEK",
+      "gene_symbol": "CCDC6",
+      "is_neoantigen": true,
+      "mutation": "R216H",
+      "variant_type": "missense",
+      "protein_change": "p.R216H",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "LAMA5:p.R1026W PSAYYEAALLQLWVTEACTYRPSAQ",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "PSAYYEAALLQLWVTEACTYRPSAQ"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_LAMA5",
+      "sequence": "PSAYYEAALLQLWVTEACTYRPSAQ",
+      "gene_symbol": "LAMA5",
+      "is_neoantigen": true,
+      "mutation": "R1026W",
+      "variant_type": "missense",
+      "protein_change": "p.R1026W",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "SACS:p.S2711L RFPLRNAEMAKVLEISSVPASDRMV",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "RFPLRNAEMAKVLEISSVPASDRMV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_SACS",
+      "sequence": "RFPLRNAEMAKVLEISSVPASDRMV",
+      "gene_symbol": "SACS",
+      "is_neoantigen": true,
+      "mutation": "S2711L",
+      "variant_type": "missense",
+      "protein_change": "p.S2711L",
+      "hla_allele": "HLA-B*44:03"
+    },
+    {
+      "quoted_text": "ZNF611:p.D404G HTGEKPYRCKVCGTAFTWHSQLARH",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "HTGEKPYRCKVCGTAFTWHSQLARH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_GTB16_ZNF611",
+      "sequence": "HTGEKPYRCKVCGTAFTWHSQLARH",
+      "gene_symbol": "ZNF611",
+      "is_neoantigen": true,
+      "mutation": "D404G",
+      "variant_type": "missense",
+      "protein_change": "p.D404G",
+      "hla_allele": "HLA-A*32:01"
+    },
+    {
+      "quoted_text": "pp65 (CMV) GILARNLVPMVATVQGQNLK",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "GILARNLVPMVATVQGQNLK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_pp65",
+      "sequence": "GILARNLVPMVATVQGQNLK",
+      "gene_symbol": "pp65 (HCMV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "LMP2 (EBV) GPVFMCLGGLLTMVAGAVWL",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "GPVFMCLGGLLTMVAGAVWL"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_LMP2",
+      "sequence": "GPVFMCLGGLLTMVAGAVWL",
+      "gene_symbol": "LMP2 (EBV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "IE (CMV) VLCCYVLEETSVMLAKRPLI",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "VLCCYVLEETSVMLAKRPLI"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_IE",
+      "sequence": "VLCCYVLEETSVMLAKRPLI",
+      "gene_symbol": "IE (HCMV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "G280 (gp100) VVTHTYLEPGPVTAQVVLQA",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "VVTHTYLEPGPVTAQVVLQA"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_G280",
+      "sequence": "VVTHTYLEPGPVTAQVVLQA",
+      "gene_symbol": "gp100 (PMEL)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "BMLF1 (EBV) AIQNAGLCTLVAMLEETIF",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "AIQNAGLCTLVAMLEETIF"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_BMLF1",
+      "sequence": "AIQNAGLCTLVAMLEETIF",
+      "gene_symbol": "BMLF1 (EBV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "G209 (gp100) SSAFTITDQVPFSVQLRALD",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "SSAFTITDQVPFSVQLRALD"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_G209",
+      "sequence": "SSAFTITDQVPFSVQLRALD",
+      "gene_symbol": "gp100 (PMEL)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "SVG9 (WNV) AWDFGSVGGVFTSVGKAVHQ",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "AWDFGSVGGVFTSVGKAVHQ"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_SVG9",
+      "sequence": "AWDFGSVGGVFTSVGKAVHQ",
+      "gene_symbol": "SVG9 (WNV envelope)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    },
+    {
+      "quoted_text": "M1 (Flu) SPLTKGILGFVFTLTVPSER",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "SPLTKGILGFVFTLTVPSER"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "IMP_HHDII_M1",
+      "sequence": "SPLTKGILGFVFTLTVPSER",
+      "gene_symbol": "M1 (Influenza)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01"
+    }
+  ],
+  "epitopes": [
+    {
+      "quoted_text": "STYTAYIV",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "QLASTYTAYIVGYVHYGDWLK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Tmem101",
+      "sequence": "STYTAYIV",
+      "gene_symbol": "Tmem101",
+      "is_neoantigen": true,
+      "mutation": "G96V",
+      "variant_type": "missense",
+      "protein_change": "p.G96V",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Tmem101"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 109.0,
+        "unit": "nM",
+        "raw": "MT score 109",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 11934.0,
+        "unit": "nM",
+        "raw": "WT score 11934",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "FVWNFLRV",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "NEKINRVVFVWNFLRVNTLSM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Pank3",
+      "sequence": "FVWNFLRV",
+      "gene_symbol": "Pank3",
+      "is_neoantigen": true,
+      "mutation": "G321W",
+      "variant_type": "missense",
+      "protein_change": "p.G321W",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Pank3"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 58.0,
+        "unit": "nM",
+        "raw": "MT score 58",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 2292.0,
+        "unit": "nM",
+        "raw": "WT score 2292",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "ASYTPQAL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "RPWEKPDKGASYTPQALKKFP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Plekho1",
+      "sequence": "ASYTPQAL",
+      "gene_symbol": "Plekho1",
+      "is_neoantigen": true,
+      "mutation": "P251S",
+      "variant_type": "missense",
+      "protein_change": "p.P251S",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Plekho1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 53.0,
+        "unit": "nM",
+        "raw": "MT score 53",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 2070.0,
+        "unit": "nM",
+        "raw": "WT score 2070",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "VMLYNTADEL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "ADLDFARQYYVMLYNTADELL"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Exoc4",
+      "sequence": "VMLYNTADEL",
+      "gene_symbol": "Exoc4",
+      "is_neoantigen": true,
+      "mutation": "E901V",
+      "variant_type": "missense",
+      "protein_change": "p.E901V",
+      "hla_allele": "H-2Db",
+      "parent_peptide_ids": [
+        "IMP_E0771_Exoc4"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 91.44,
+        "unit": "nM",
+        "raw": "MT score 91.44",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 1250.89,
+        "unit": "nM",
+        "raw": "WT score 1250.89",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "SAYQNTVHA",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "FKGILPNLPSAYQNTVHANRM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Lrrc27",
+      "sequence": "SAYQNTVHA",
+      "gene_symbol": "Lrrc27",
+      "is_neoantigen": true,
+      "mutation": "G330A",
+      "variant_type": "missense",
+      "protein_change": "p.G330A",
+      "hla_allele": "H-2Db",
+      "parent_peptide_ids": [
+        "IMP_E0771_Lrrc27"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 90.0,
+        "unit": "nM",
+        "raw": "MT score 90",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 1219.0,
+        "unit": "nM",
+        "raw": "WT score 1219; netMHC 4.0 predicted 408.48 nM for WT Lrrc27 to H-2Db",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "VIRLLSAL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "TDSVIRLLSALLRVSEVESRA"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Xpo4",
+      "sequence": "VIRLLSAL",
+      "gene_symbol": "Xpo4",
+      "is_neoantigen": true,
+      "mutation": "V611L",
+      "variant_type": "missense",
+      "protein_change": "p.V611L",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Xpo4"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 65.0,
+        "unit": "nM",
+        "raw": "MT score 65",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 579.0,
+        "unit": "nM",
+        "raw": "WT score 579",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "KVFNAPAL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "RVGKVFNAPALPKASRKALGT"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Pttg1",
+      "sequence": "KVFNAPAL",
+      "gene_symbol": "Pttg1",
+      "is_neoantigen": true,
+      "mutation": "V53L",
+      "variant_type": "missense",
+      "protein_change": "p.V53L",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Pttg1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 227.0,
+        "unit": "nM",
+        "raw": "MT score 227",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 1141.0,
+        "unit": "nM",
+        "raw": "WT score 1141",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "MYFGHRAL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LGKELFMYFGHRALRIHFGMK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Neil3",
+      "sequence": "MYFGHRAL",
+      "gene_symbol": "Neil3",
+      "is_neoantigen": true,
+      "mutation": "P90H",
+      "variant_type": "missense",
+      "protein_change": "p.P90H",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Neil3"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 166.57,
+        "unit": "nM",
+        "raw": "MT score 166.57",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 475.14,
+        "unit": "nM",
+        "raw": "WT score 475.14",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "INAKRVTIM",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LFEDTNLCAINAKRVTIMPKD"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Hist1h3e",
+      "sequence": "INAKRVTIM",
+      "gene_symbol": "Hist1h3e",
+      "is_neoantigen": true,
+      "mutation": "H114N",
+      "variant_type": "missense",
+      "protein_change": "p.H114N",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Hist1h3e"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 296.29,
+        "unit": "nM",
+        "raw": "MT score 296.29",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 829.35,
+        "unit": "nM",
+        "raw": "WT score 829.35",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "LSHYFEGVL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "DVSVTKALQHLSHYFEGVLKC"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Prkag1",
+      "sequence": "LSHYFEGVL",
+      "gene_symbol": "Prkag1",
+      "is_neoantigen": true,
+      "mutation": "R268L",
+      "variant_type": "missense",
+      "protein_change": "p.R268L",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Prkag1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 187.0,
+        "unit": "nM",
+        "raw": "MT score 187",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 443.0,
+        "unit": "nM",
+        "raw": "WT score 443",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "SMPLWAKHM",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LVSMPLWAKHMSDEQIQGFVE"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_BC057079",
+      "sequence": "SMPLWAKHM",
+      "gene_symbol": "BC057079",
+      "is_neoantigen": true,
+      "mutation": "V1474M",
+      "variant_type": "missense",
+      "protein_change": "p.V1474M",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_BC057079"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 138.0,
+        "unit": "nM",
+        "raw": "MT score 138",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 322.0,
+        "unit": "nM",
+        "raw": "WT score 322",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "MGNENVVEI",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "EPFEKPVMISMGNENVVEIKG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Met",
+      "sequence": "MGNENVVEI",
+      "gene_symbol": "Met",
+      "is_neoantigen": true,
+      "mutation": "I851M",
+      "variant_type": "missense",
+      "protein_change": "p.I851M",
+      "hla_allele": "H-2Db",
+      "parent_peptide_ids": [
+        "IMP_E0771_Met"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 73.84,
+        "unit": "nM",
+        "raw": "MT score 73.84",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 166.1,
+        "unit": "nM",
+        "raw": "WT score 166.1",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "VSAVTLSLL",
+      "section_ref": "Additional file 2, Table S2",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "LEIQGTDPVSAVTLSLLDPET"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_E0771_Map3k6",
+      "sequence": "VSAVTLSLL",
+      "gene_symbol": "Map3k6",
+      "is_neoantigen": true,
+      "mutation": "T552A",
+      "variant_type": "missense",
+      "protein_change": "p.T552A",
+      "hla_allele": "H-2Kb",
+      "parent_peptide_ids": [
+        "IMP_E0771_Map3k6"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 97.0,
+        "unit": "nM",
+        "raw": "MT score 97",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 213.0,
+        "unit": "nM",
+        "raw": "WT score 213",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "LPHTARIPG",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "VGQDKPVFMEEVPLPHTARIPGLRSLDEV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Aars2",
+      "sequence": "LPHTARIPG",
+      "gene_symbol": "Aars2",
+      "is_neoantigen": true,
+      "mutation": "A697P",
+      "variant_type": "missense",
+      "protein_change": "p.A697P",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Aars2"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 17.0,
+        "unit": "nM",
+        "raw": "MT score 17",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 1237.0,
+        "unit": "nM",
+        "raw": "WT score 1237",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "KPNYIVPDC",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "SKMDLEKPNYIVPDCMPVVYDKLPQPPTH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Dync1h1",
+      "sequence": "KPNYIVPDC",
+      "gene_symbol": "Dync1h1",
+      "is_neoantigen": true,
+      "mutation": "Y3123C",
+      "variant_type": "missense",
+      "protein_change": "p.Y3123C",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Dync1h1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 135.0,
+        "unit": "nM",
+        "raw": "MT score 135",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 446.0,
+        "unit": "nM",
+        "raw": "WT score 446",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "SRLASKSHSS",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "LSRAPRPTGPPASRLASKSHSSVKRLRKM"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Dtx2",
+      "sequence": "SRLASKSHSS",
+      "gene_symbol": "Dtx2",
+      "is_neoantigen": true,
+      "mutation": "P365L",
+      "variant_type": "missense",
+      "protein_change": "p.P365L",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Dtx2"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 290.0,
+        "unit": "nM",
+        "raw": "MT score 290",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 877.0,
+        "unit": "nM",
+        "raw": "WT score 877",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "LIRKAEKA",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "QPQQLPATDPKLLKLIRKAEKAEREFRKK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Pram1",
+      "sequence": "LIRKAEKA",
+      "gene_symbol": "Pram1",
+      "is_neoantigen": true,
+      "mutation": "Q572L",
+      "variant_type": "missense",
+      "protein_change": "p.Q572L",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Pram1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 2413.0,
+        "unit": "nM",
+        "raw": "MT score 2413",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 4232.0,
+        "unit": "nM",
+        "raw": "WT score 4232",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "LNESRTECI",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "RVEKLQLESELNESRTECITATSQMTA"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Cenpf",
+      "sequence": "LNESRTECI",
+      "gene_symbol": "Cenpf",
+      "is_neoantigen": true,
+      "mutation": "D1327E",
+      "variant_type": "missense",
+      "protein_change": "p.D1327E",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Cenpf"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 2390.0,
+        "unit": "nM",
+        "raw": "MT score 2390",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 4115.0,
+        "unit": "nM",
+        "raw": "WT score 4115",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "STWKRAVM",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "INAEESEIRYSTWKRAVMKSIGWVTTQSP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Gyk",
+      "sequence": "STWKRAVM",
+      "gene_symbol": "Gyk",
+      "is_neoantigen": true,
+      "mutation": "K505R",
+      "variant_type": "missense",
+      "protein_change": "p.K505R",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Gyk"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 257.0,
+        "unit": "nM",
+        "raw": "MT score 257",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 418.0,
+        "unit": "nM",
+        "raw": "WT score 418",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "LLAHALNLI",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FAICFSCLLAHALNLIKLVRGRKPLSW"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Gprc5a",
+      "sequence": "LLAHALNLI",
+      "gene_symbol": "Gprc5a",
+      "is_neoantigen": true,
+      "mutation": "F119L",
+      "variant_type": "missense",
+      "protein_change": "p.F119L",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Gprc5a"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 418.0,
+        "unit": "nM",
+        "raw": "MT score 418",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 414.0,
+        "unit": "nM",
+        "raw": "WT score 414",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "TGIINHPLL",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "MAMELFRVCLVVVTGIINHPLLFPRENAT"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Itprip",
+      "sequence": "TGIINHPLL",
+      "gene_symbol": "Itprip",
+      "is_neoantigen": true,
+      "mutation": "A15G",
+      "variant_type": "missense",
+      "protein_change": "p.A15G",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Itprip"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 293.0,
+        "unit": "nM",
+        "raw": "MT score 293",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 263.0,
+        "unit": "nM",
+        "raw": "WT score 263",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "GQKRKRGCP",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "EGCRGGRGQKRKRGCPQTHAVVLPLNNGD"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Zfp142",
+      "sequence": "GQKRKRGCP",
+      "gene_symbol": "Zfp142",
+      "is_neoantigen": true,
+      "mutation": "R1119C",
+      "variant_type": "missense",
+      "protein_change": "p.R1119C",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Zfp142"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 162.0,
+        "unit": "nM",
+        "raw": "MT score 162",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 138.0,
+        "unit": "nM",
+        "raw": "WT score 138",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "KWSLVPFSIP",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "LETPRGKIQAKKWSLVPFSIPVFDILQDC"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Dhx58",
+      "sequence": "KWSLVPFSIP",
+      "gene_symbol": "Dhx58",
+      "is_neoantigen": true,
+      "mutation": "R654L",
+      "variant_type": "missense",
+      "protein_change": "p.R654L",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Dhx58"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 286.0,
+        "unit": "nM",
+        "raw": "MT score 286",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 218.0,
+        "unit": "nM",
+        "raw": "WT score 218",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "GLFQGQSPL",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FKEIQKIIKEPVPDSGLLGLFQGQSPLTS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Isoc2a",
+      "sequence": "GLFQGQSPL",
+      "gene_symbol": "Isoc2a",
+      "is_neoantigen": true,
+      "mutation": "S195G",
+      "variant_type": "missense",
+      "protein_change": "p.S195G",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Isoc2a"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 471.0,
+        "unit": "nM",
+        "raw": "MT score 471",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 302.0,
+        "unit": "nM",
+        "raw": "WT score 302",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "VKTTNNLV",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "IPHNPRVAVKTTNNLVMKNSVCLERDS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Gen1",
+      "sequence": "VKTTNNLV",
+      "gene_symbol": "Gen1",
+      "is_neoantigen": true,
+      "mutation": "K707N",
+      "variant_type": "missense",
+      "protein_change": "p.K707N",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Gen1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 543.0,
+        "unit": "nM",
+        "raw": "MT score 543",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 306.0,
+        "unit": "nM",
+        "raw": "WT score 306",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "RSSWGAWLS",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "GRNQVVVAAGRSSWGAWLSGALHVYSFSS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Gpld1",
+      "sequence": "RSSWGAWLS",
+      "gene_symbol": "Gpld1",
+      "is_neoantigen": true,
+      "mutation": "R829W",
+      "variant_type": "missense",
+      "protein_change": "p.R829W",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Gpld1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 1817.0,
+        "unit": "nM",
+        "raw": "MT score 1817",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 904.0,
+        "unit": "nM",
+        "raw": "WT score 904",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "KLQGSPVPR",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "DSVTKFKLQGSPVPRLRQSLLWGEPARP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Igsf9",
+      "sequence": "KLQGSPVPR",
+      "gene_symbol": "Igsf9",
+      "is_neoantigen": true,
+      "mutation": "S813R",
+      "variant_type": "missense",
+      "protein_change": "p.S813R",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Igsf9"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 77.0,
+        "unit": "nM",
+        "raw": "MT score 77",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 30.0,
+        "unit": "nM",
+        "raw": "WT score 30",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "SYQSITTDD",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "GFLKAYVKKFSYQSITTDDWKSFLYSHFK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Lta4h",
+      "sequence": "SYQSITTDD",
+      "gene_symbol": "Lta4h",
+      "is_neoantigen": true,
+      "mutation": "V420I",
+      "variant_type": "missense",
+      "protein_change": "p.V420I",
+      "hla_allele": "H-2Kd",
+      "parent_peptide_ids": [
+        "IMP_4T1_Lta4h"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 246.0,
+        "unit": "nM",
+        "raw": "MT score 246",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 95.0,
+        "unit": "nM",
+        "raw": "WT score 95",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "FPPDAINNF",
+      "section_ref": "Additional file 2, Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "FTLTALRRRGFPPDAINNFCARVGVTV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_4T1_Qars",
+      "sequence": "FPPDAINNF",
+      "gene_symbol": "Qars",
+      "is_neoantigen": true,
+      "mutation": "E530D",
+      "variant_type": "missense",
+      "protein_change": "p.E530D",
+      "hla_allele": "H-2Ld",
+      "parent_peptide_ids": [
+        "IMP_4T1_Qars"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 27.0,
+        "unit": "nM",
+        "raw": "MT score 27",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 8.0,
+        "unit": "nM",
+        "raw": "WT score 8",
+        "method": "pVACseq (IEDB class I)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "RTLVMFYAPW",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "GDNFRETLKKKKRTLVMFYAPWCPH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_PDIA5",
+      "sequence": "RTLVMFYAPW",
+      "gene_symbol": "PDIA5",
+      "is_neoantigen": true,
+      "mutation": "H416R",
+      "variant_type": "missense",
+      "protein_change": "p.H416R",
+      "hla_allele": "HLA-B*57:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_PDIA5"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 5.5,
+        "unit": "nM",
+        "raw": "MT score 5.5",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 8.7,
+        "unit": "nM",
+        "raw": "WT score 8.7",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "CTISLWDTY",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "LLMREVPLRCTISLWDTYQSEPDGF"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_TBC1D22A",
+      "sequence": "CTISLWDTY",
+      "gene_symbol": "TBC1D22A",
+      "is_neoantigen": true,
+      "mutation": "R437S",
+      "variant_type": "missense",
+      "protein_change": "p.R437S",
+      "hla_allele": "HLA-A*01:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_TBC1D22A"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 147.2,
+        "unit": "nM",
+        "raw": "MT score 147.2",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 196.0,
+        "unit": "nM",
+        "raw": "WT score 196",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "AECDVGDY",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "TRRLREQQKTAECDVGDYRCPQDQS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_GZF1",
+      "sequence": "AECDVGDY",
+      "gene_symbol": "GZF1",
+      "is_neoantigen": true,
+      "mutation": "G253C",
+      "variant_type": "missense",
+      "protein_change": "p.G253C",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_GZF1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 31.0,
+        "unit": "nM",
+        "raw": "MT score 31",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 34.0,
+        "unit": "nM",
+        "raw": "WT score 34",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "MERDKQSKW",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "LVRAVQFTETFLMERDKQSKWSGIP"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_TRPC4AP",
+      "sequence": "MERDKQSKW",
+      "gene_symbol": "TRPC4AP",
+      "is_neoantigen": true,
+      "mutation": "T63M",
+      "variant_type": "missense",
+      "protein_change": "p.T63M",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_TRPC4AP"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 147.2,
+        "unit": "nM",
+        "raw": "MT score 147.2",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 196.0,
+        "unit": "nM",
+        "raw": "WT score 196",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "GEIVSLSIEF",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "EVLEQEKGALSDGEIVSLSIEFYEG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_PCGF2",
+      "sequence": "GEIVSLSIEF",
+      "gene_symbol": "PCGF2",
+      "is_neoantigen": true,
+      "mutation": "D128G",
+      "variant_type": "missense",
+      "protein_change": "p.D128G",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_PCGF2"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 66.9,
+        "unit": "nM",
+        "raw": "MT score 66.9",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 308.0,
+        "unit": "nM",
+        "raw": "WT score 308",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "RLPKLHLEI",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "PSPQAEKRLPKLHLEIIDKDSKTRR"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_CLPB",
+      "sequence": "RLPKLHLEI",
+      "gene_symbol": "CLPB",
+      "is_neoantigen": true,
+      "mutation": "R679H",
+      "variant_type": "missense",
+      "protein_change": "p.R679H",
+      "hla_allele": "HLA-A*32:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_CLPB"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 162.5,
+        "unit": "nM",
+        "raw": "MT score 162.5",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 264.8,
+        "unit": "nM",
+        "raw": "WT score 264.8",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "AMYQDYEI",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "VKTDSTGTHSLYAMYQDYEIMFHVS"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_SIPA1L3",
+      "sequence": "AMYQDYEI",
+      "gene_symbol": "SIPA1L3",
+      "is_neoantigen": true,
+      "mutation": "T687A",
+      "variant_type": "missense",
+      "protein_change": "p.T687A",
+      "hla_allele": "HLA-A*32:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_SIPA1L3"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 69.1,
+        "unit": "nM",
+        "raw": "MT score 69.1",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 153.6,
+        "unit": "nM",
+        "raw": "WT score 153.6",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "STLEWAPKF",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "ALGAAALAVVKSTLEWAPKFQLQLF"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_TBC1D20",
+      "sequence": "STLEWAPKF",
+      "gene_symbol": "TBC1D20",
+      "is_neoantigen": true,
+      "mutation": "A390T",
+      "variant_type": "missense",
+      "protein_change": "p.A390T",
+      "hla_allele": "HLA-A*32:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_TBC1D20"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 20.8,
+        "unit": "nM",
+        "raw": "MT score 20.8",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 179.1,
+        "unit": "nM",
+        "raw": "WT score 179.1",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "VRYNMGGIP",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "VTKEPIPVLPTVRYNMGGIPTNYKG"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_SDHA",
+      "sequence": "VRYNMGGIP",
+      "gene_symbol": "SDHA",
+      "is_neoantigen": true,
+      "mutation": "H407R",
+      "variant_type": "missense",
+      "protein_change": "p.H407R",
+      "hla_allele": "HLA-C*06:02",
+      "parent_peptide_ids": [
+        "IMP_GTB16_SDHA"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 113.0,
+        "unit": "nM",
+        "raw": "MT score 113",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 262.0,
+        "unit": "nM",
+        "raw": "WT score 262",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "QEALVNHLW",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "NTLEQEQEALVNHLWKRMDKLEAEK"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_CCDC6",
+      "sequence": "QEALVNHLW",
+      "gene_symbol": "CCDC6",
+      "is_neoantigen": true,
+      "mutation": "R216H",
+      "variant_type": "missense",
+      "protein_change": "p.R216H",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_CCDC6"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 19.1,
+        "unit": "nM",
+        "raw": "MT score 19.1",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 27.2,
+        "unit": "nM",
+        "raw": "WT score 27.2",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "YEAALLQLW",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "PSAYYEAALLQLWVTEACTYRPSAQ"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_LAMA5",
+      "sequence": "YEAALLQLW",
+      "gene_symbol": "LAMA5",
+      "is_neoantigen": true,
+      "mutation": "R1026W",
+      "variant_type": "missense",
+      "protein_change": "p.R1026W",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_LAMA5"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 6.9,
+        "unit": "nM",
+        "raw": "MT score 6.9",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 3738.6,
+        "unit": "nM",
+        "raw": "WT score 3738.6",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "AEMAKVLEI",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "RFPLRNAEMAKVLEISSVPASDRMV"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_SACS",
+      "sequence": "AEMAKVLEI",
+      "gene_symbol": "SACS",
+      "is_neoantigen": true,
+      "mutation": "S2711L",
+      "variant_type": "missense",
+      "protein_change": "p.S2711L",
+      "hla_allele": "HLA-B*44:03",
+      "parent_peptide_ids": [
+        "IMP_GTB16_SACS"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 19.6,
+        "unit": "nM",
+        "raw": "MT score 19.6",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 45.4,
+        "unit": "nM",
+        "raw": "WT score 45.4",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "KVCGTAFTW",
+      "section_ref": "Additional file 2, Table S4",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S4",
+          "quoted_text": "HTGEKPYRCKVCGTAFTWHSQLARH"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_GTB16_ZNF611",
+      "sequence": "KVCGTAFTW",
+      "gene_symbol": "ZNF611",
+      "is_neoantigen": true,
+      "mutation": "D404G",
+      "variant_type": "missense",
+      "protein_change": "p.D404G",
+      "hla_allele": "HLA-A*32:01",
+      "parent_peptide_ids": [
+        "IMP_GTB16_ZNF611"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "value": 9.0,
+        "unit": "nM",
+        "raw": "MT score 9",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      },
+      "wild_type_affinity": {
+        "value": 17.0,
+        "unit": "nM",
+        "raw": "WT score 17",
+        "method": "NetMHC (pVACseq)",
+        "tier": "predicted"
+      }
+    },
+    {
+      "quoted_text": "GILAR<u>NLVPMVATV</u>QGQNLK",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_pp65",
+      "sequence": "NLVPMVATV",
+      "gene_symbol": "pp65 (HCMV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_pp65"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope; IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "GPVFM<u>CLGGLLTMV</u>AGAVWL",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_LMP2",
+      "sequence": "CLGGLLTMV",
+      "gene_symbol": "LMP2 (EBV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_LMP2"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope; IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "VLCCY<u>VLEETSVML</u>AKRPLI",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_IE",
+      "sequence": "VLEETSVML",
+      "gene_symbol": "IE (HCMV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_IE"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope; IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "VVTHT<u>YLEPGPVTA</u>QVVLQA",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_G280",
+      "sequence": "YLEPGPVTA",
+      "gene_symbol": "gp100 (PMEL)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_G280"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope (gp100 G280); IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "AIQNA<u>GLCTLVAML</u>EETIF",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_BMLF1",
+      "sequence": "GLCTLVAML",
+      "gene_symbol": "BMLF1 (EBV)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_BMLF1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope; IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "SSAFT<u>ITDQVPFSV</u>QLRALD",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_G209",
+      "sequence": "ITDQVPFSV",
+      "gene_symbol": "gp100 (PMEL)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_G209"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope (gp100 G209); IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "AWDFG<u>SVGGVFTSV</u>GKAVHQ",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_SVG9",
+      "sequence": "SVGGVFTSV",
+      "gene_symbol": "SVG9 (WNV envelope)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_SVG9"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope (West Nile virus SVG9); IC50/%rank not reported",
+        "tier": "reported"
+      }
+    },
+    {
+      "quoted_text": "SPLTK<u>GILGFVFTLT</u>VPSER",
+      "section_ref": "Additional file 2, Table S1",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S1",
+          "quoted_text": "underlined indicate minimal epitope sequences"
+        }
+      ],
+      "needs_review": false,
+      "paper_local_id": "EPI_HHDII_M1",
+      "sequence": "GILGFVFTLT",
+      "gene_symbol": "M1 (Influenza)",
+      "is_neoantigen": false,
+      "hla_allele": "HLA-A*02:01",
+      "parent_peptide_ids": [
+        "IMP_HHDII_M1"
+      ],
+      "mhc_class": "I",
+      "predicted_affinity": {
+        "unit": "unknown",
+        "raw": "well-characterized HLA-A2-restricted minimal epitope (influenza M1); IC50/%rank not reported",
+        "tier": "reported"
+      }
+    }
+  ],
+  "pools": [],
+  "evidence": [
+    {
+      "quoted_text": "DNA vaccines induced G209-specific immune response in HHD II mice was measured by an IFN-γ ELISpot assay (mean ± SEM, n = 8)",
+      "section_ref": "Fig. 1c (right)",
+      "provenance": [
+        {
+          "kind": "figure",
+          "locator": "Fig. 1c",
+          "quoted_text": "G209-specific immune response in HHD II mice"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P1",
+      "target_kind": "epitope",
+      "epitope_paper_id": "EPI_HHDII_G209",
+      "hla_allele": "HLA-A*02:01",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": false,
+      "assay_stimulation": "ex_vivo",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "sfc_per_1e6",
+        "raw": "G209-specific IFN-γ ELISpot response in Ubmut-P20-vaccinated HHD II mice (Fig. 1c); per-group SFU value not tabulated",
+        "tier": "reported",
+        "source": {
+          "kind": "figure",
+          "locator": "Fig. 1c right",
+          "quoted_text": "DNA vaccines induced G209-specific immune response"
+        }
+      }
+    },
+    {
+      "quoted_text": "Representative dot plots showing SVG9/HLA-A2 tetramer staining of CD8+ spleen cells from the vaccinated HHD II mice",
+      "section_ref": "Fig. 1d",
+      "provenance": [
+        {
+          "kind": "figure",
+          "locator": "Fig. 1d",
+          "quoted_text": "SVG9/HLA-A2 tetramer staining of CD8+ spleen cells from the vaccinated HHD II mice"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P1",
+      "target_kind": "epitope",
+      "epitope_paper_id": "EPI_HHDII_SVG9",
+      "hla_allele": "HLA-A*02:01",
+      "assay": "tetramer",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": false,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "tetramer",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "percent_of_parent",
+        "raw": "SVG9/HLA-A2 tetramer+ CD8 T cells detected in vaccinated HHD II spleen (Fig. 1d); frequency not tabulated",
+        "tier": "reported",
+        "source": {
+          "kind": "figure",
+          "locator": "Fig. 1d",
+          "quoted_text": "SVG9/HLA-A2 tetramer staining of CD8+ spleen cells"
+        }
+      }
+    },
+    {
+      "quoted_text": "Plekho1.P251S ... ELISPOT +++",
+      "section_ref": "Table S2; Fig. 2a",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "+++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P2",
+      "target_kind": "epitope",
+      "epitope_paper_id": "EPI_E0771_Plekho1",
+      "hla_allele": "H-2Kb",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "high",
+        "raw": "+++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S2 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Lrrc27.G330A ... ELISPOT ++++",
+      "section_ref": "Table S2; Fig. 2a",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "++++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P2",
+      "target_kind": "epitope",
+      "epitope_paper_id": "EPI_E0771_Lrrc27",
+      "hla_allele": "H-2Db",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "very_high",
+        "raw": "++++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S2 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Pttg1.V53L ... ELISPOT ++",
+      "section_ref": "Table S2; Fig. 2a",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S2",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P2",
+      "target_kind": "epitope",
+      "epitope_paper_id": "EPI_E0771_Pttg1",
+      "hla_allele": "H-2Kb",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S2 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Aars2.A697P ... ELISPOT ++",
+      "section_ref": "Table S3; Fig. 2b",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Aars2",
+      "hla_allele": "H-2Ld",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Pram1.Q572L ... ELISPOT ++++",
+      "section_ref": "Table S3; Fig. 2b",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Pram1",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "very_high",
+        "raw": "++++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Gyk.K505R ... ELISPOT +++",
+      "section_ref": "Table S3; Fig. 2b",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "+++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Gyk",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "high",
+        "raw": "+++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Gpld1.R829W ... ELISPOT ++",
+      "section_ref": "Table S3; Fig. 2b",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 4,
+      "needs_review": false,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Gpld1",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Dync1h1.Y3123C ... ELISPOT +",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "+"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Dync1h1",
+      "hla_allele": "H-2Ld",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "low",
+        "raw": "+",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Dtx2.P365L ... ELISPOT +",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "+"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Dtx2",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "low",
+        "raw": "+",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Cenpf.D1327E ... ELISPOT ++",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Cenpf",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Dhx58.R654L ... ELISPOT ++",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Dhx58",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Gen1.K707N ... ELISPOT +",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "+"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Gen1",
+      "hla_allele": "H-2Kd",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "low",
+        "raw": "+",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Igsf9.S813R ... ELISPOT ++",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "++"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Igsf9",
+      "hla_allele": "H-2Ld",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "moderate",
+        "raw": "++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Qars.E530D ... ELISPOT +++",
+      "section_ref": "Table S3",
+      "provenance": [
+        {
+          "kind": "table",
+          "locator": "Table S3",
+          "quoted_text": "+++"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P3",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_4T1_Qars",
+      "hla_allele": "H-2Ld",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "ex_vivo",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "assay_detail": "Table S3 ELISPOT screen positive; not among the 4 DNA-vaccine responders named in text",
+      "magnitude": {
+        "unit": "unknown",
+        "grade": "high",
+        "raw": "+++",
+        "tier": "reported",
+        "source": {
+          "kind": "table",
+          "locator": "Table S3 ELISPOT"
+        }
+      }
+    },
+    {
+      "quoted_text": "Specific responses above background were demonstrated against three neoantigens (TBC1D22A:p.R437S, TRPC4AP:p.T63M, and ZNF611:p.D404G, Fig. 5)",
+      "section_ref": "Fig. 5",
+      "provenance": [
+        {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "Specific responses above background were demonstrated against three neoantigens"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P4",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_GTB16_TBC1D22A",
+      "hla_allele": "HLA-A*01:01",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "in_vitro_expanded",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "value": 2390.0,
+        "unit": "sfc_per_1e6",
+        "raw": "post-vaccine ~2390 SFC/1e6 cells (pre ~150) read from Fig. 5 bar",
+        "background_subtracted": true,
+        "denominator": "1e6 cells",
+        "tier": "reported",
+        "source": {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "The number of spot forming cells (SFC) specific for each neoantigen is indicated"
+        },
+        "confidence": 2
+      }
+    },
+    {
+      "quoted_text": "Specific responses above background were demonstrated against three neoantigens (TBC1D22A:p.R437S, TRPC4AP:p.T63M, and ZNF611:p.D404G, Fig. 5)",
+      "section_ref": "Fig. 5",
+      "provenance": [
+        {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "Specific responses above background were demonstrated against three neoantigens"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P4",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_GTB16_TRPC4AP",
+      "hla_allele": "HLA-B*44:03",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "in_vitro_expanded",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "value": 505.0,
+        "unit": "sfc_per_1e6",
+        "raw": "post-vaccine ~505 SFC/1e6 cells (pre ~130) read from Fig. 5 bar",
+        "background_subtracted": true,
+        "denominator": "1e6 cells",
+        "tier": "reported",
+        "source": {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "The number of spot forming cells (SFC) specific for each neoantigen is indicated"
+        },
+        "confidence": 2
+      }
+    },
+    {
+      "quoted_text": "Specific responses above background were demonstrated against three neoantigens (TBC1D22A:p.R437S, TRPC4AP:p.T63M, and ZNF611:p.D404G, Fig. 5)",
+      "section_ref": "Fig. 5",
+      "provenance": [
+        {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "Specific responses above background were demonstrated against three neoantigens"
+        }
+      ],
+      "confidence": 3,
+      "needs_review": true,
+      "patient_paper_id": "P4",
+      "target_kind": "immunizing_peptide",
+      "immunizing_peptide_paper_id": "IMP_GTB16_ZNF611",
+      "hla_allele": "HLA-A*32:01",
+      "assay": "elispot",
+      "outcome": "immunogenic",
+      "vaccine_induced": true,
+      "mutation_specific": true,
+      "assay_stimulation": "in_vitro_expanded",
+      "assay_antigen_format": "peptide_pulsed",
+      "timepoint_phase": "post_vaccine",
+      "magnitude": {
+        "value": 2180.0,
+        "unit": "sfc_per_1e6",
+        "raw": "post-vaccine ~2180 SFC/1e6 cells (pre ~190) read from Fig. 5 bar",
+        "background_subtracted": true,
+        "denominator": "1e6 cells",
+        "tier": "reported",
+        "source": {
+          "kind": "figure",
+          "locator": "Fig. 5",
+          "quoted_text": "The number of spot forming cells (SFC) specific for each neoantigen is indicated"
+        },
+        "confidence": 2
+      }
+    }
+  ],
+  "survival_outcomes": [],
+  "curator_notes": []
+}

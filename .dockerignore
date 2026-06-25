@@ -1,0 +1,30 @@
+# Trim the build context. The Dockerfile COPY is selective (pyproject + README +
+# LICENSE + vaxtract/), so the ONE hard rule is: never exclude anything the
+# package needs. Directory excludes are ROOT-ANCHORED (leading /) so a bare name like
+# `figure_benchmark` or `*.md` can't match INSIDE vaxtract/ at any depth and
+# silently drop the figure subpackage / layer2_prompt_deltas.md (which is read at import).
+.git
+**/__pycache__
+*.pyc
+*.pyo
+/tests
+/outputs
+/docs
+/.docs
+/lite_extract
+/scale
+/cancervac_packet
+/build
+/dist
+/*.egg-info
+/.venv*
+# Not needed by the image and would bloat / break the context. `/data` is a
+# symlink to the corpus outside this dir (a buildkit context-walk hazard);
+# reference_records, the dev figures, and JS artifacts are dev-only.
+/data
+/reference_records
+/node_modules
+/package-lock.json
+/package.json
+/*.pdf
+/*.png

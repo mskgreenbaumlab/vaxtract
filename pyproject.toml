@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vaxtract"
+dynamic = ["version"]   # single source of truth: vaxtract.__version__
+description = "Schema-validated extraction of neoantigen cancer-vaccine immunogenicity data from primary papers, on the Claude Agent SDK (bring-your-own-key)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Samuel Ahuno", email = "ekwame001@gmail.com" }]
+keywords = ["neoantigen", "cancer-vaccine", "immunogenicity", "extraction", "claude", "bioinformatics"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+# Core install = the schema/vocab DATA CONTRACT only. A downstream consumer
+# (e.g. an ingest/ETL pipeline) can `import vaxtract.schema` to validate records
+# with nothing heavier than pydantic — no Claude Agent SDK, no file readers.
+dependencies = [
+    "pydantic>=2",
+]
+
+[project.optional-dependencies]
+# The extraction agent: the Claude Agent SDK loop plus the file readers it drives.
+# Required by the `vaxtract` console script and by `vaxtract.extract_paper`.
+agent = [
+    "claude-agent-sdk>=0.2.87",  # tested against 0.2.87; the 0.2.x line is pre-1.0
+    "pypdf>=4",          # read_pdf_text (the primary input format)
+    "openpyxl>=3.1",     # read_table (xlsx supplementary tables)
+    "python-docx>=1.1",  # read_docx
+]
+# Figure reading is an agent capability (read_figure), so it pulls in [agent]
+# too — `pip install vaxtract[figures]` is a complete agent+figures install.
+figures = ["vaxtract[agent]", "pymupdf>=1.23", "Pillow>=10"]  # read_figure: render PDF pages to images
+all = ["vaxtract[agent,figures]"]
+dev = ["vaxtract[agent,figures]", "pytest>=7"]
+
+[project.scripts]
+vaxtract = "vaxtract.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mskgreenbaumlab/vaxtract"
+Repository = "https://github.com/mskgreenbaumlab/vaxtract"
+Issues = "https://github.com/mskgreenbaumlab/vaxtract/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "vaxtract.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["vaxtract*"]
+
+[tool.setuptools.package-data]
+# Runtime data file read via importlib.resources (the Layer-2 prompt deltas). The "*"
+# key globs every package incl. subpackages so no nested data file is silently dropped.
+"*" = ["*.md"]

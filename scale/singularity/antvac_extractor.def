@@ -1,0 +1,56 @@
+Bootstrap: docker
+From: condaforge/miniforge3:latest
+
+# antVac extractor runtime image — MSKCC HPC (RHEL 8, no sudo) build.
+# Holds ONLY the runtime (Node + claude CLI + Python + deps). The repo code, paper data, and the
+# `claude` login creds are BIND-MOUNTED at run time (see scale/config.yaml + Snakefile) so code
+# changes never require a rebuild and no secrets are baked into the image.
+#
+# WHY miniforge + mamba (NOT a Debian/node base + apt-get): on this HPC the user is not in
+# /etc/subuid, so apptainer builds in a ROOT-MAPPED namespace where apt-get's setgroups() syscall
+# is blocked (the prior node:20-bookworm-slim recipe failed exactly there). The singularity-build
+# skill's rule: conda base, mamba/pip/npm only, never apt-get. See scale/singularity/build_sif.sh.
+#
+# Build (per the skill — --ignore-fakeroot-command is MANDATORY for the miniforge base on RHEL 8):
+#   bash scale/singularity/build_sif.sh <package_dir> <sif_out> <log>
+# or directly:
+#   unset APPTAINER_BIND SINGULARITY_BIND
+#   export APPTAINER_CACHEDIR=$HOME/apptainer_cache
+#   apptainer build --fakeroot --ignore-fakeroot-command <sif_out> scale/singularity/antvac_extractor.def
+
+%labels
+    Author Samuel Ahuno
+    Date 2026-06-09
+    Purpose antVac cancer-vaccine extractor runtime (Node + claude CLI + Python deps)
+    SchemaVersion 2.11.4
+    Source antVacDBCancer scale lane
+
+%post
+    set -eux
+    # conda-forge packages ONLY (no apt-get — setgroups is blocked in root-mapped namespace).
+    # node for the claude CLI; the extractor packet's python deps (pydantic/openpyxl/pypdf/Pillow/docx).
+    mamba install -y -c conda-forge \
+        "nodejs>=20" "python>=3.11,<3.13" \
+        "pydantic>=2,<3" openpyxl pypdf pillow python-docx
+    # claude-agent-sdk is not on conda-forge -> pip into the base conda env.
+    pip install --no-cache-dir "claude-agent-sdk>=0.2,<0.3"
+    pip cache purge || true
+    # the Claude Code CLI (the Agent SDK spawns it as a subprocess). Installs into the conda node prefix.
+    npm install -g @anthropic-ai/claude-code
+    # size hygiene (NEVER rm -rf /tmp/* — it is a host bind mount under fakeroot)
+    mamba clean --all --yes
+
+%environment
+    export PYTHONUNBUFFERED=1
+    export NODE_NO_WARNINGS=1
+    export PATH="/opt/conda/bin:$PATH"
+    # CLAUDE_CONFIG_DIR is set per-run by the Snakefile (--env) to the bind-mounted creds dir.
+
+%test
+    set -e
+    claude --version
+    python -c "import pydantic, openpyxl, pypdf, PIL, docx, claude_agent_sdk; print('deps OK')"
+
+%help
+    Batch cancer-vaccine extraction runtime. Run via scale/Snakefile; do NOT bake API keys or
+    creds into this image. Smoke-test auth+egress with scale/probe_egress.sh before a batch.

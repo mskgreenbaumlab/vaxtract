@@ -1,0 +1,25 @@
+# One PMID per line; '#' starts a comment. Each must have sources at <data_root>/<PMID>/.
+# Corpus state as of 2026-06-07 (local subscription runs; outputs in outputs/scale_localrun/).
+
+# --- gold reference papers (validated + signed-off; schema 2.10.0) ---
+37165196   # Rojas et al. 2023, Nature — autogene cevumeran, adjuvant PDAC   [REFERENCE]
+30568305   # Keskin et al. 2019, Nature — NeoVax, glioblastoma               [REFERENCE]
+33879241   # Li et al. 2021, Genome Medicine — DNA vs SLP                     [REFERENCE]
+
+# --- substantive silver extractions (validated this run; await human sign-off) ---
+33016924   # cafri    — metastatic; 4 pat / 76 IMP / 30 ev
+33479501   # hu       — adjuvant; 8 pat / 125 IMP / 83 ev / funnel
+28678778   # ott      — adjuvant; 6 pat / 101 IMP / 53 ev / 24 pools / funnel
+39287991   # bear     — adjuvant; 9 pat / 40 IMP / 16 ev
+32385144   # engelhard— adjuvant; 15 pat / 24 IMP / 9 ev
+25837513   # 3 pat / 21 IMP / 23 ev / funnel (adjuvant+metastatic)
+28678784   # 13 pat / 125 IMP / 78 ev / funnel (adjuvant+metastatic)
+31685621   # 2 pat / 20 IMP / 16 ev (metastatic)
+33064988   # 48 pat / 823 IMP / 15 ev (metastatic) — large cohort
+38538867   # 19 pat / 30 IMP / 35 ev (metastatic)
+39559350   # 6 pat / 92 IMP / 92 ev / funnel
+39910301   # 9 pat / 130 IMP / 76 ev / funnel (adjuvant)
+# main-PDF fetched 2026-06-07 (tools/fetch_paper_pdfs.py) -> re-extracted substantive:
+31440238   # 3 pat / 33 IMP / 4 ev / funnel (adjuvant)
+34903219   # 10 pat / 107 IMP / 32 ev / 5 pools / 4 benefit (adjuvant); NOTE .docx supps still unreadable
+39972124   # Sethna 2025 Nature — FOLLOW-UP of Rojas 37165196 (same trial/patients/vaccine). 16 pat / 9 ev / 2 benefit. LOW IMP is FAITHFUL: no xlsx peptide table (all 12 xlsx = figure source-data); peptides are in figures + reuse 37165196's 232. ACTION: link shared cohort to 37165196, not re-extract.

@@ -1,13 +1,16 @@
 name: publish
 
-# Publishes to PyPI when a version tag (v*) is pushed.
+# Publishes to PyPI when a GitHub Release is published (the same event Zenodo archives on,
+# so cutting one Release both mints the DOI and ships the package).
 # Uses PyPI Trusted Publishing (OIDC) — no API token stored in the repo.
 # One-time setup: on https://pypi.org/manage/project/vaxtract/settings/publishing/
 # register this repo + workflow (publish.yml) + environment "pypi" as a trusted publisher.
+# `skip-existing` makes re-running on an already-uploaded version a no-op instead of a failure
+# (so archiving the already-published 0.1.0 won't error).
 
 on:
-  push:
-    tags: ["v*"]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -43,3 +46,5 @@ jobs:
           path: dist/
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true

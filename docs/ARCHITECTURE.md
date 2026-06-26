@@ -115,6 +115,36 @@ erDiagram
 (Simplified: `ExtractedEvidence.target` is one of peptide / epitope / pool / candidate; nested
 per-patient detail — `VaccineDelivery`, `ConcomitantTherapy`, response magnitudes — is omitted.)
 
+### Data grain — there is no single grain
+
+The schema is **multi-grain by design**: different entities live at different grains and are joined
+by id. The single most useful thing to internalise before reasoning about the data is *which grain a
+given entity is at* — most confusion comes from two parties silently assuming different ones.
+
+| Entity | Grain | Identity | Patient-scoped? |
+|---|---|---|---|
+| `ImmunizingPeptide` | **per-sequence** (the vaccine antigen catalog) | `sequence` (+ `paper_local_id`) | optional (`patient_paper_id` often null) |
+| `MinimalEpitope` | **per-sequence** (minimal MHC-binding peptide) | `sequence` + `mhc_class`; `parent_peptide_ids` (many-to-many) | no |
+| `NeoantigenCandidate` | **per-(patient × candidate)** (prediction/screening funnel) | `patient_paper_id` + sequence/mutation; `selected_peptide_id` → peptide | yes |
+| `NeoantigenMutation` | **per-(patient × mutation)** (genomic) | `patient_paper_id` + `gene_symbol` + mutation | yes |
+| `ExtractedEvidence` | **per-(patient × target × assay)** (the immunogenicity readout) | `patient_paper_id` + `target_kind` + target id + `assay` | yes |
+| `ExtractedPatient` | **per-patient** | `paper_local_id` | — |
+
+**The spine.** (1) The antigen catalog (`ImmunizingPeptide`, `MinimalEpitope`) is **per-sequence** —
+a peptide exists once, deduplicated across patients. (2) The central fact, immunogenicity, is
+**per-(patient × target × assay)** in `ExtractedEvidence` — the many-to-many join. (3) The genomic
+layer is **per-(patient × mutation)**. (4) `NeoantigenCandidate` is the **bridge**: it carries the
+patient *and* links to the per-sequence peptide.
+
+**Why it matters (two real consequences).**
+- *Papers that report only gene + mutation (no peptide sequences)* can populate `NeoantigenMutation`
+  (genomic grain) but not the per-sequence antigen spine — so the record is faithful-but-thin and is
+  routed to `needs_review`. That is a grain mismatch between the paper and the schema's spine, not an
+  extraction failure.
+- *Validation* must match grains explicitly: a gold key at `(patient, gene, mutation)` grain compares
+  to the agent's per-sequence peptides only after the patient is recovered through the candidate
+  bridge (see `eval/score_extraction.py`).
+
 ## 6. Faithfulness & provenance
 
 Every extracted fact carries provenance (`quoted_text` / source anchors), and a set of

@@ -101,6 +101,18 @@ The model is given **tools and a loop**: it reads tables/text/figures itself, dr
 JSON, calls `validate()`, reads the schema's errors, and **fixes its own output** until the
 record passes or an outer guard quarantines it for review. Pure logic (`agent_core.py`,
 `prompt_render.py`) is SDK-free and unit-tested; the SDK shell wraps it as in-process tools.
+
+```mermaid
+flowchart LR
+    A["Paper dir<br/>PDF · XLSX · DOCX · figures"] --> B[Read sources]
+    B --> C[Draft / amend record]
+    C --> D{"validate()"}
+    D -- errors --> C
+    D -- passes --> E["finalize:<br/>faithfulness guards"]
+    E -- clean --> F[("Schema-valid JSON")]
+    E -- flagged --> G[["needs_review"]]
+```
+
 See **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** for the full design.
 
 ## Reproducibility

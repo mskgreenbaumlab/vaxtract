@@ -15,16 +15,15 @@ the schema or an outer guard quarantines it for human review.
 
 ## 2. The agent loop
 
-```
-read sources ──▶ draft / amend partial record ──▶ validate(partial)
-     ▲                                                   │
-     └───────────────  fix from schema errors  ◀─────────┘
-                                                          │ passes
-                                                          ▼
-                                          finalize ──▶ outer guards ──▶ JSON
-                                                          │ fail
-                                                          ▼
-                                                  needs_review (quarantine)
+```mermaid
+flowchart TD
+    A["Paper dir<br/>PDF · XLSX · DOCX · figures"] --> B[Read sources]
+    B --> C[Draft / amend partial record]
+    C --> D{"validate()<br/>vs versioned schema"}
+    D -- "schema errors" --> C
+    D -- passes --> E["finalize:<br/>faithfulness guards"]
+    E -- clean --> F[("Schema-valid JSON")]
+    E -- flagged --> G[["needs_review<br/>(quarantine)"]]
 ```
 
 - **Model:** `claude-opus-4-8[1m]` (the 1M-context variant). Large papers that would otherwise
@@ -52,6 +51,23 @@ lazily (PEP 562) so the data contract never drags in the agent dependencies. Thi
 downstream ETL pipeline validate records against the exact same schema the extractor produces,
 with no SDK.
 
+```mermaid
+flowchart LR
+    subgraph core["core install — pydantic only"]
+        S["schema.py<br/>(ExtractedPaper, SCHEMA_VERSION)"]
+        V["vocab.py"]
+        L["agent_core · prompt_render · schema_digest<br/>(pure, unit-tested)"]
+    end
+    subgraph agent["[agent] extra — Claude Agent SDK"]
+        SH["extraction_agent.py (SDK shell)"]
+        CLI["cli.py"]
+    end
+    SH --> L
+    SH --> S
+    CLI --> SH
+    ETL["downstream ETL / loader"] --> S
+```
+
 ## 4. The toolset (in-process MCP tools)
 
 The agent is restricted to a curated set of tools and is **headless-safe** — no host shell, and it
@@ -73,6 +89,31 @@ vocabularies, and cross-field invariants. Because it is the **core** install, th
 importable by any consumer — extractor, ETL loader, and tests all validate against one source of
 truth rather than drifting copies. `cancervac_packet/predeploy_gate.py` shadow-validates every
 record in a corpus against the current schema before any schema change ships.
+
+The entity model, at the grain that distinguishes this resource (per-peptide / per-epitope, not
+per-paper):
+
+```mermaid
+erDiagram
+    ExtractedPaper ||--o{ ExtractedPatient : enrolls
+    ExtractedPaper ||--o{ NeoantigenCandidate : "predicts (funnel in)"
+    ExtractedPaper ||--o{ ImmunizingPeptide : "vaccinates with (funnel out)"
+    ExtractedPaper ||--o{ MinimalEpitope : maps
+    ExtractedPaper ||--o{ ExtractedPeptidePool : groups
+    ExtractedPaper ||--o{ ExtractedEvidence : reports
+    ExtractedPaper ||--o{ NeoantigenMutation : annotates
+    ExtractedPaper ||--o{ SurvivalOutcome : summarizes
+    ExtractedPaper ||--o{ ClinicalBenefitSignal : links
+    NeoantigenCandidate |o..|| ImmunizingPeptide : "selected from"
+    ImmunizingPeptide ||--o{ MinimalEpitope : contains
+    ExtractedEvidence }o..o| ImmunizingPeptide : "target = peptide"
+    ExtractedEvidence }o..o| MinimalEpitope : "or epitope"
+    ExtractedEvidence }o..o| ExtractedPeptidePool : "or pool"
+    ExtractedEvidence }o--|| ExtractedPatient : "in patient"
+```
+
+(Simplified: `ExtractedEvidence.target` is one of peptide / epitope / pool / candidate; nested
+per-patient detail — `VaccineDelivery`, `ConcomitantTherapy`, response magnitudes — is omitted.)
 
 ## 6. Faithfulness & provenance
 

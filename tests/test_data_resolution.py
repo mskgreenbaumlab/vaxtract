@@ -82,3 +82,14 @@ def test_breadth_gap_exempts_coarse_paper():
            for i in range(7)]
     rec = _rec(neoantigen_mutations=[NS() for _ in range(40)], patients=pts, evidence=[])
     assert agent_core._evidence_breadth_gap(rec) is None
+
+
+# ----- prompt wiring: the agent is told to declare the grain (both prompts, in lockstep) ------
+def test_data_resolution_guidance_in_both_prompts():
+    import pathlib
+    pkt = pathlib.Path(__file__).resolve().parents[1]
+    pr = (pkt / "vaxtract" / "prompt_render.py").read_text()
+    rules = (pkt / "lite_extract" / "RULES.md").read_text()
+    for blob in (pr, rules):
+        assert "data_resolution" in blob
+        assert "peptide_manifest_present" in blob

@@ -122,6 +122,18 @@ NON-NEGOTIABLE RULES:
     (those counts are cited, not enumerated here), so a complete secondary-paper extraction finalizes
     CLEAN. Set this ONLY for a deferral the paper explicitly states -- NEVER just because you could not
     locate a table (that is a real miss; keep looking or flag it, do not paper over it with this field).
+  - DATA RESOLUTION (paper-level `data_resolution` + `peptide_manifest_present`): set
+    `data_resolution` to the FINEST immunogenicity grain THIS paper actually reports --
+    per_sequence (peptide/epitope SEQUENCES given) > per_mutation (gene+mutation neoantigens, NO
+    sequences -> neoantigen_mutations) > per_target_gene (named target genes, no mutation) >
+    cohort_summary (only aggregate response counts) > clinical_only (survival/safety only). Set
+    `peptide_manifest_present`=true ONLY if a peptide/epitope SEQUENCE table/manifest is actually in
+    this paper or its supplements; false if neoantigens are reported only by gene/mutation or as cohort
+    counts. A genuinely coarse paper (per_mutation/cohort_summary/... with NO manifest) finalizes CLEAN
+    even with few/no peptides -- the per-sequence recall/breadth anchors relax (n_selected_reported is
+    then a CITED count, not a target you enumerate). NOT an escape hatch: if a sequence manifest IS
+    present, set peptide_manifest_present=true and extract it FULLY (a shortfall is then a real miss).
+    Coarse != lazy -- still populate every grain the paper does offer (mutations, screening, survival).
   - EPITOPE LINKAGE (required): every epitope MUST set `parent_peptide_ids` to the
     paper_local_id of its immunizing peptide -- in `add_table`, map it with
     `template_list` using the SAME id scheme as the immunizing_peptides' paper_local_id

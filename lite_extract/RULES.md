@@ -112,3 +112,10 @@ heavy MCP harness buys.
 - If the per-neoantigen sequences are deferred to a prior publication, set `companion_paper_ref` and
   capture what IS reported (named gene/mutation targets → `neoantigen_mutations`; per-patient response
   counts and survival). Do **NOT** fabricate peptide sequences.
+
+## Data resolution (paper grain)
+- Set `data_resolution` to the FINEST grain the paper reports: `per_sequence` > `per_mutation` >
+  `per_target_gene` > `cohort_summary` > `clinical_only`. Set `peptide_manifest_present`=true ONLY if a
+  peptide/epitope SEQUENCE table is actually in the paper/supplements. A genuinely coarse paper (no
+  manifest) finalizes CLEAN with few/no peptides; if a manifest IS present, set it true and extract it
+  fully — **coarse ≠ lazy**.

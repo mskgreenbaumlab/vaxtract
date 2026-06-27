@@ -25,7 +25,7 @@ def _epitope(allele, mhc_class="II"):
 
 def test_version_bumped():
     # v2.12.0 (P23) — CD4/CD8 t_cell_subset + evidence mhc_class axes + class-II epitope anchor.
-    assert schema.SCHEMA_VERSION == "2.15.0"
+    assert schema.SCHEMA_VERSION == "2.16.0"
 
 
 @pytest.mark.parametrize("allele", [

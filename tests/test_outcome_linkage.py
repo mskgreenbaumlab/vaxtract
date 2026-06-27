@@ -112,7 +112,7 @@ def test_li_reference_back_compat_empty_linkage_fields():
     assert all(p.trial_setting is None for p in rec.patients)
     assert all(p.clinical_benefit_signals == [] for p in rec.patients)
     assert rec.clinical_benefit_signals == []
-    assert schema.SCHEMA_VERSION == "2.15.0"
+    assert schema.SCHEMA_VERSION == "2.16.0"
 
 def test_refreshed_references_carry_p22_fields():
     # rojas + keskin refreshed 2026-06-07: trial_setting on every patient + >=1 benefit signal.

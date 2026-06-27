@@ -178,6 +178,14 @@ SPECIES: tuple[str, ...] = ("human", "mouse", "rat", "non_human_primate", "other
 COHORT_KINDS: tuple[str, ...] = (
     "patient", "tumor_model", "model_antigen_validation", "healthy_donor", "other",
 )
+# Paper-level DATA RESOLUTION (schema v2.16): the finest immunogenicity grain a study REPORTS at,
+# ordered FINEST -> COARSEST. Lets a genuinely coarse paper (gene+mutation or cohort-summary only,
+# e.g. 39762422 autogene cevumeran) be admitted faithfully + tagged instead of held as under-
+# extracted by the per-sequence recall anchor. None = un-tagged (legacy/back-compat). MUST equal the
+# schema Literal (VOCAB LOCKSTEP).
+DATA_RESOLUTIONS: tuple[str, ...] = (
+    "per_sequence", "per_mutation", "per_target_gene", "cohort_summary", "clinical_only",
+)
 VACCINE_PLATFORMS: tuple[str, ...] = (
     "dna", "rna", "synthetic_long_peptide", "short_peptide",
     "dendritic_cell", "viral_vector", "other", "unspecified",

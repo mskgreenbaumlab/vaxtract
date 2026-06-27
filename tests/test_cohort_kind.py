@@ -22,7 +22,7 @@ def _patient(pid="P1", **kw):
 
 
 def test_schema_version():
-    assert SCHEMA_VERSION == "2.15.0"
+    assert SCHEMA_VERSION == "2.16.0"
 
 def test_cohort_kind_enum_members():
     assert set(get_args(CohortKind)) == {

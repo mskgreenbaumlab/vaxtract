@@ -14,7 +14,7 @@ def _ev(**kw):
 
 
 def test_schema_version_bumped():
-    assert SCHEMA_VERSION == "2.15.0"
+    assert SCHEMA_VERSION == "2.16.0"
 
 def test_enum_members():
     assert set(get_args(TCellSubset)) == {"cd4", "cd8", "bulk_or_unknown"}

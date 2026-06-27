@@ -41,7 +41,7 @@ def _paper(patients=None, **kw):
 
 
 def test_version_bumped():
-    assert SCHEMA_VERSION == "2.15.0"
+    assert SCHEMA_VERSION == "2.16.0"
 
 
 # --- vocab lockstep (the import-time guard already enforces this; assert membership too) ---

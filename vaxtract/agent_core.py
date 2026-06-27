@@ -931,6 +931,47 @@ def _evidence_anchor_gap(rec: "ExtractedPaper") -> list[str]:
     return msgs
 
 
+# --- data-resolution grain (schema v2.16) -------------------------------------
+# Ladder finest -> coarsest (mirrors vocab.DATA_RESOLUTIONS). Lower rank = finer grain.
+_GRAIN_RANK = {g: i for i, g in enumerate(
+    ("per_sequence", "per_mutation", "per_target_gene", "cohort_summary", "clinical_only"))}
+
+
+def derive_data_resolution(rec: "ExtractedPaper") -> str | None:
+    """The ACHIEVED data-resolution grain, derived deterministically from populated content (NOT the
+    declared `data_resolution` field). The finest populated layer wins. Used to (a) cross-check the
+    agent's declared grain and (b) gate the per-sequence completeness anchors for genuinely coarse
+    papers. Defensive (getattr defaults) so it is safe on partial/duck-typed records.
+    (per_target_gene is agent-declared-only — not deterministically distinguishable here.)"""
+    _g = lambda n: getattr(rec, n, None) or []
+    if any(getattr(p, "sequence", None) for p in _g("immunizing_peptides")) \
+            or any(getattr(e, "sequence", None) for e in _g("epitopes")):
+        return "per_sequence"
+    if _g("neoantigen_mutations"):
+        return "per_mutation"
+    if _g("screening_readouts") or getattr(rec, "n_immunogenic_reported", None) is not None:
+        return "cohort_summary"
+    if _g("survival_outcomes") or getattr(rec, "safety_summary", None):
+        return "clinical_only"
+    return None
+
+
+def _is_faithfully_coarse(rec: "ExtractedPaper") -> bool:
+    """True when the paper genuinely reports BELOW per-sequence grain AND no per-sequence manifest was
+    available in the source -- so the per-sequence completeness anchors (peptide recall, evidence
+    breadth) must NOT fire (n_selected_reported is then a CITED count, like companion_paper_ref). If a
+    manifest WAS present (peptide_manifest_present=True), a shortfall is real under-extraction -> the
+    anchors still fire. None grain (empty record) is NOT coarse -- it should be flagged, not admitted."""
+    # A per-sequence/per-patient layer already exists (peptides or per-patient evidence) -> the anchors
+    # are meaningful and must apply; this is not a coarse-only paper.
+    if getattr(rec, "immunizing_peptides", None) or getattr(rec, "evidence", None):
+        return False
+    achieved = derive_data_resolution(rec)
+    return (achieved is not None
+            and _GRAIN_RANK.get(achieved, 0) > _GRAIN_RANK["per_sequence"]
+            and not getattr(rec, "peptide_manifest_present", None))
+
+
 def _peptide_recall_gap(rec: "ExtractedPaper") -> str | None:
     """Peptide RECALL anchor (prototype): the recorded peptides must meet the paper's STATED
     selected/administered count `n_selected_reported`.
@@ -950,6 +991,10 @@ def _peptide_recall_gap(rec: "ExtractedPaper") -> str | None:
     enumerates — the per-sequence list lives in the companion paper (e.g. 39972124's 108 neoantigens
     are in Rojas). So the recall shortfall is expected, not a miss; do not fire."""
     if getattr(rec, "companion_paper_ref", None):
+        return None
+    # v2.16: a genuinely coarse-grained paper (achieved grain below per_sequence, no manifest available)
+    # cites n_selected_reported as a cohort count, not a per-sequence target it enumerates -- admit it.
+    if _is_faithfully_coarse(rec):
         return None
     anchor = rec.n_selected_reported
     if anchor is None:
@@ -978,6 +1023,11 @@ def _evidence_breadth_gap(rec: "ExtractedPaper") -> str | None:
     biology: across the audited refs the lowest legitimate coverage is Rojas 8/16 (50%) and Keskin 5/8
     (62%), while the under-extraction (33064988) sits at 6/48 (12%). So <1/3 separates skipped-sheets
     from a genuine low response rate without false-positiving on the gold corpus."""
+    # v2.16: a genuinely coarse-grained paper reports cohort-level (not per-patient) immunogenicity, so
+    # zero per-patient evidence rows is faithful, not incomplete -- don't apply the per-sequence breadth
+    # anchor. (A manifest being present => still apply it.)
+    if _is_faithfully_coarse(rec):
+        return None
     # v2.13 A1: a methodological arm (model_antigen_validation / healthy_donor) is NOT a vaccinated
     # disease cohort — exclude it from the denominator so it doesn't dilute coverage. None/patient/
     # tumor_model count (None = legacy untagged).

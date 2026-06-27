@@ -25,7 +25,7 @@ def _scr(**kw):
 
 
 def test_schema_version():
-    assert SCHEMA_VERSION == "2.15.0"
+    assert SCHEMA_VERSION == "2.16.0"
 
 def test_manifest_outcome_enum():
     assert set(get_args(ManifestOutcome)) == {"response", "no_response", "not_evaluable"}

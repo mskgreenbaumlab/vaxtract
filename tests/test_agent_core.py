@@ -7,7 +7,7 @@ ROJAS_REF = PKT / "reference_records" / "rojas_extracted.json"
 
 
 def test_schema_version_is_2_14_0():
-    assert agent_core.SCHEMA_VERSION == "2.15.0"
+    assert agent_core.SCHEMA_VERSION == "2.16.0"
 
 
 def test_validate_accepts_the_rojas_reference_record():

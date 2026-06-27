@@ -176,4 +176,4 @@ def test_references_validate_with_empty_mutations():
         rec = ExtractedPaper(**json.loads((PKT / "reference_records" / f"{n}_extracted.json").read_text()))
         assert rec.neoantigen_mutations == []
         assert all(p_.clonality is None for p_ in rec.immunizing_peptides)  # Piece B defaults
-    assert schema.SCHEMA_VERSION == "2.15.0"
+    assert schema.SCHEMA_VERSION == "2.16.0"

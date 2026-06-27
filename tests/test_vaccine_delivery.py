@@ -154,7 +154,7 @@ def test_li_reference_back_compat_no_delivery():
     rec = ExtractedPaper(**json.loads((PKT / "reference_records" / "li_extracted.json").read_text()))
     assert all(p.vaccine_delivery is None for p in rec.patients)
     assert rec.cohort_latencies == []
-    assert schema.SCHEMA_VERSION == "2.15.0"
+    assert schema.SCHEMA_VERSION == "2.16.0"
 
 def test_refreshed_references_carry_delivery_and_latency():
     # rojas + keskin refreshed 2026-06-07: per-patient vaccine_delivery + paper-level cohort_latencies,

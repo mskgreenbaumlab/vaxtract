@@ -280,8 +280,16 @@ from pydantic import (
 #   ExtractedPaper.safety_summary (SafetySummary; CTCAE-grade headline facts, DISTINCT from the
 #   immunogenicity ResponseGrade; full per-event AE tables deferred); (3) per-patient tmb_value/
 #   tmb_raw/msi_status. All default None/[] -> every pre-2.15 record still validates.
+# 2.16.0 DATA_RESOLUTION — two additive paper-level fields that let a genuinely coarse-grained study be
+#   admitted faithfully instead of held as under-extracted: (1) ExtractedPaper.data_resolution
+#   (DataResolution enum, finest->coarsest; the grain the paper reports at); (2)
+#   ExtractedPaper.peptide_manifest_present (the available-grain ANCHOR: was a per-sequence manifest in
+#   the source?). finalize derives the ACHIEVED grain from content (agent_core.derive_data_resolution)
+#   and, when it is coarser than per_sequence AND no manifest was available, exempts the per-sequence
+#   recall/breadth anchors (n_selected_reported is then a CITED count, like companion_paper_ref). Both
+#   default None -> every pre-2.16 record validates and gates exactly as before (conservative).
 # ---------------------------------------------------------------------------
-SCHEMA_VERSION = "2.15.0"
+SCHEMA_VERSION = "2.16.0"
 
 # ---------------------------------------------------------------------------
 # Patterns — kept in lockstep with antvac.ids and the DB invariants.
@@ -957,6 +965,13 @@ Species = Literal["human", "mouse", "rat", "non_human_primate", "other"]
 # patient" denominator exclude methodological arms (model_antigen_validation/healthy_donor) without
 # dropping the data. None = un-tagged (legacy/back-compat).
 CohortKind = Literal["patient", "tumor_model", "model_antigen_validation", "healthy_donor", "other"]
+# PATCH (v2.16 DATA_RESOLUTION): the finest immunogenicity grain the PAPER reports at, finest->coarsest.
+# Admits genuinely coarse papers faithfully (tagged + queryable) instead of holding them as under-
+# extracted by the per-sequence recall anchor. None = un-tagged (legacy/back-compat -> treated as
+# per_sequence-expected; conservative). Paired with peptide_manifest_present (the available-grain anchor).
+DataResolution = Literal[
+    "per_sequence", "per_mutation", "per_target_gene", "cohort_summary", "clinical_only",
+]
 VaccinePlatform = Literal[
     "dna", "rna", "synthetic_long_peptide", "short_peptide",
     "dendritic_cell", "viral_vector", "other", "unspecified",
@@ -1635,6 +1650,7 @@ _assert_vocab(ImmunosuppressantClass,  "IMMUNOSUPPRESSANT_CLASSES")
 _assert_vocab(ImmunosuppressionTiming, "IMMUNOSUPPRESSION_TIMING")
 _assert_vocab(Species,                 "SPECIES")
 _assert_vocab(CohortKind,              "COHORT_KINDS")
+_assert_vocab(DataResolution,          "DATA_RESOLUTIONS")
 _assert_vocab(VaccinePlatform,         "VACCINE_PLATFORMS")
 _assert_vocab(EfficacyReadout,         "EFFICACY_READOUTS")
 _assert_vocab(EfficacyResult,          "EFFICACY_RESULTS")
@@ -2016,6 +2032,19 @@ class ExtractedPaper(_Frozen):
     # needs_review. NOT an escape hatch for "I couldn't find the table" — only for a genuine deferral the
     # paper itself states. None = standalone paper. The negative-grain evidence anchor is unaffected.
     companion_paper_ref: str | None = Field(default=None, max_length=300)
+    # PATCH (v2.16): paper-level DATA RESOLUTION — the finest immunogenicity grain THIS paper reports
+    # at (see DataResolution; finest->coarsest). A genuinely coarse paper (per_mutation/cohort_summary
+    # /clinical_only, e.g. 39762422 autogene cevumeran's 40 gene+mutation neoantigens + survival, no
+    # peptide sequences) is admitted faithfully + tagged instead of held by the per-sequence recall
+    # anchor. The agent sets it to the finest grain ACTUALLY reported; finalize cross-checks against the
+    # achieved grain derived from content (agent_core.derive_data_resolution). None = un-tagged (legacy
+    # -> treated as per_sequence-expected; conservative).
+    data_resolution: DataResolution | None = None
+    # The available-grain ANCHOR: True iff a peptide/epitope SEQUENCE manifest/table was present in the
+    # source (paper or supplement). Distinguishes faithfully-coarse (no finer grain offered -> admit)
+    # from under-extracted (a manifest existed but wasn't fully parsed -> still flag). None = unknown
+    # (legacy). NOT an escape hatch: set it truthfully from source inspection.
+    peptide_manifest_present: bool | None = None
     # PATCH (v2.11.3): audit trail of which SOFT finalize guards were OVERRIDDEN to let this record
     # through (e.g. 'allow_sparse_evidence', 'allow_peptide_count_mismatch'). Empty = no override used =
     # all completeness/consistency nudges passed clean. Non-empty means the record finalized DESPITE a

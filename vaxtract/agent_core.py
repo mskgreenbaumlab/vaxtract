@@ -199,11 +199,19 @@ def _funnel_size_unknown(rec: "ExtractedPaper") -> bool:
     return bool(rec.candidates) and rec.n_predicted_reported is None
 
 
-# v2.9 P21: the trial-constant regimen fields of VaccineDelivery (per-patient fields excluded —
-# weeks_surgery_to_first_dose and n_doses_received are MEANT to vary; source is provenance).
+# v2.9 P21 / v2.16 recalibration: the TRIAL-CONSTANT, structural regimen fields of VaccineDelivery.
+# The signature must compare only fields that are uniform across an arm by protocol, so divergence
+# means agent inconsistency (or a genuine dose-escalation arm -> override). EXCLUDED:
+#  - per-patient OUTCOME fields that legitimately vary: n_boost_doses (boosters a patient ACTUALLY
+#    received, like n_doses_received / weeks_surgery_to_first_dose — already exempt). Including
+#    n_boost_doses made every personalized-vaccine paper falsely diverge (40480654: identical regimen,
+#    boosters 4..26 per patient).
+#  - FREE-TEXT fields that vary by incidental wording or per-patient dosing: adjuvant_detail,
+#    formulation_detail, dose_amount_raw, schedule_detail (39762422: '25 ug'/'38 ug', substudy phrasing).
+# KEEPS the enum/numeric structural fields an agent should record identically per arm. Dose-escalation
+# (dose_per_peptide_ug varies by cohort) still flags -> genuine, resolved via allow_regimen_divergence.
 _REGIMEN_FIELDS = (
-    "adjuvant", "adjuvant_detail", "formulation_detail", "dose_amount_raw",
-    "dose_per_peptide_ug", "dose_basis", "n_priming_doses", "n_boost_doses", "schedule_detail",
+    "adjuvant", "dose_basis", "dose_per_peptide_ug", "n_priming_doses",
 )
 
 

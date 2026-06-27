@@ -95,6 +95,25 @@ def test_single_patient_arm_cannot_diverge():
                        _pt("rna", _vd(adjuvant=None))])  # 2 same-arm but adjuvant None vs none differ
     assert agent_core._regimen_divergence(rec) == ["rna"]  # None != 'none' is a real divergence
 
+def test_personalized_vaccine_perpatient_boosts_not_divergent():
+    # v2.16: 40480654 shape — identical structural regimen; only n_boost_doses (boosters RECEIVED)
+    # and free-text dose/schedule differ per patient. Must NOT flag (was the over-flag that held it).
+    rec = NS(patients=[
+        _pt("synthetic_long_peptide", _vd(adjuvant="gm_csf", dose_basis="per_peptide",
+            dose_per_peptide_ug=400.0, n_priming_doses=4, n_boost_doses=23,
+            dose_amount_raw="0.5 mL, 0.8 mg/mL", schedule_detail="monthly boosters")),
+        _pt("synthetic_long_peptide", _vd(adjuvant="gm_csf", dose_basis="per_peptide",
+            dose_per_peptide_ug=400.0, n_priming_doses=4, n_boost_doses=4,
+            dose_amount_raw="0.5 mL, 0.8 mg/mL", schedule_detail="monthly boosters; biomarker substudy")),
+    ])
+    assert agent_core._regimen_divergence(rec) == []
+
+def test_dose_escalation_still_flags():
+    # a genuine per-cohort dose difference (structural) is still caught -> resolved via override.
+    rec = NS(patients=[_pt("short_peptide", _vd(adjuvant="poly_iclc", dose_per_peptide_ug=100.0)),
+                       _pt("short_peptide", _vd(adjuvant="poly_iclc", dose_per_peptide_ug=300.0))])
+    assert agent_core._regimen_divergence(rec) == ["short_peptide"]
+
 
 # ---- the nudge is reachable + overridable through finalize_partial ----
 

@@ -83,7 +83,7 @@ cannot read or write outside the paper directory you give it and the output path
 
 ## 5. The schema as a single versioned contract
 
-The output schema (`SCHEMA_VERSION`, currently 2.15.0) is the heart of the system. It encodes the
+The output schema (`SCHEMA_VERSION`, currently 2.16.0) is the heart of the system. It encodes the
 entity model (studies → patients → peptides/epitopes/pools → evidence → outcomes), controlled
 vocabularies, and cross-field invariants. Because it is the **core** install, the same contract is
 importable by any consumer — extractor, ETL loader, and tests all validate against one source of

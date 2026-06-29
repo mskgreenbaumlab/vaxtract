@@ -7,8 +7,8 @@ authors:
     family-names: Ahuno
     email: ekwame001@gmail.com
     orcid: "https://orcid.org/0000-0002-1327-0195"
-version: 0.1.0
-date-released: "2026-06-18"
+version: 0.2.0
+date-released: "2026-06-29"
 license: MIT
 repository-code: "https://github.com/mskgreenbaumlab/vaxtract"
 url: "https://github.com/mskgreenbaumlab/vaxtract"

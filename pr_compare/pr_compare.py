@@ -58,6 +58,16 @@ def build_source_index(paper_dir):
                 for ws in wb.worksheets:
                     for row in ws.iter_rows(values_only=True):
                         chunks.append(" ".join(str(c) for c in row if c is not None))
+            elif suf == ".docx":
+                # docx supplements hold real manifests (e.g. 27274999 Supp Table 1's 31-peptide panel).
+                # cell.text carries the FULL cell (merged/pivoted cells included), so source-verification
+                # is not defeated by the reader's preview clip. Tables + prose; fail-soft on missing dep.
+                import docx
+                d = docx.Document(p)
+                for tbl in d.tables:
+                    for row in tbl.rows:
+                        chunks.append(" ".join(c.text for c in row.cells))
+                chunks.append(" ".join(par.text for par in d.paragraphs))
             elif suf in (".txt", ".md", ".csv", ".tsv"):
                 chunks.append(p.read_text(errors="ignore"))
         except Exception as e:

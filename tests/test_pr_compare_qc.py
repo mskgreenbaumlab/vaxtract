@@ -28,6 +28,25 @@ def test_qc_fact_rate_catches_unsourced_sequence(tmp_path):
     assert m["fact_unverified"] == 1
 
 
+def test_qc_verifies_sequences_in_a_docx_source(tmp_path):
+    """build_source_index must read .docx tables (incl. merged/pivoted cells), so a docx-only
+    manifest verifies — the 27274999 gap: panel sequences live only in a docx Supp Table."""
+    import docx
+    d = docx.Document()
+    t = d.add_table(rows=2, cols=2)            # pivoted: one data cell holds the whole sequence column
+    t.rows[0].cells[0].text = "Name"; t.rows[0].cells[1].text = "Sequence"
+    t.rows[1].cells[0].text = "P1\nP2"
+    t.rows[1].cells[1].text = "KLKHYGPGWV\nWLEYYNLER"   # second seq is past a naive 1-row read
+    d.save(str(tmp_path / "supp.docx"))
+    rec = {"immunizing_peptides": [
+        {"paper_local_id": "i1", "sequence": "KLKHYGPGWV"},
+        {"paper_local_id": "i2", "sequence": "WLEYYNLER"},
+        {"paper_local_id": "i3", "sequence": "MADEUPSEQ"},   # not in the docx -> unverified
+    ]}
+    m = pr_compare.qc_metrics(rec, paper_dir=str(tmp_path))
+    assert m["fact_seq_rate"] == round(2 / 3, 4) and m["fact_unverified"] == 1
+
+
 def test_qc_gold_pr_added_when_gold_given(tmp_path):
     (tmp_path / "src.txt").write_text("SIINFEKL")
     rec = {"immunizing_peptides": [{"paper_local_id": "i1", "sequence": "SIINFEKL"}],

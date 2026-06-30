@@ -111,6 +111,76 @@ def test_prose_paging(tmp_path):
     assert "120-" in rest and "text_offset=" not in rest.split("chars:\n", 1)[1]  # no further page
 
 
+def _pivot_doc(path, header, columns):
+    """Build the 27274999 Supp Table 1 shape: ONE header row + ONE data row whose cells each hold
+    a whole column joined by newlines (the merged/pivoted layout that silently lost rows)."""
+    d = docx.Document()
+    t = d.add_table(rows=2, cols=len(header))
+    for c, h in enumerate(header):
+        t.rows[0].cells[c].text = h
+    for c, col in enumerate(columns):
+        t.rows[1].cells[c].text = "\n".join(col)
+    d.save(str(path))
+    return str(path)
+
+
+# 31-peptide panel verbatim from PMID 27274999 Supplementary Table 1 (the real regression).
+_PANEL_NAMES = ["CypB-129", "Lck-246", "Lck-422", "MAP-432", "WHSC2-103", "HNRPL-501", "UBE-43",
+                "UBE-85", "WHSC2-141", "HNRPL-140", "SART3-302", "SART3-309", "SART2-93", "SART3-109",
+                "Lck-208", "PAP-213", "PSA-248", "EGFR-800", "MRP3-503", "MRP3-1293", "SART2-161",
+                "Lck-486", "Lck-488", "PSMA-624", "EZH2-735", "PTHrP-102", "SART3-511", "SART3-734",
+                "Lck-90", "Lck-449", "PAP-248"]
+_PANEL_SEQS = ["KLKHYGPGWV", "KLVERLGAA", "DVWSFGILL", "DLLSHAFFA", "ASLDSDPWV", "NVLHFFNAPL",
+               "RLQEWCSVI", "LIADFLSGL", "ILGELREKV", "ALVEFEDVL", "LLQAEAPRL", "RLAEYQAYI",
+               "DYSARWNEI", "VYDYNCHVDL", "HYTNASDGL", "LYCESVHNF", "HYRKWIKDTI", "DYVREHKDNI",
+               "LYAWEPSFL", "NYSVRYRPGL", "AYDFLYNYL", "TFDYLRSVL", "DYLRSVLEDF", "TYSVSFDSL",
+               "KYVGIEREM", "RYLTQETNKV", "WLEYYNLER", "QIRPIFSNR", "ILEQSGEWWK", "VIQNLERGYR",
+               "GIHKQKEKSR"]
+
+
+def test_unpivot_recovers_all_rows_from_list_cells(tmp_path):
+    """A pivoted list-cell table (1 data row, all values newline-joined) must un-pivot to one row
+    per value — NOT lose the tail to the per-cell clip (the 27274999 23/31 regression). One header
+    cell WRAPS across lines ("Amino acid\\nsequence") with MIXED counts across the row, exactly like the
+    real Supp Table 1 — the guard must key on the DATA row's uniform K, not bail on any header newline
+    (the original bug bailed on ANY header newline and lost all 8 tail rows)."""
+    p = _pivot_doc(tmp_path / "panel.docx", ["Peptide name", "Amino acid\nsequence"],
+                   [_PANEL_NAMES, _PANEL_SEQS])
+    out = agent_core.read_docx_from(p, table_index=0)
+    assert "un-pivoted" in out
+    for seq in _PANEL_SEQS:                      # every sequence survives, incl. the 8 once dropped
+        assert seq in out, f"{seq} lost"
+    proj = agent_core.read_docx_from(p, table_index=0, columns=["Amino acid\nsequence"])
+    assert proj.count("WLEYYNLER") == 1 and proj.count("GIHKQKEKSR") == 1
+
+
+def test_summary_flags_list_cell_pivot(tmp_path):
+    p = _pivot_doc(tmp_path / "panel.docx", ["Name", "Seq"], [_PANEL_NAMES, _PANEL_SEQS])
+    out = agent_core.read_docx_from(p)           # summary
+    assert "un-pivoted" in out and "31 rows" in out
+
+
+def test_normal_table_is_not_unpivoted(tmp_path):
+    """A genuine 2-row table (header + one record) where one cell merely wraps to two lines must
+    NOT be reshaped — the strict guard requires a CONSISTENT K>=2 across ALL cells."""
+    d = docx.Document()
+    t = d.add_table(rows=2, cols=2)
+    t.rows[0].cells[0].text = "Gene"; t.rows[0].cells[1].text = "Note"
+    t.rows[1].cells[0].text = "TP53"; t.rows[1].cells[1].text = "line one\nline two"
+    p = str(tmp_path / "normal.docx"); d.save(p)
+    out = agent_core.read_docx_from(p, table_index=0)
+    assert "un-pivoted" not in out and "TP53" in out
+
+
+def test_ambiguous_uniform_header_is_not_unpivoted(tmp_path):
+    """When BOTH rows are uniform K>=2 lists (header can't be told from data), the reshape is
+    ambiguous — bail rather than risk silently corrupting a normal table (conservative guard)."""
+    p = _pivot_doc(tmp_path / "amb.docx", ["Col\nA", "Col\nB"],   # header: every cell wraps to 2
+                   [["x", "y"], ["p", "q"]])                       # data: every cell also 2 -> ambiguous
+    out = agent_core.read_docx_from(p, table_index=0)
+    assert "un-pivoted" not in out
+
+
 # ---- discovery: .docx is now an accepted source suffix ----
 
 def test_docx_is_a_discovered_suffix():

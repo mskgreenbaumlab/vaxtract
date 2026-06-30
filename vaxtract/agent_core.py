@@ -481,6 +481,46 @@ def _docx_table_matrix(tbl, underline: bool) -> list:
     return rows
 
 
+def _unpivot_list_cells(matrix: list) -> tuple[list, str]:
+    """Un-pivot a docx table that packs an ENTIRE COLUMN of values into a single cell as a
+    newline-separated list — the merged-cell artifact behind silent row loss.
+
+    Some publishers lay a manifest out so the whole table is ONE header row + ONE data row, where
+    each data cell holds every value for that column joined by newlines (e.g. PMID 27274999 Supp
+    Table 1: a 2x5 grid whose 5 data cells each carry all 31 peptides). python-docx returns that as a
+    2-row table, and `_clip_cell` (240-char cap) then truncates each cell — dropping the tail rows
+    with only a "…(+N chars)" marker and no way to recover them (root-caused: the agent saw 23 of 31
+    peptides and could not reach the rest). Detect that exact shape and TRANSPOSE it back to one row
+    per value.
+
+    STRICT guard so normal tables are never reshaped: exactly two rows (header + one data row); the DATA
+    row's every NON-empty cell splits into the SAME count K>=2 on newlines (empty columns allowed and
+    back-filled with ""); and the HEADER row is NOT itself such a uniform K>=2 list-row (so it stays a
+    genuine header — note the header cells may still wrap across lines, e.g. "Position of\npeptide", which
+    is why "header has no newline" is the WRONG test). Anything else -> returned unchanged. Returns
+    (matrix, note); note='' when nothing was reshaped."""
+    if len(matrix) != 2:
+        return matrix, ""
+    header, data = matrix[0], matrix[1]
+
+    def _segs(c):
+        return [s.strip() for s in str(c).split("\n") if s.strip()] if c is not None else []
+
+    def _uniform_k(row):
+        """The single segment-count K>=2 shared by every non-empty cell, else None."""
+        counts = {len(_segs(c)) for c in row if _segs(c)}
+        return counts.pop() if len(counts) == 1 and next(iter(counts)) >= 2 else None
+
+    k = _uniform_k(data)
+    if k is None:                                    # data row isn't a clean K-list -> ordinary table
+        return matrix, ""
+    if _uniform_k(header) is not None:               # header is ALSO a uniform list -> ambiguous, bail
+        return matrix, ""
+    cols = [_segs(c) for c in data]
+    new = [list(header)] + [[(col[i] if i < len(col) else "") for col in cols] for i in range(k)]
+    return new, f"un-pivoted list-cell table (1 data row x {len(header)} cols -> {k} rows)"
+
+
 def read_docx_from(path: str, table_index: int | None = None, max_rows: int = 500,
                    row_filter: dict | None = None, columns: list | None = None,
                    underline: bool = False, text_offset: int | None = None,
@@ -524,8 +564,13 @@ def read_docx_from(path: str, table_index: int | None = None, max_rows: int = 50
         if not tables:
             return (f"docx: 0 tables, {len(doc.paragraphs)} paragraphs. "
                     f"Call with text_offset=0 to read the prose.")
-        summ = "\n".join(f"  [{i}] {len(t.rows)}x{len(t.columns)}  {cap[:70]!r}"
-                         for i, (t, cap) in enumerate(tables))
+        lines = []
+        for i, (t, cap) in enumerate(tables):
+            _, note = _unpivot_list_cells(_docx_table_matrix(t, False))
+            # report the REAL record count for a list-cell pivot (its physical 2 rows are misleading)
+            dims = f"{len(t.rows)}x{len(t.columns)}" + (f" [{note}]" if note else "")
+            lines.append(f"  [{i}] {dims}  {cap[:70]!r}")
+        summ = "\n".join(lines)
         return (f"docx: {len(tables)} table(s), {len(doc.paragraphs)} paragraphs.\n"
                 f"tables (read one with table_index=N):\n{summ}\n"
                 f"(prose: call with text_offset=0)")
@@ -535,9 +580,11 @@ def read_docx_from(path: str, table_index: int | None = None, max_rows: int = 50
         return f"table_index {table_index} out of range (have {len(tables)} table(s): 0..{len(tables) - 1})"
     tbl, cap = tables[table_index]
     matrix = _docx_table_matrix(tbl, underline)
+    matrix, note = _unpivot_list_cells(matrix)   # recover row-per-value from merged/pivoted cells
     unit = f"table[{table_index}] {cap[:70]!r}"
+    prefix = f"tables={len(tables)}" + (f"\n{note}" if note else "")
     return _render_matrix(
-        matrix, prefix=f"tables={len(tables)}", raw_unit=unit, filtered_unit=unit,
+        matrix, prefix=prefix, raw_unit=unit, filtered_unit=unit,
         max_rows=max_rows, row_filter=row_filter, columns=columns)
 
 

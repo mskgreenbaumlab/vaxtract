@@ -13,7 +13,7 @@ needs_pdf = pytest.mark.skipif(not PDF.exists(), reason="Rojas main.pdf not pres
 
 def _call(**args):
     fn = ea.read_figure.handler if hasattr(ea.read_figure, "handler") else ea.read_figure
-    return asyncio.get_event_loop().run_until_complete(fn(args))
+    return asyncio.run(fn(args))
 
 
 @needs_pdf

@@ -1,15 +1,30 @@
 # vaxtract — BYOK neoantigen cancer-vaccine extraction agent.
 #
-# Build:  docker build -t vaxtract .
-# Run:    docker run --rm -e ANTHROPIC_API_KEY \
-#               -v "$PWD/paper:/work/paper" \
-#               vaxtract /work/paper /work/paper/out.json
+# Full image (Claude CLI + OpenAI-compat runtimes):
+#   docker build --target full -t ghcr.io/mskgreenbaumlab/vaxtract:latest .
+# Slim image (Grok/GPT/vLLM only — no Node/Claude CLI):
+#   docker build --target compat -t ghcr.io/mskgreenbaumlab/vaxtract:compat .
 #
-# The image bundles Node + the Claude Code CLI because the Claude Agent SDK shells
-# out to the `claude` binary. Bring your own ANTHROPIC_API_KEY (nothing is hosted).
-FROM python:3.11-slim
+# Run:
+#   docker run --rm -e ANTHROPIC_API_KEY -v "$PWD/paper:/work/paper" \
+#       ghcr.io/mskgreenbaumlab/vaxtract:latest /work/paper /work/paper/out.json
+#   docker run --rm -e XAI_API_KEY -v "$PWD/paper:/work/paper" \
+#       ghcr.io/mskgreenbaumlab/vaxtract:compat \
+#       --profile grok /work/paper /work/paper/out.json
 
-# Node 20 + the Claude Code CLI (the SDK's subprocess transport).
+FROM python:3.11-slim AS base
+WORKDIR /app
+COPY pyproject.toml README.md LICENSE /app/
+COPY vaxtract /app/vaxtract
+
+# Slim: OpenAI-compatible profiles only (Grok, GPT, Inkling, NIM/vLLM).
+FROM base AS compat
+RUN pip install --no-cache-dir ".[compat_figures]"
+WORKDIR /work
+ENTRYPOINT ["vaxtract"]
+
+# Default: Claude Agent SDK + figures + OpenAI-compat. Bundles Node + `claude`.
+FROM base AS full
 RUN apt-get update \
  && apt-get install -y --no-install-recommends curl ca-certificates gnupg \
  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
@@ -17,15 +32,6 @@ RUN apt-get update \
  && npm install -g @anthropic-ai/claude-code \
  && apt-get purge -y curl gnupg && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-# Copy only what the build needs (see .dockerignore); keeps the image lean.
-COPY pyproject.toml README_PACKAGE.md LICENSE /app/
-COPY vaxtract /app/vaxtract
-# This image runs the agent, so it needs the [agent] extra (SDK + readers);
-# [figures] adds PDF figure/image reading. Core install alone is schema-only.
-RUN pip install --no-cache-dir ".[agent,figures]"
-
-# Papers are mounted here; pass <paper_dir> [out.json] as args.
+RUN pip install --no-cache-dir ".[agent,figures,compat]"
 WORKDIR /work
 ENTRYPOINT ["vaxtract"]

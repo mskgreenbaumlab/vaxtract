@@ -40,12 +40,13 @@ def test_finalize_tool_forwards_all_override_flags():
     # but the tool forwarded only the older two, so a blocked agent deleted all 103 candidates).
     # Reads extraction_agent.py as text (no SDK import needed).
     import inspect
+    from vaxtract.tool_registry import finalize_override_names, get_tool
     params = [p for p in inspect.signature(agent_core.finalize_partial).parameters if p.startswith("allow_")]
-    src = (PKT / "vaxtract" / "extraction_agent.py").read_text()
-    start = src.index('@tool("finalize"')
-    body = src[start:src.index("@tool(", start + 10)]
+    spec = get_tool("finalize")
+    props = spec.input_schema["properties"]
+    assert set(finalize_override_names()) == set(params)
     for p in params:
-        assert p in body, f"finalize_partial override {p!r} is not forwarded by the MCP finalize tool"
+        assert p in props, f"finalize schema missing override {p!r}"
 
 
 def test_can_append_candidates_with_scores_through_tool_path(tmp_path):

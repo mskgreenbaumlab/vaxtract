@@ -53,8 +53,7 @@ def test_finalize_override_recorded(tmp_path):
     assert rec["finalize_overrides_used"] == ["allow_missing_class_ii"]
 
 def test_tool_schema_exposes_override():
-    # the finalize tool must expose the override in its JSON schema AND forward it in the handler
-    src = (PKT / "vaxtract" / "extraction_agent.py").read_text()
-    body = src[src.index('@tool("finalize"'):src.index("return", src.index("async def finalize"))]
-    assert '"allow_missing_class_ii"' in body                       # schema property
-    assert 'allow_missing_class_ii=bool(args.get("allow_missing_class_ii"))' in body  # handler forward
+    from vaxtract.tool_registry import finalize_override_names, get_tool
+    spec = get_tool("finalize")
+    assert "allow_missing_class_ii" in spec.input_schema["properties"]
+    assert "allow_missing_class_ii" in finalize_override_names()

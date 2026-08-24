@@ -162,6 +162,7 @@ def test_add_table_tool_logs_its_mode():
     # observability (2026-06-09): the add_table MCP wrapper must emit a greppable '[add_table]' line
     # recording single vs multi(N), so the per-paper log shows whether the bulk sheets=[...] path was
     # used. Guard the marker so a refactor can't silently drop it (we grep logs for it post-run).
-    src = (PKT / "vaxtract" / "extraction_agent.py").read_text()
-    body = src[src.index("async def add_table"):src.index("server = create_sdk_mcp_server")]
+    src = (PKT / "vaxtract" / "tool_registry.py").read_text()
+    start = src.index("async def handle_add_table")
+    body = src[start:src.index("async def handle_build_pools")]
     assert "[add_table]" in body and "multi(" in body and "mode=" in body

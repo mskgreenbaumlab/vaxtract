@@ -1,0 +1,58 @@
+# Named extraction endpoints. The runtime is either claude_sdk (today's loop)
+# or openai_compat (Chat Completions + tools). Grok / GPT / Inkling / Nemotron /
+# Qwen are profiles, not code paths. Non-Claude profiles are experimental until
+# the parity suite + source-fact floors pass (eval_kind=parity_vs_claude_keepfile).
+#
+# Override model / base_url on the CLI: --model NAME --base-url URL
+
+claude:
+  runtime: claude_sdk
+  model: claude-opus-4-8[1m]
+  vision: true
+  max_context: 1000000
+  experimental: false
+
+grok:
+  runtime: openai_compat
+  base_url: https://api.x.ai/v1
+  api_key_env: XAI_API_KEY
+  model: grok-4.6
+  vision: true
+  max_context: 500000
+  experimental: true
+
+gpt:
+  runtime: openai_compat
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  model: gpt-5.4
+  vision: true
+  max_context: 256000
+  experimental: true
+
+inkling:
+  runtime: openai_compat
+  base_url: https://api.together.xyz/v1
+  api_key_env: TOGETHER_API_KEY
+  model: thinkingmachines/Inkling
+  vision: true
+  max_context: 524000
+  experimental: true
+
+nemotron:
+  runtime: openai_compat
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: NVIDIA_API_KEY
+  model: nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B
+  vision: false
+  max_context: 262144
+  experimental: true
+
+qwen:
+  runtime: openai_compat
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: EMPTY
+  model: Qwen/Qwen3-235B-A22B
+  vision: false
+  max_context: 131072
+  experimental: true

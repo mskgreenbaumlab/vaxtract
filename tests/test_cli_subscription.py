@@ -6,18 +6,21 @@ import extraction_agent as ea
 
 
 def test_parse_cli_plain():
-    paper_dir, out, sub = ea._parse_cli(["data/raw/foo"])
+    paper_dir, out, sub, model = ea._parse_cli(["data/raw/foo"])
     assert paper_dir == "data/raw/foo"
     assert out == "newpaper_extracted.json"  # default
     assert sub is False
+    assert model == ea.MODEL
 
 
 def test_parse_cli_with_out_and_subscription_anywhere():
     # --subscription is position-independent and stripped from positionals
-    paper_dir, out, sub = ea._parse_cli(["--subscription", "data/raw/foo", "out.json"])
+    paper_dir, out, sub, model = ea._parse_cli(["--subscription", "data/raw/foo", "out.json"])
     assert (paper_dir, out, sub) == ("data/raw/foo", "out.json", True)
-    paper_dir, out, sub = ea._parse_cli(["data/raw/foo", "out.json", "--subscription"])
+    assert model == ea.MODEL
+    paper_dir, out, sub, model = ea._parse_cli(["data/raw/foo", "out.json", "--subscription"])
     assert (paper_dir, out, sub) == ("data/raw/foo", "out.json", True)
+    assert model == ea.MODEL
 
 
 def test_parse_cli_requires_paper_dir():

@@ -200,10 +200,12 @@ def test_tool_forwards_both_new_flags():
     import inspect
     params = [p for p in inspect.signature(agent_core.finalize_partial).parameters]
     assert "allow_peptide_count_mismatch" in params and "allow_sparse_evidence" in params
-    src = (PKT / "vaxtract" / "extraction_agent.py").read_text()
-    body = src[src.index('@tool("finalize"'):src.index("async def finalize")] + \
-        src[src.index("async def finalize"):src.index("return", src.index("async def finalize"))]
-    assert "allow_peptide_count_mismatch" in body and "allow_sparse_evidence" in body
+    from vaxtract.tool_registry import finalize_override_names, get_tool
+    spec = get_tool("finalize")
+    names = finalize_override_names()
+    assert "allow_peptide_count_mismatch" in spec.input_schema["properties"]
+    assert "allow_sparse_evidence" in spec.input_schema["properties"]
+    assert "allow_peptide_count_mismatch" in names and "allow_sparse_evidence" in names
 
 
 # ---- override TIERING (v2.11.5): soft-only stays clean; any hard/unknown -> needs_review ----

@@ -15,8 +15,8 @@ if str(PKT) not in sys.path:
 # "ModuleNotFoundError: schema". Only the optional-dependency modules are guarded
 # (extraction_agent needs claude_agent_sdk; figure_benchmark.* needs pymupdf/Pillow),
 # and only ImportError is caught so a genuine bug there still raises.
-_CORE = ["agent_core", "prompt_render", "schema_digest", "table_map", "schema", "vocab"]
-_OPTIONAL = ["extraction_agent", "figure_benchmark"]
+_CORE = ["agent_core", "prompt_render", "schema_digest", "table_map", "schema", "vocab", "extraction_agent"]
+_OPTIONAL = ["figure_benchmark"]
 for _name in _CORE:
     sys.modules.setdefault(_name, importlib.import_module(f"vaxtract.{_name}"))
 for _name in _OPTIONAL:

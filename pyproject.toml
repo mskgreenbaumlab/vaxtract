@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "vaxtract"
 dynamic = ["version"]   # single source of truth: vaxtract.__version__
-description = "Schema-validated extraction of neoantigen cancer-vaccine immunogenicity data from primary papers, on the Claude Agent SDK (bring-your-own-key)."
+description = "Schema-validated extraction of neoantigen cancer-vaccine immunogenicity data from primary papers (Claude Agent SDK or any OpenAI-compatible endpoint)."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Samuel Ahuno", email = "ekwame001@gmail.com" }]
-keywords = ["neoantigen", "cancer-vaccine", "immunogenicity", "extraction", "claude", "bioinformatics"]
+keywords = ["neoantigen", "cancer-vaccine", "immunogenicity", "extraction", "claude", "grok", "bioinformatics"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -40,8 +40,16 @@ agent = [
 # Figure reading is an agent capability (read_figure), so it pulls in [agent]
 # too — `pip install vaxtract[figures]` is a complete agent+figures install.
 figures = ["vaxtract[agent]", "pymupdf>=1.23", "Pillow>=10"]  # read_figure: render PDF pages to images
-all = ["vaxtract[agent,figures]"]
-dev = ["vaxtract[agent,figures]", "pytest>=7"]
+# OpenAI-compatible runtime (xAI Grok, OpenAI GPT, Together/Inkling, NIM/vLLM).
+compat = ["openai>=1.0"]
+# Slim cloud image: Grok/GPT + readers + figures, no Claude CLI/SDK.
+compat_figures = [
+    "vaxtract[compat]",
+    "pypdf>=4", "openpyxl>=3.1", "python-docx>=1.1",
+    "pymupdf>=1.23", "Pillow>=10",
+]
+all = ["vaxtract[agent,figures,compat]"]
+dev = ["vaxtract[agent,figures,compat]", "pytest>=7"]
 
 [project.scripts]
 vaxtract = "vaxtract.cli:main"
@@ -60,4 +68,4 @@ include = ["vaxtract*"]
 [tool.setuptools.package-data]
 # Runtime data file read via importlib.resources (the Layer-2 prompt deltas). The "*"
 # key globs every package incl. subpackages so no nested data file is silently dropped.
-"*" = ["*.md"]
+"*" = ["*.md", "*.yaml"]

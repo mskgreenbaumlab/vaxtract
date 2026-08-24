@@ -66,10 +66,10 @@ def test_survey_byte_cap_lists_skipped(tmp_path):
 
 
 def test_survey_tool_is_registered():
-    src = (pathlib.Path(__file__).resolve().parents[1] / "vaxtract" / "extraction_agent.py").read_text()
-    assert '@tool("survey_sources"' in src
-    assert "survey_sources," in src                       # in the server tools=[...] list
-    assert "mcp__antvac__survey_sources" in src           # in the allowed-tools list
+    from vaxtract.tool_registry import allowed_mcp_names, get_tool
+    spec = get_tool("survey_sources")
+    assert spec.allowed
+    assert "mcp__antvac__survey_sources" in allowed_mcp_names()
 
 
 def test_survey_flags_per_patient_sheet_family(tmp_path):

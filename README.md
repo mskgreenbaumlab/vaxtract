@@ -7,13 +7,15 @@
 <!-- DOI badge added after the first Zenodo release: [![DOI](https://zenodo.org/badge/DOI/<DOI>.svg)](https://doi.org/<DOI>) -->
 
 Schema-validated extraction of **neoantigen cancer-vaccine immunogenicity data** from
-primary papers, built on the [Claude Agent SDK](https://github.com/anthropics/claude-agent-sdk-python).
+primary papers. The default runtime is the [Claude Agent SDK](https://github.com/anthropics/claude-agent-sdk-python);
+`--profile grok` (and other OpenAI-compatible endpoints) is **experimental**.
 Point it at a folder of paper files (PDF / XLSX / DOCX) and it returns a
 **schema-validated, provenance-tracked JSON** extraction (per-peptide / per-epitope
 immunogenicity, HLA restriction, evidence, survival outcomes, …) for human sign-off.
 
-> **Bring your own key (BYOK).** You run the agent and pay for your own Anthropic usage
-> (~$3/paper, varies). Your files never leave your machine — there is no hosted service.
+> **Bring your own key (BYOK).** You run the agent and pay for your own model usage
+> (~$3/paper, varies). Your files never leave your machine unless you choose a
+> hosted runner. There is no public upload service.
 
 > **Output is _silver_, not gold.** Every record carries provenance and is meant for a
 > curator to review before use, not to be treated as ground truth.
@@ -30,6 +32,7 @@ accompanying paper (see [Citation](#citation)).
 pip install vaxtract                    # core: the schema/vocab data contract only (pydantic)
 pip install "vaxtract[agent]"           # + the extraction agent (Claude Agent SDK + readers)
 pip install "vaxtract[agent,figures]"   # + figure/image reading (PyMuPDF + Pillow)
+pip install "vaxtract[compat]"          # + OpenAI-compatible runtime (Grok / GPT / vLLM)
 ```
 
 `pip install vaxtract` pulls only `pydantic`, so you can `import vaxtract.schema` to validate
@@ -56,8 +59,12 @@ export ANTHROPIC_API_KEY=sk-ant-...     # A) API key — pay-per-token
 
 ```bash
 vaxtract ./my_paper_dir out.json
-vaxtract --subscription ./my_paper_dir out.json   # use plan quota
+vaxtract --subscription ./my_paper_dir out.json   # Claude plan quota
+vaxtract --profile grok ./my_paper_dir out.json   # XAI_API_KEY; experimental
 ```
+
+`--subscription` is Claude-only. Non-Claude profiles (`grok`, `gpt`, `inkling`,
+`nemotron`, `qwen`) are experimental — see [docs/MODEL_AGNOSTIC_RUNTIME.md](docs/MODEL_AGNOSTIC_RUNTIME.md).
 
 `my_paper_dir` is a folder containing the paper's `.pdf` and any supplementary `.xlsx` /
 `.docx`. The agent reads the tables/text/figures, builds the record, self-validates against
@@ -79,13 +86,20 @@ from vaxtract.schema import ExtractedPaper, SCHEMA_VERSION
 
 ### Run with Docker
 
-A prebuilt multi-arch image bundles Python, the agent, **and** the Claude Code CLI — bring only your key:
+Multi-arch images on GHCR. `latest` includes the Claude CLI; `compat` is the slim Grok/GPT image (no Node).
 
 ```bash
-docker pull sahuno/vaxtract:latest
+docker pull ghcr.io/mskgreenbaumlab/vaxtract:latest
 docker run --rm -e ANTHROPIC_API_KEY \
     -v "$PWD/my_paper_dir:/work/my_paper_dir" \
-    sahuno/vaxtract:latest /work/my_paper_dir /work/my_paper_dir/out.json
+    ghcr.io/mskgreenbaumlab/vaxtract:latest \
+    /work/my_paper_dir /work/my_paper_dir/out.json
+
+docker pull ghcr.io/mskgreenbaumlab/vaxtract:compat
+docker run --rm -e XAI_API_KEY \
+    -v "$PWD/my_paper_dir:/work/my_paper_dir" \
+    ghcr.io/mskgreenbaumlab/vaxtract:compat \
+    --profile grok /work/my_paper_dir /work/my_paper_dir/out.json
 ```
 
 ## What it extracts
@@ -125,7 +139,7 @@ reproducibility anchor, not byte-identical re-runs. See **[REPRODUCIBILITY.md](R
 
 | Path | What |
 |---|---|
-| `vaxtract/` | the package: schema (core) + the agent loop, tools, prompt rendering (`[agent]`) |
+| `vaxtract/` | schema (core) + tool registry + Claude / OpenAI-compat runtimes |
 | `cancervac_packet/` | schema/vocab re-export shims + reporting + the pre-deploy validation gate |
 | `tests/` | the test suite (`pytest`) |
 | `reference_records/` | audited gold extractions — the validation set |

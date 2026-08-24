@@ -130,7 +130,9 @@ def test_finalize_blocks_then_overrides_on_anchor_gap(tmp_path):
 
 def test_tool_forwards_the_new_flag():
     import inspect
+    from vaxtract.tool_registry import finalize_override_names, get_tool
     params = [p for p in inspect.signature(agent_core.finalize_partial).parameters if p.startswith("allow_")]
-    src = (PKT / "vaxtract" / "extraction_agent.py").read_text()
-    body = src[src.index('@tool("finalize"'):src.index("@tool(", src.index('@tool("finalize"') + 10)]
-    assert "allow_evidence_count_mismatch" in params and "allow_evidence_count_mismatch" in body
+    spec = get_tool("finalize")
+    assert "allow_evidence_count_mismatch" in params
+    assert "allow_evidence_count_mismatch" in spec.input_schema["properties"]
+    assert "allow_evidence_count_mismatch" in finalize_override_names()

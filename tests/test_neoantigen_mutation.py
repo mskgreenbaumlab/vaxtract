@@ -176,4 +176,7 @@ def test_references_validate_with_empty_mutations():
         rec = ExtractedPaper(**json.loads((PKT / "reference_records" / f"{n}_extracted.json").read_text()))
         assert rec.neoantigen_mutations == []
         assert all(p_.clonality is None for p_ in rec.immunizing_peptides)  # Piece B defaults
-    assert schema.SCHEMA_VERSION == "2.16.0"
+        assert rec.data_depositions == [] and rec.neoantigen_tcr_flags == [] and rec.tcr_seq_methods == []
+        # Public gold files are still pre-TCR-lane (empty defaults). Schema 2.19 admits them.
+        assert rec.tcr_clonotypes == []
+    assert schema.SCHEMA_VERSION == "2.19.0"

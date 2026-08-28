@@ -193,6 +193,97 @@ this field. `assay_detail` keeps only non-magnitude exotica.
 
 ---
 
+## Delta F — TCR-seq / repertoire  (v2.17)
+
+**The ceiling first (read before extracting):** a paper-reading extractor captures **that** a study did
+TCR-seq, **how**, **where the data live**, and **which neoantigens got a TCR** — it does **NOT** reconstruct
+the repertoire. Clonotype frequencies, fish plots, clonal-frequency-over-time, and diversity indices live in
+**figures** or the **deposited data** — **never digitize a figure into numbers** (same rule as “predictions
+are not evidence”). Extract Tier A/B from a real table cell or an unambiguous sentence, quoted.
+
+**F1 — Study marker (always set when TCR-seq is discussed).** Set paper-level `tcr_seq_status`, allowed
+`{{join TCR_SEQ_STATUSES}}`: `none` (no TCR-seq); `bulk` / `single_cell` / `both` (done, and you extracted a
+recipe/deposition below); `mentioned_only` = the paper states TCR-seq was done but you could **not** extract a
+recipe or accession — an honest declared gap (routes to needs_review). Do not leave it null when the paper
+runs TCR-seq.
+
+**F2 — Data deposition (cheap, high-value; capture even with zero clonotype detail).** For each deposited
+dataset add a `data_depositions` row: `repository` `{{join DEPOSITION_REPOS}}`, verbatim `accession`,
+`data_type` `{{join DEPOSITION_DATA_TYPES}}`, `access` (`open`/`controlled`/`unknown` — dbGaP/EGA are
+`controlled`). Accession is regex-checked per repo (`GSE\d+`, `phs\d{6}[.v.p]`, `PRJNA\d+`, …). E.g. GEO
+`GSE222011` (open); dbGaP `phs001451.v2.p1` (controlled). Analysis-code URLs (GitHub) are NOT depositions —
+skip them.
+
+**F3 — Method (one per DISTINCT recipe).** Add a `tcr_seq_methods` row per recipe = (platform + pipeline +
+clonotype-definition) — this can be **more than one per modality** (e.g. 10x AND a plate-based single-cell
+method for different patients → two rows, `patient_scope` naming which). `method_local_id` (referenced by
+clonotypes), `modality` `{{join RECEPTOR_MODALITIES}}`, `platform` `{{join TCR_PLATFORMS}}`, `software`
+`{{join TCR_SOFTWARE}}`, `software_versions`, `pipeline_name` (e.g. `CloneTrack`, `RevImMo`), and — load-bearing
+— `clonotype_definition` `{{join CLONOTYPE_DEFINITIONS}}` (an immunoSEQ nt clonotype, a MiXCR aa clonotype, and
+a paired-αβ clonotype are NOT comparable objects).
+
+**F4 — Per-neoantigen TCR flag (the flagship; extract whenever tabulated).** When a table gives, per target,
+whether a TCR was identified and CD4/CD8, add a `neoantigen_tcr_flags` row: `target_kind` `{{join TCR_TARGETS}}`
+(exactly ONE of `epitope_paper_id`/`immunizing_peptide_paper_id`/`candidate_paper_id` — no `pool`),
+`patient_paper_id` (**null = pooled/cohort-level**, never guess a patient), `tcr_identified` `{{join TCR_IDENTIFIED}}`,
+`method_label`. This is nomenclature-immune and the most meta-analyzable TCR fact — prefer it over clonotype detail.
+
+**F5 — Clonotype. If a clean cloned-TCR / paired-CDR3 table exists, you MUST extract it** (one
+`tcr_clonotypes` row per clone) — this is Tier-C "hero clone" data, not optional. **Sharp Tier-C vs
+Tier-D line:** a *cloned-TCR* table (a small list — tens of rows — of individual clones with paired
+`CDR3 alpha`/`CDR3 beta` + `TRAV`/`TRBV`/`TRAJ`/`TRBJ`, e.g. a "Dataset 9 … TCR cloned" sheet) → extract
+every row as a clonotype. A *bulk repertoire* table (thousands–hundreds-of-thousands of rows of CDR3β +
+frequency across timepoints, e.g. a "…All CDR3b in bulk" sheet) → this is the repertoire; do **NOT**
+digitize it into clonotype rows (record its existence narratively at most). Example row from a cloned-TCR
+sheet (`Pt2 ZH41`, Result=Positive): `chain_pairing:"paired_ab"`, `chains:[{locus:"TRA",
+cdr3_aa:"CALSEGYNQGGKLIF", v_call:"TRAV19", j_call:"TRAJ23"}, {locus:"TRB",
+cdr3_aa:"CASSLQGLAGGYGSYNEQFF", v_call:"TRBV7-9", j_call:"TRBJ2-1"}]`, `specificity_evidence:
+"functional_tcr_clone"` (it was cloned + reactivity-tested). Continuing:
+`paper_local_id`, `patient_paper_id` (null = pooled), `chains` (a list of `TcrChain`;
+MAY be **empty** when the paper gives only an opaque clone ID with sequences in the deposit). On each chain use
+**AIRR names**: `junction_aa` INCLUDES the conserved C…F/W, `cdr3_aa` EXCLUDES them — put whichever the paper
+prints in the right field and set `cdr3_scheme` `{{join CDR3_SCHEMES}}`; `v_call`/`j_call` verbatim (do NOT
+normalize `Vβ20`/`BV20`). `chain_pairing` `{{join CHAIN_PAIRINGS}}`, `method_ref` → a method row, `restricting_hla`.
+Specificity: `specific_for_kind` `{{join TCR_TARGETS}}` + its one id, and `specificity_evidence`
+`{{join TCR_SPECIFICITY_EVIDENCE}}` — **`inferred_association` (a loose narrative link) MUST set
+`needs_review=true`**; never launder a co-occurrence into a hard TCR→neoantigen edge. If the clone was
+functionally titrated, point `validation_evidence_ref` at its `tcr_reporter` evidence row (see F6). Leave
+`clonal_dynamics`/`clonal_phase` at default unless the paper tabulates them; paper-specific labels go in
+`clonal_dynamics_raw`.
+
+**F6 — Functional avidity (EC50) lives on the evidence row, not the clonotype.** A cloned-TCR titration is a
+`tcr_reporter` `ExtractedEvidence` row; put EC50 in its `functional_avidity` object: `ec50_mut_value`,
+`ec50_wt_value`, `unit` `{{join AVIDITY_UNITS}}` (concentration — NOT a NetMHCpan nM), `fold_difference`, and
+`non_reactive:true` for a sentinel/censored EC50 (e.g. “assigned 1000 µM”). Give that row an `evidence_local_id`
+and reference it from the clonotype’s `validation_evidence_ref`.
+
+**F7 — Longitudinal / per-tissue trajectory (v2.18; `observations` on a clonotype).** Add `observations`
+ONLY from a **curated per-clone tracking table** — a "…Tet-spec … track" sheet's *specific* clones (the
+`Tetramer-Specific=1` rows, NOT the whole sheet), or a cloned clone's origin-timepoint frequency — **never
+the bulk repertoire** (a "…All CDR3b in bulk" sheet of thousands of rows is Tier-D; do not digitize it).
+Each observation: `tissue` `{{join TCR_TISSUES}}`, `sorted_compartment` `{{join TCR_SORTS}}`,
+`timepoint_phase` `{{join TIMEPOINT_PHASE}}` + verbatim `timepoint_label` ("Week 12"), `frequency_value`
+**as-reported** + `frequency_basis` `{{join FREQUENCY_BASES}}` (do NOT convert a % to a fraction), optional
+`template_count` + `count_basis`. **Identity discipline:** set `observations_identity` `{{join
+OBSERVATION_IDENTITIES}}` — `paper_explicit` when a tracking table tabulates the same clone across
+timepoints, `cdr3_match` when tied by a stated CDR3 identity. If you group observations the paper does NOT
+assert are one clone, you MUST set `not_asserted` + `needs_review=true`. A tracked CDR3β with no paired
+clone → a TRB-only clonotype carrying the trajectory; **do NOT** merge it into a paired hero clone yourself
+(the CDR3β↔clone link is computed later as an exact-match query, decision 1b).
+
+**GATEWAY RULE (finalize):** if `tcr_seq_status` is any non-`none` value but you extracted **no** method AND
+**no** deposition, finalize blocks once — add the Tier-A fact, or set `tcr_seq_status='mentioned_only'` and pass
+`allow_missing_tcr_gateway=true` (routes to needs_review). **FLAG RULE (finalize):** symmetrically, if
+`tcr_seq_status` is `bulk`/`single_cell`/`both` and you extracted clonotypes or a method but **no**
+`neoantigen_tcr_flags` row, finalize blocks once — add the per-(neoantigen × patient) flags (call
+`partial_status` first; it lists the real target ids, which the deterministic loaders mint opaque) or pass
+`allow_missing_tcr_flags=true` (routes to needs_review). A TCR loader fills `tcr_clonotypes`, NOT this lane.
+`neoantigen_tcr_flags` overlapping CD4/CD8 with an
+`ExtractedEvidence.t_cell_subset` is fine — they are orthogonal (receptor captured vs response seen) and NOT
+cross-checked.
+
+---
+
 ## v2.7 — `curator_notes`: intentionally NOT an extraction delta
 
 v2.7 (P17) added `ExtractedPaper.curator_notes` (a list of `CuratorNote`; axis
@@ -218,6 +309,13 @@ so prompt ↔ schema stay in lockstep. New since the prompt was last generated:
 `SPECIES`, `VACCINE_PLATFORMS`, `EFFICACY_READOUTS`, `EFFICACY_RESULTS`, `EFFICACY_SETTINGS`,
 `COMBINATION_CLASSES`, `SURVIVAL_ENDPOINTS`, `SURVIVAL_TIME_UNITS`, `RESPONSE_MAGNITUDE_UNITS`,
 `RESPONSE_GRADES`.
+
+TCR-seq (v2.17, Delta F): `TCR_SEQ_STATUSES`, `DEPOSITION_REPOS`, `DEPOSITION_DATA_TYPES`,
+`RECEPTOR_MODALITIES`, `TCR_PLATFORMS`, `TCR_SOFTWARE`, `CLONOTYPE_DEFINITIONS`, `TCR_TARGETS`,
+`TCR_IDENTIFIED`, `CDR3_SCHEMES`, `CHAIN_PAIRINGS`, `TCR_SPECIFICITY_EVIDENCE`, `AVIDITY_UNITS`.
+TCR trajectory (v2.18, Delta F7): `TCR_TISSUES`, `TCR_SORTS`, `FREQUENCY_BASES`, `OBSERVATION_IDENTITIES`.
+(Deferred-populate axes `CLONAL_DYNAMICS`/`CLONAL_PHASES` are defined but left at default by the
+extractor until a paper tabulates them, so they need not be injected yet.)
 
 (Already injected previously: `OUTCOMES`, `ASSAYS`, `EVIDENCE_TARGETS`, `ASSAY_STIMULATION`,
 `ASSAY_ANTIGEN_FORMAT`, `TIMEPOINT_PHASE`, `MHC_CLASSES`, `VARIANT_TYPES`, `PROVENANCE_KINDS`,

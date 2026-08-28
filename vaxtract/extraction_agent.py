@@ -190,6 +190,11 @@ async def extract_paper(
     base_url: str | None = None,
 ) -> None:
     files = _list_paper_files(paper_dir)
+    # SOURCE POINTER for the finalize under-coverage census (2026-08-24). The runtime -- not a tool
+    # argument -- records where this record's source lives, because the thing being measured is what
+    # the AGENT did or did not read: a model that forgot to route a sheet to a loader would just as
+    # easily forget to declare the directory, and a gate the agent can silence is not a gate.
+    agent_core.set_source_dir(out_path, paper_dir)
     prof = resolve_profile(
         profile_name=profile, runtime=backend, model=model, base_url=base_url)
     if model:

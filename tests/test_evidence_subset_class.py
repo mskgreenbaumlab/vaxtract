@@ -14,7 +14,7 @@ def _ev(**kw):
 
 
 def test_schema_version_bumped():
-    assert SCHEMA_VERSION == "2.16.0"
+    assert SCHEMA_VERSION == "2.19.0"
 
 def test_enum_members():
     assert set(get_args(TCellSubset)) == {"cd4", "cd8", "bulk_or_unknown"}
@@ -51,6 +51,31 @@ def test_class_ii_with_cue_ok():
 def test_class_ii_without_cue_rejected():
     with pytest.raises(ValueError, match="class_ii"):
         _ev(quoted_text="reactive in ELISpot", mhc_class="class_ii")
+
+def test_cd4_does_not_license_class_ii():
+    # v2.19: CD4/helper is a subset cue, not a restriction cue
+    with pytest.raises(ValueError, match="class_ii"):
+        _ev(quoted_text="CD4+ helper response to the long peptide", mhc_class="class_ii")
+
+def test_cd8_does_not_license_class_i():
+    with pytest.raises(ValueError, match="class_i"):
+        _ev(quoted_text="CD8+ cytotoxic T-cell response by IFN-g ELISpot", mhc_class="class_i")
+
+def test_class_ii_phrase_does_not_license_cd4():
+    with pytest.raises(ValueError, match="cd4"):
+        _ev(quoted_text="class II-restricted response", t_cell_subset="cd4")
+
+def test_class_i_phrase_does_not_license_cd8():
+    with pytest.raises(ValueError, match="cd8"):
+        _ev(quoted_text="class I-restricted response", t_cell_subset="cd8")
+
+def test_orthogonal_cd4_plus_class_ii_both_cued():
+    e = _ev(
+        quoted_text="CD4+ helper, HLA-DRB1*04:01-restricted response",
+        t_cell_subset="cd4",
+        mhc_class="class_ii",
+    )
+    assert (e.t_cell_subset, e.mhc_class) == ("cd4", "class_ii")
 
 def test_class_i_via_named_allele_field():
     # cue may live on hla_allele, not quoted_text

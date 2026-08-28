@@ -4,11 +4,14 @@
              [--backend claude_sdk|openai_compat] [--base-url URL]
              <paper_dir> [out.json]
 
+    vaxtract report EXTRACTED.json [OUT.html]   # core extra; no agent SDK
+
 BYOK Claude: set ``ANTHROPIC_API_KEY`` or pass ``--subscription`` for a logged-in
 Claude plan. OpenAI-compatible profiles (grok, gpt, inkling, nemotron, qwen)
 read the profile's ``api_key_env``. The agent writes a schema-validated *silver*
 extraction to ``out.json`` for human sign-off. Non-Claude profiles are
-experimental until the parity suite passes.
+experimental until the parity suite passes. ``report`` is optional curator HTML
+and ships in the core package (pydantic only).
 
 Author: Samuel Ahuno (ekwame001@gmail.com)
 """
@@ -17,12 +20,14 @@ from __future__ import annotations
 import asyncio
 import sys
 
-from .backends.base import resolve_profile
-from .extraction_agent import _apply_auth_mode, extract_paper, parse_argv
-
 
 def main(argv: list[str] | None = None) -> None:
     argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "report":
+        from .report import main as report_main
+        raise SystemExit(report_main(argv[1:]))
+    from .backends.base import resolve_profile
+    from .extraction_agent import _apply_auth_mode, extract_paper, parse_argv
     cfg = parse_argv(argv)
     prof = resolve_profile(
         profile_name=cfg.profile, runtime=cfg.backend,

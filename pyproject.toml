@@ -53,6 +53,7 @@ dev = ["vaxtract[agent,figures,compat]", "pytest>=7"]
 
 [project.scripts]
 vaxtract = "vaxtract.cli:main"
+vaxtract-report = "vaxtract.report:main"
 
 [project.urls]
 Homepage = "https://github.com/mskgreenbaumlab/vaxtract"

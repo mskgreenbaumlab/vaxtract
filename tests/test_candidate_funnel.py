@@ -251,8 +251,10 @@ def test_bridge_seq_match_does_not_block(tmp_path):
 
 def test_unknown_funnel_size_blocks_then_overrides(tmp_path):
     """#3 SOFT: candidates present but n_predicted_reported unset is nudged;
-    allow_unknown_funnel_size=True proceeds. Sequence matches so #2 doesn't fire."""
-    rec = _paper(candidates=[_candidate(seq="NAQVRKCPPVITVNA", selected="IMP1")])
+    allow_unknown_funnel_size=True proceeds. Uses a GENUINELY unselected prediction (unique seq, not
+    administered) so finalize's drop_administered_candidates preserves it (an administered re-list that
+    duplicates a peptide would be dropped, correctly leaving no funnel to nudge)."""
+    rec = _paper(candidates=[_candidate(seq="WWWWWWWWWWWWWWW", status="predicted", selected=None)])
     out = tmp_path / "r.json"
     part = tmp_path / "r.json.partial.json"
 

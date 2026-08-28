@@ -82,10 +82,72 @@ NON-NEGOTIABLE RULES:
     pick the one registered for THIS study (named where the trial is registered/described,
     e.g. "registered as NCT… / this trial (NCT…)"), NOT an NCT cited for another study. If
     no NCT##### appears anywhere in the text, leave nct_id null (do not guess).
-  For table-derived sections (peptides, epitopes), PREFER `add_table` with a
+  For table-derived sections (peptides, epitopes, AND evidence), PREFER `add_table` with a
   column->field mapping over hand-typing via `add_entities` -- it reads ALL rows
   deterministically in one call. Add ALL
   synthesized peptides, not only the immunogenic ones.
+  - IMMUNOGENICITY / REACTIVITY MATRIX -> USE `build_reactivity_evidence` (deterministic, FIRST CHOICE
+    for the EVIDENCE lane). When a supplement scores several assays ACROSS one row -- one row per
+    assayed peptide, then columns like 'Ex vivo peptide pulsed' / 'After pre-stimulation' / 'Minigene' /
+    'Autologous tumor', each holding 1 / 0 / 'n.d.', often under two timepoint blocks -- EVERY POSITIVE
+    CELL IS ONE EVIDENCE ROW. `build_reactivity_evidence` reads the census and authors the mapping;
+    call it ONCE after patients + immunizing peptides are loaded (optional `sheet=` to do one tab).
+    A plain add_table row->field mapping reaches only ONE of those columns and silently drops the rest,
+    and hand-transcribing the sheet is what made this lane swing 21-155 rows across five runs of the
+    SAME paper. If you must use add_table, call it ONCE per such sheet with a `per_cell` list, giving each
+    cell rule its own timepoint_phase + assay_stimulation + assay_antigen_format (without those the rows
+    collapse into each other at finalize and the load is refused):
+      add_table(section="evidence", path=<wb>, sheet=<sheet>, header_row=<row of the FIELD labels>,
+        mapping_json={"fields": {...patient/target/outcome/assay shared by the row...},
+                      "per_cell": [{"col_idx": 9,  "equals": 1, "fields": {"timepoint_phase": {"const": "post_vaccine"},
+                                     "assay_stimulation": {"const": "ex_vivo"}, "assay_antigen_format": {"const": "peptide_pulsed"}}},
+                                   {"col_idx": 10, "equals": 1, "fields": {...}}, ...one rule PER assay column...]})
+    The scored cells are usually NUMBERS, so the operator is `"equals": 1`, not `"equals": "1"`. If a
+    finalize gate says a reactivity sheet is under-loaded, the fix is this call -- NOT the override.
+    LOAD EVERY SUCH SHEET, NOT JUST THE BIG ONES. A paper often scores the same assay on several
+    sheets -- a main immunogenicity table PLUS smaller prediction-tool tables that carry their own
+    ELISPOT readout columns (Hu 33479501: 'Suppl Dataset 4a' 18 calls + '4b' 279 + 'Supp11b
+    NetMHCpan2.4 CD4 T cell' 11). A sheet with only a handful of positive cells is still evidence and
+    still needs its own add_table call; skipping it is what leaves an under-coverage gate firing at
+    the end with nothing but the override left to silence it.
+  - MINIMAL-EPITOPE / CLASS-I(-II) PREDICTION MANIFEST -> USE `add_epitope_manifest` (deterministic,
+    FIRST CHOICE for the epitope layer): when a supplement lists one row PER PREDICTED EPITOPE (an
+    HLA/MHC-allele column + a mutant-epitope column, usually beside the long immunizing-peptide
+    sequence -- Keskin Supp Table 5, Rojas 'targets_with_elispot'), call `add_epitope_manifest(path=<xlsx>,
+    sheet=<manifest tab>)` ONCE. It loads the FULL epitope + immunizing-peptide set (both MHC-I and MHC-II
+    columns) in one pure-function call, so the layer is identical every run -- hand-transcribing it via
+    add_entities collapses under budget (Keskin swung 2 vs 99 epitopes). It merge-dedupes, so it is safe
+    beside peptides loaded elsewhere. If the sheet lists ONLY a long peptide (no minimal-epitope column),
+    it loads the peptides and no epitopes -- then mint minimal epitopes the usual way. A lane a loader
+    populated is AUTHORITATIVE and LOCKED: do NOT clear_entities it (that is refused) or re-list its rows
+    by hand -- the loader already read the whole table. add_entities only for a row the table genuinely
+    lacked (e.g. a class-II epitope named only in the text).
+  - NEOANTIGEN-REACTIVE TCR CLONOTYPES -> USE `add_reactive_tcr` (deterministic, FIRST CHOICE for the TCR
+    lane): when a supplement has a PAIRED SINGLE-CELL reactive-clone sheet (one row per cell: TRAV/TRAJ/
+    Alpha CDR3 aa | TRBV/TRBJ/Beta CDR3 aa | Clone | Clonotype -- e.g. Keskin MOESM7 'mutSHANK2-react',
+    MOESM10 'Neoantigen-reactive'), call `add_reactive_tcr(path=<xlsx>, sheet=<sheet>, patient=<PtN>,
+    antigen=<sorted specificity>)` ONCE per reactive sheet. It emits one clonotype per unique (CDR3a,CDR3b)
+    pair (the paper's own Clonotype grouping), identical every run -- hand-building tcr_clonotypes swings
+    run-to-run and captures only dominant clones. Default loads every unique clonotype; pass min_cells=2 for
+    clonally-expanded only.
+  - TET-SPEC / CLONOTYPE TRACKING SHEET (WIDE, one column PER TIMEPOINT) -> USE `add_tcr_track`
+    (deterministic): when a supplement tracks each CDR3 ACROSS TIMEPOINTS -- col0 = CDR3b, a
+    "Tetramer-Specific TCR?" flag, then one frequency column per timepoint (Pre-Vax / Week 4 / ... /
+    Long-term -- e.g. Hu 33479501 'Suppl 8 Pt<N> Tet-spec TCRb track') -- call `add_tcr_track(path=<xlsx>,
+    sheet=<sheet>, patient=<PtN>)` ONCE per patient sheet. It keeps the flagged rows and UNPIVOTS every
+    timepoint column into that clonotype's `observations`, so the trajectories are complete and identical
+    every run; `add_table` cannot do this (a flat column->field mapping cannot unpivot) and hand-building
+    swings run-to-run (Hu: 0 vs 39 vs 20) while capturing one snapshot instead of the trajectory. This is
+    the WIDE per-clone-by-timepoint sheet; a one-row-per-CELL paired sheet is `add_reactive_tcr` instead.
+    Both loaders write the SAME (locked) tcr_clonotypes lane and merge-dedupe, so a paper with both sheet
+    kinds takes both calls.
+  - BOTH TCR LOADERS POPULATE `tcr_clonotypes` ONLY -- they do NOT populate `neoantigen_tcr_flags` (a
+    loader derives a flag only when its sheet names BOTH the antigen and the CD4/CD8 subset, which is
+    rare, and it says so in its return message). After ANY TCR loader call you MUST still emit the
+    per-(neoantigen x patient) `neoantigen_tcr_flags` rows YOURSELF (target_kind + that entity's real
+    paper_local_id from `partial_status`, patient_paper_id, tcr_identified cd4/cd8/both/none/not_assessed,
+    quoted_text + section_ref) -- that flag is the FLAGSHIP TCR fact, the clonotype table is not a
+    substitute for it, that lane is NEVER locked, and finalize blocks until it is filled.
   - KEEP EVERY NEOANTIGEN, including indel/frameshift ones (do NOT drop them). The
     peptide `sequence` is the short MUTANT NEOANTIGEN SEQUENCE column -- NOT the long
     "mRNA / indel-to-stop context" column. Indel neoantigens have a short peptide
@@ -97,9 +159,13 @@ NON-NEGOTIABLE RULES:
     to subclonal/clonal for you, so do NOT pre-convert. Never infer clonal from CCF alone;
     leave `clonality` unmapped if there is no clonal column.
   - PEPTIDE COUNT (reconciled at finalize): the number of immunizing_peptides MUST equal
-    the sum of every patient's `n_peptides_synthesized`. If finalize reports a peptide
-    count mismatch, add the missing peptides (often the indel rows) -- do not "fix" it by
-    lowering n_peptides_synthesized. Also set paper-level `n_selected_reported` to the count
+    the sum of every patient's `n_peptides_synthesized`. Count LONG vaccine peptides, not
+    predicted EPTs/ASP 15-mers. `cohort_size` is TREATED patients (n_peptides_synthesized>0);
+    `n_enrolled` may be larger. If the IMP lane was already loaded from the vaccine-peptide
+    table and finalize says patients declare MORE than that count, you over-counted EPTs --
+    SET n_peptides_synthesized so they SUM to the loaded IMP count; do not add peptides.
+    If finalize says peptides are MISSING, add them (often indel rows) -- do not lower counts
+    in that case. Also set paper-level `n_selected_reported` to the count
     of peptides the paper STATES were selected/administered (e.g. "108 peptides across 16
     patients"): finalize anchors recall to it, so a record far below that number means you
     have NOT yet found the peptide table (locate the 'vaccine peptides' / per-patient
@@ -140,6 +206,14 @@ NON-NEGOTIABLE RULES:
     (e.g. if peptides are `IMP_P{Patient}_N{Neoantigen}`, the epitope's
     parent_peptide_ids template_list must build that same `IMP_P{..}_N{..}`). An epitope
     with empty parent_peptide_ids is ORPHANED -- finalize will reject the record.
+    You do NOT have to hand-link epitopes loaded by `add_epitope_manifest`: finalize
+    DERIVES a missing parent by sequence containment (a minimal epitope is a substring of
+    its long peptide) against the immunizing_peptides in the record. What that derivation
+    needs from you is the PEPTIDE LANE: make sure the long/immunizing peptides those
+    epitopes came from are loaded (the manifest loader picks them up from the same sheet;
+    if the epitopes live on a sheet with no long-peptide column, load that column too).
+    An epitope whose sequence sits in NO loaded peptide is quarantined at finalize --
+    never point it at an unrelated peptide to clear the gate.
   Use `partial_status` to check
   progress (and to resume after a context summary). Then call `finalize`; if it
   reports errors, fix with `clear_entities`/`add_entities` and finalize again.
@@ -189,13 +263,35 @@ NON-NEGOTIABLE RULES:
       as equally reactive to WT), else leave it null.
     - SUBSET + CLASS ON EVIDENCE: each ExtractedEvidence may carry t_cell_subset (cd4|cd8|
       bulk_or_unknown) and mhc_class (class_i|class_ii|not_determined), two ORTHOGONAL optional axes.
-      Set cd4/cd8 or class_i/class_ii ONLY with a verbatim cue (CD8+/cytotoxic, CD4+/helper, a named
-      HLA-A/B/C or DR/DP/DQ allele, 'class I/II-restricted') present in quoted_text/assay_detail/
-      hla_allele -- else use bulk_or_unknown / not_determined (a value with no cue is REJECTED). A long
-      peptide answered by BOTH CD4 and CD8 = TWO rows (one per subset), never one. Subset is per-
-      measurement, NOT a peptide field. DO mint a class-II MinimalEpitope when a DR/DP/DQ (or mouse
-      I-A/I-E) allele or a class-II tie is quoted for a defined sequence; a 'II' label with no quoted
-      anchor is rejected.
+      CD4/helper licenses t_cell_subset='cd4' only; CD8/cytotoxic licenses 'cd8' only. class_ii
+      needs a restriction cue (named DR/DP/DQ or mouse I-A/I-E, or 'class II-restricted') -- CD4
+      does NOT license class_ii. class_i needs HLA-A/B/C or 'class I-restricted' -- CD8 does NOT
+      license class_i. Cue must be in quoted_text/assay_detail/hla_allele or the value is REJECTED;
+      else use bulk_or_unknown / not_determined. A long peptide answered by BOTH CD4 and CD8 = TWO
+      rows (one per subset), never one. Subset is per-measurement, NOT a peptide field. DO mint a
+      class-II MinimalEpitope when a DR/DP/DQ (or mouse I-A/I-E) allele or a class-II restriction
+      phrase is quoted for a defined sequence; a 'II' label with only a CD4 cue is rejected.
+    - EVIDENCE TARGET GRAIN (do not collapse the sandwich): a CD4 / helper / ASP / long-peptide
+      ELISpot is target_kind='immunizing_peptide' on an ALREADY LOADED immunizing peptide (the long
+      vaccine sequence; use parent_peptide_ids from partial_status if the 9-mer is already in the
+      record). A CD8 / predicted class-I 8-11mer response is target_kind='epitope' on the EXISTING
+      manifest epitope id. A CD4 response to a named class-II minimal epitope (DR/DP/DQ or I-A/I-E)
+      may target that II epitope. NEVER mint an alias epitope (e.g. EPI_RESP_*) just to hang
+      evidence on, and NEVER point a CD4 row at a class-I 8-11mer. One paper finding -> one row
+      on one IMP even if two overlapping long-peptide windows exist (Table S5 may list two
+      immunizing peptides for one mutation, e.g. Keskin GPC1 IMP13/IMP14 -- do NOT emit two CD4
+      rows). If the quote NAMES a specific class-I 8-11mer or EPT id (e.g. EPT12A, MVNTVAGAMK),
+      the CD8 row MUST use that existing epitope id, never the long IMP -- do NOT call
+      allow_cd8_on_immunizing_peptide when the finish message lists epitope ids or the quote
+      names 4-EPT2A / EPT12A / a 9-mer already in the record; set epitope_paper_id to that id.
+      If the paper only says SLX4MUT / predicted class I epitopes and does not name which EPT,
+      put ONE CD8 row on ONE parent IMP and note in assay_detail that the EPTs were not
+      deconvoluted -- do not emit four rows and do not pick the lowest nM.
+      Predicted class-I 8-11mers from an affinity / all_epts table ARE epitopes (catalog).
+      Overlapping ASP 15-mers contained in an already-loaded immunizing peptide are NOT new
+      class-II MinimalEpitopes -- CD4 stays on the IMP. Mint class-II only when the paper
+      names a DR/DP/DQ (or I-A/I-E) restriction for a defined MINIMAL sequence, not every
+      sliding 15-mer window.
     - COVER EVERY VACCINATED PATIENT -- USE `add_table sheets:[...]` (FIRST CHOICE, not a loop):
       immunogenicity is normally assessed per patient, so a workbook often splits it into ONE sheet
       per patient (e.g. 'IAP-<patient>' tabs). The CORRECT way to load these is a SINGLE add_table

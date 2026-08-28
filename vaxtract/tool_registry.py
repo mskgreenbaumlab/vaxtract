@@ -167,6 +167,12 @@ _FINALIZE_OVERRIDE_DOCS: dict[str, str] = {
         "proceed when tcr_seq_status does not match the extracted TCR content (normally just set the field correctly; routes to needs_review)",
     "allow_missing_tcr_flags":
         "proceed when TCR content was extracted but no per-(neoantigen x patient) neoantigen_tcr_flags row could be written (routes to needs_review)",
+    "allow_unloaded_tcr_sheets":
+        "proceed when the source census found a loadable TCR sheet this record never loaded — normally call the named loader (add_tcr_track / add_reactive_tcr) on each sheet instead; use only when the sheet is genuinely out of this paper's scope or the loader comes back empty (routes to needs_review)",
+    "allow_underloaded_reactivity_sheets":
+        "proceed when the source census found a reactivity matrix (an immunogenicity sheet scoring several assays per row) whose positive calls this record largely did not capture — normally load it with add_table using a per_cell mapping, one evidence row per positive cell; use only when those calls are genuinely recorded from another table already (routes to needs_review)",
+    "allow_underloaded_read_sheets":
+        "proceed when a sheet you filtered-read to N rows contributed far fewer rows to the record — normally load it with add_table (per_cell for a reactivity sheet whose assay columns sit side by side) instead of transcribing by hand; use only when the filter was pure inspection or the rows legitimately collapse to far fewer records (routes to needs_review)",
     "allow_cd4_on_class_i_minimal":
         "proceed when a CD4 evidence row targets a class-I 8-11mer epitope instead of the parent immunizing peptide — only if the paper quotes that exact 9-mer as the CD4 target (routes to needs_review)",
     "allow_cd8_on_immunizing_peptide":
@@ -230,6 +236,14 @@ async def handle_build_pool_evidence(args: dict) -> ToolResult:
     return _ok(msg) if ok else _err(msg)
 
 
+async def handle_build_reactivity_evidence(args: dict) -> ToolResult:
+    ok, msg = agent_core.build_reactivity_evidence(
+        args["out_path"], paper_dir=args.get("paper_dir") or None,
+        sheet=args.get("sheet") or None)
+    print(f"[build_reactivity_evidence] -> {msg[:240]}")
+    return _ok(msg) if ok else _err(msg)
+
+
 async def handle_build_crossreactivity_evidence(args: dict) -> ToolResult:
     ok, msg = agent_core.build_crossreactivity_evidence(
         args["out_path"], args["pdf_path"],
@@ -237,6 +251,35 @@ async def handle_build_crossreactivity_evidence(args: dict) -> ToolResult:
         assay=args.get("assay") or "elispot",
         provenance_locator=args.get("provenance_locator") or "Supplemental Table 5")
     print(f"[build_crossreactivity_evidence] -> {msg[:240]}")
+    return _ok(msg) if ok else _err(msg)
+
+
+async def handle_add_epitope_manifest(args: dict) -> ToolResult:
+    ok, msg = agent_core.load_epitope_manifest_into(
+        args["out_path"], args["path"], sheet=args.get("sheet") or None,
+        section_ref=args.get("section_ref") or None)
+    print(f"[add_epitope_manifest] -> {msg[:240]}")
+    return _ok(msg) if ok else _err(msg)
+
+
+async def handle_add_reactive_tcr(args: dict) -> ToolResult:
+    ok, msg = agent_core.load_reactive_tcr_into(
+        args["out_path"], args["path"], args["sheet"], args["patient"], args["antigen"],
+        section_ref=args.get("section_ref") or None,
+        min_cells=args.get("min_cells") if args.get("min_cells") is not None else 1)
+    print(f"[add_reactive_tcr] -> {msg[:240]}")
+    return _ok(msg) if ok else _err(msg)
+
+
+async def handle_add_tcr_track(args: dict) -> ToolResult:
+    ok, msg = agent_core.load_tcr_track_into(
+        args["out_path"], args["path"], args["sheet"], args["patient"],
+        section_ref=args.get("section_ref") or None,
+        locus=args.get("locus") or None,
+        tissue=args.get("tissue") or "blood",
+        sorted_compartment=args.get("sorted_compartment") or "whole_pbmc",
+        header_row_index=args.get("header_row_index") if args.get("header_row_index") is not None else 1)
+    print(f"[add_tcr_track] -> {msg[:240]}")
     return _ok(msg) if ok else _err(msg)
 
 
@@ -425,6 +468,7 @@ TOOLS: list[ToolSpec] = [
     ToolSpec("add_table",
              "Bulk-add entities to a section by mapping xlsx columns to schema fields - reads ALL rows in "
              "one deterministic call. PREFER this over add_entities for table-derived sections (peptides, "
+             "evidence from an immunogenicity/reactivity matrix -- see REACTIVITY MATRIX below -- and "
              "epitopes). A column may be addressed by NAME or by 0-based POSITION (position reaches "
              "merged/blank/duplicated-header columns a name can't). "
              "mapping_json = {\"filter\"?: {\"col\":H|\"col_idx\":N|\"col_letter\":\"L\", \"in\"|\"equals\"|\"not_empty\":...}, "
@@ -432,6 +476,13 @@ TOOLS: list[ToolSpec] = [
              "\"template\":\"..{Col}..{#N}..{@L}..\" | \"template_list\":\"..\"}}} "
              "(template tokens: {Header} by name, {#N} by 0-based index, {@L} by Excel letter). "
              "Any field rule may add \"extract\":\"regex(group)\" to post-process its value (e.g. strip a prefix). "
+             "REACTIVITY MATRIX (one row -> MANY evidence rows): a sheet that puts several measurements "
+             "side by side on one row (e.g. Hu 33479501 'Suppl Dataset 4b': 7 assay columns per peptide, "
+             "each 1/0/'n.d.') needs \"per_cell\":[{\"col_idx\":N,\"equals\":1,\"fields\":{...}},...] -- one "
+             "entity per MATCHING CELL, each cell's fields layered over the shared \"fields\". USE THIS for "
+             "immunogenicity/reactivity sheets: a plain row mapping reaches only ONE assay column and "
+             "silently drops the rest. Give every cell rule its own timepoint_phase + assay_stimulation + "
+             "assay_antigen_format, or finalize's dedup will merge the measurements back together. "
              "MULTI-SHEET: pass \"sheets\":[name,...] to apply the SAME mapping across many per-entity sheets in "
              "ONE call (the cheap way to load papers that split data into one sheet per patient, e.g. ~34 "
              "'IAP-<patient>' immunogenicity tabs). Each row then carries a reserved \"__sheet__\" column "
@@ -494,6 +545,26 @@ TOOLS: list[ToolSpec] = [
                  "quoted_text_template": {"type": "string", "description": "optional; may use {patient}"},
              }, ["out_path"]),
              handle_build_pool_evidence),
+    ToolSpec("build_reactivity_evidence",
+             "DETERMINISTICALLY load every immunogenicity / reactivity-matrix sheet the source census "
+             "finds (or one named sheet). A reactivity matrix scores several assays across one row "
+             "(timepoints x ex-vivo / pre-stimulated / minigene / autologous tumour); EVERY positive "
+             "cell is one evidence row. THIS TOOL AUTHORS THE MAPPING -- do not hand-write per_cell "
+             "for these sheets (that is what made Hu 33479501 4b drift 160/279/275/273 and left "
+             "Supp11b at 0). Call ONCE after patients and immunizing peptides are loaded. Optional "
+             "sheet= restricts to one tab (Hu: 'Suppl Dataset 4a. CD8+ T cells', "
+             "'Suppl Dataset 4b. CD4+ T cells', 'Supp11b NetMHCpan2.4 CD4 T cell'). Grain: assay-peptide "
+             "column present -> epitope-target (minted class-II window only when evidence will point at "
+             "it); otherwise immunizing-peptide. Idempotent: a second call skips measurement keys already "
+             "in the record.",
+             _schema({
+                 "out_path": {"type": "string"},
+                 "paper_dir": {"type": "string",
+                               "description": "paper directory; omit inside a live extract (source sidecar)"},
+                 "sheet": {"type": "string",
+                           "description": "optional: load only this census reactivity sheet name"},
+             }, ["out_path"]),
+             handle_build_reactivity_evidence),
     ToolSpec("build_crossreactivity_evidence",
              "DETERMINISTICALLY load a mutant-vs-WT cross-reactivity TABLE (33064988 Supplemental Table 5, in "
              "mmc1.pdf: 'Peptide ID | Mutant seq | WT seq | Cross reactive to WT') into one MinimalEpitope + one "
@@ -511,6 +582,71 @@ TOOLS: list[ToolSpec] = [
                  "provenance_locator": {"type": "string", "description": "default 'Supplemental Table 5'"},
              }, ["out_path", "pdf_path"]),
              handle_build_crossreactivity_evidence),
+    ToolSpec("add_epitope_manifest",
+             "DETERMINISTICALLY load the FULL minimal-epitope + immunizing-peptide set from a class-I/II "
+             "PREDICTION MANIFEST — the wide supplementary table with one row per predicted epitope (an "
+             "HLA/MHC-allele column + a mutant-epitope column, usually alongside the long immunizing-peptide "
+             "sequence; e.g. Keskin Supp Table 5, Rojas 'targets_with_elispot'). Reads ALL rows and BOTH the "
+             "MHC-I and MHC-II epitope columns in ONE pure-function call, so the epitope layer is IDENTICAL "
+             "every run. Use this INSTEAD of add_table/add_entities for the epitopes + immunizing_peptides lanes "
+             "on manifest papers: hand-transcribing the epitope layer collapses under budget (Keskin swung 2 vs "
+             "99 epitopes run-to-run). Merge-dedupes into anything already loaded (epitopes by sequence+HLA+class, "
+             "peptides by sequence), so it is safe and idempotent; call it ONCE and point `sheet` at the manifest "
+             "tab. If the sheet's minimal epitope is NOT an explicit column (only a long peptide is listed), it "
+             "loads the peptides and no epitopes — it never invents a predicted binder.",
+             _schema({
+                 "out_path": {"type": "string"},
+                 "path": {"type": "string", "description": "path to the .xlsx manifest file"},
+                 "sheet": {"type": "string", "description": "manifest sheet name; omit to auto-pick the best-matching sheet"},
+                 "section_ref": {"type": "string", "description": "optional provenance section_ref (e.g. 'Supplementary Table 5')"},
+             }, ["out_path", "path"]),
+             handle_add_epitope_manifest),
+    ToolSpec("add_reactive_tcr",
+             "DETERMINISTICALLY load the neoantigen-reactive TCR clonotypes from a PAIRED SINGLE-CELL reactive-"
+             "clone sheet (one row per cell: TRAV/TRAJ/Alpha CDR3 aa | TRBV/TRBJ/Beta CDR3 aa | Clone | Clonotype "
+             "-- e.g. Keskin MOESM7 'Pt8 mutSHANK2-react', MOESM10 'Pt7 Neoantigen-reactive'). One clonotype per "
+             "unique (CDR3a, CDR3b) pair, in ONE pure-function call, so the TCR lane is IDENTICAL every run -- use "
+             "this INSTEAD of hand-building tcr_clonotypes (which the agent extracts non-deterministically, 4 one "
+             "run and 0 the next, capturing only dominant clones). Call ONCE per reactive sheet; `patient` and "
+             "`antigen` name the sorted specificity (recorded in quoted_text; not a needs_review dump). "
+             "min_cells filters by clonal expansion (default 1 = every unique clonotype incl. single-cell; 2 = "
+             "clonally expanded only). Merge-dedupes by chain identity, so it is safe and idempotent.",
+             _schema({
+                 "out_path": {"type": "string"},
+                 "path": {"type": "string", "description": "path to the .xlsx file with the reactive-clone sheet"},
+                 "sheet": {"type": "string", "description": "the reactive-clone sheet name"},
+                 "patient": {"type": "string", "description": "patient_paper_id (e.g. 'Pt8')"},
+                 "antigen": {"type": "string", "description": "sorted specificity, e.g. 'mutant SHANK2'"},
+                 "section_ref": {"type": "string", "description": "optional provenance section_ref"},
+                 "min_cells": {"type": "integer", "description": "min cells per clonotype (default 1 = all unique)"},
+             }, ["out_path", "path", "sheet", "patient", "antigen"]),
+             handle_add_reactive_tcr),
+    ToolSpec("add_tcr_track",
+             "DETERMINISTICALLY load TRACKED TCR clonotypes + their FULL per-timepoint trajectories from a WIDE "
+             "tet-spec tracking sheet (col0 = the clone identity -- a bare CDR3 or the paper's 'V,J,CDR3' token "
+             "-- col1 = a 'Tetramer-Specific TCR?' flag, then ONE COLUMN PER TIMEPOINT holding that clone's "
+             "frequency -- e.g. Hu 33479501 'Suppl 8 Pt<N> Tet-spec TCR<a|b> track'; call it for the TCRa AND the "
+             "TCRb sheet, the locus is read off the header). "
+             "Keeps only the flagged rows and UNPIVOTS every timepoint column into the clonotype's `observations`, "
+             "in ONE pure-function call, so clonotypes AND trajectories are IDENTICAL every run -- hand-building "
+             "them swings run-to-run (Hu: 0 vs 39 vs 20 clonotypes) and captures a single snapshot instead of the "
+             "trajectory. `add_table` CANNOT do this (its flat column->field mapping cannot unpivot). Call ONCE per "
+             "patient track sheet. Use `add_reactive_tcr` instead for a paired single-cell one-row-per-CELL sheet. "
+             "Merge-dedupes by (patient, chain identity), so it is safe and idempotent.",
+             _schema({
+                 "out_path": {"type": "string"},
+                 "path": {"type": "string", "description": "path to the .xlsx file with the track sheet"},
+                 "sheet": {"type": "string", "description": "the tet-spec track sheet name"},
+                 "patient": {"type": "string", "description": "patient_paper_id (e.g. 'Pt2')"},
+                 "section_ref": {"type": "string", "description": "optional provenance section_ref"},
+                 "locus": {"type": "string",
+                           "description": "'TRB' or 'TRA'; omit to infer from the identity column's header (CDR3b/TCRa)"},
+                 "tissue": {"type": "string", "description": "tissue the track was measured in (default 'blood')"},
+                 "sorted_compartment": {"type": "string", "description": "sorted compartment (default 'whole_pbmc')"},
+                 "header_row_index": {"type": "integer",
+                                      "description": "0-based row carrying the timepoint labels, the row above the data (default 1)"},
+             }, ["out_path", "path", "sheet", "patient"]),
+             handle_add_tcr_track),
 ]
 
 

@@ -288,8 +288,39 @@ from pydantic import (
 #   and, when it is coarser than per_sequence AND no manifest was available, exempts the per-sequence
 #   recall/breadth anchors (n_selected_reported is then a CITED count, like companion_paper_ref). Both
 #   default None -> every pre-2.16 record validates and gates exactly as before (conservative).
+# 2.17.0 (TCR) TCR-SEQ EXTRACTION MVP — the schema had ZERO TCR/repertoire support (only
+#   Evidence.assay='tcr_reporter', a functional assay). Adds, all additive/empty-default (every pre-2.17
+#   record still validates): paper-level `tcr_seq_status` (the rich did-they/how sticker) + four lists —
+#   `data_depositions` (DataDeposition: WHERE recoverable AIRR/omics data live, _Extracted, per-repo
+#   accession patterns), `tcr_seq_methods` (TcrSeqMethod: one per DISTINCT recipe, the comparability
+#   backbone), `neoantigen_tcr_flags` (NeoantigenTcrFlag: the flagship per-target CD4/CD8 flag), and
+#   `tcr_clonotypes` (TcrClonotype shell: identity + specificity linkage; longitudinal observations
+#   deferred Tier-2). Value objects: TcrChain (AIRR field names; junction_aa vs cdr3_aa the comparability
+#   crux), TcrFunctionalAvidity (EC50 in CONCENTRATION units, OFF MeasurementUnit; hangs on the
+#   tcr_reporter evidence row — Option B). ExtractedEvidence gains `functional_avidity` + an OPTIONAL
+#   `evidence_local_id` so a hero clonotype can reference its titration row (validation_evidence_ref).
+#   TCR specificity uses a NARROWER TcrTarget discriminator (epitope/immunizing_peptide/candidate — no
+#   'pool'; a single TCR isn't pool-specific); inferred_association forces needs_review. clonal dynamics
+#   is TWO orthogonal axes (origin + temporal phase). Design + two full-text dry-runs (39972124 PDAC,
+#   33479501 melanoma): docs/TCRSEQ_EXTRACTION_DESIGN_2026-07-02_fable_rev.md.
+# 2.18.0 (TCR Tier-2 #1) TcrObservation — longitudinal / per-tissue clonotype trajectories. A _Frozen
+#   value object nested on TcrClonotype (`observations`): tissue, sorted_compartment, timepoint (reuses
+#   TimepointPhase) + verbatim label, frequency AS-REPORTED + basis, template_count + basis. Populated
+#   ONLY from a curated per-clone tracking table (a "Tet-spec … track" sheet's specific clones, or a
+#   cloned clone's origin-timepoint frequency) — NEVER the bulk repertoire (Tier-D). Design decision 5.1
+#   made concrete: `observations_identity` records HOW the paper tied a clone's observations together;
+#   >1 observation with 'not_asserted' forces needs_review (the agent may not launder co-occurrence into
+#   one clone). Cross-linking a TRB-only track clone to a paired hero clone is a deterministic CDR3-match
+#   QUERY, not agent matching (decision 1b). Additive/back-compatible: observations=[] default; every
+#   pre-2.18 record still validates.
+# 2.19.0 CLASS-II CUE SPLIT — t_cell_subset and evidence/epitope mhc_class stay orthogonal.
+#   CD4/helper (or CD8/cytotoxic) is NOT a class-II (or class-I) restriction cue. class_ii / MinimalEpitope
+#   mhc_class='II' need a quoted restriction (class II, HLA-D*, DR/DP/DQ, H-2I, I-A/I-E). Symmetric:
+#   class_i needs class I / HLA-A/B/C / H-2K/D/L, not CD8. _class_ii_minting_gap no longer fires on
+#   CD4-only text. Additive validator tightening; existing records that already used the leap will
+#   fail-closed on reload (that is the point).
 # ---------------------------------------------------------------------------
-SCHEMA_VERSION = "2.16.0"
+SCHEMA_VERSION = "2.19.0"
 
 # ---------------------------------------------------------------------------
 # Patterns — kept in lockstep with antvac.ids and the DB invariants.
@@ -909,19 +940,17 @@ class MinimalEpitope(_PeptideCore):
 
     @model_validator(mode="after")
     def _class_ii_needs_restriction_anchor(self) -> MinimalEpitope:
-        # PATCH (v2.12): minting a CLASS-II epitope is gated on a QUOTED RESTRICTION ANCHOR — either a
-        # named DR/DP/DQ (or murine I-A/I-E) allele on hla_allele, OR a class-II-restriction phrase in
-        # quoted_text (e.g. 'class II-restricted', 'HLA-DR', 'CD4'). Without one, a 'II' label is a
-        # guess, not an extraction. Class-I is unaffected (its affinity slot is the anchor). Verified
-        # against all reference_records: 0 legitimate class-II epitopes break (every one names an allele).
-        # EXEMPTION: a record that explicitly declares mhc_class_inferred=True (a deterministic length/
-        # heuristic call from a table adapter, always needs_review) is an AUDITED inference, not a silent
-        # guess — it is exempt here. This keeps the rule fully strict for agent/LLM output (which never
-        # sets the flag) without forcing the adapter to launder a synthetic cue into quoted_text.
+        # PATCH (v2.12; cue-split v2.19): minting a CLASS-II epitope is gated on a QUOTED RESTRICTION
+        # ANCHOR — a named DR/DP/DQ (or murine I-A/I-E) allele on hla_allele, OR a class-II-restriction
+        # phrase in quoted_text ('class II-restricted', 'HLA-DR'). CD4/helper is NOT an anchor: that is
+        # a T-cell subset, not a restriction. Without a restriction cue, a 'II' label is a guess.
+        # Class-I is unaffected (its affinity slot is the anchor). EXEMPTION: mhc_class_inferred=True
+        # (deterministic length/heuristic from a table adapter, always needs_review) is an AUDITED
+        # inference — exempt here so adapters do not launder a synthetic cue into quoted_text.
         if self.mhc_class == "II" and not self.mhc_class_inferred:
             hay = (self.quoted_text or "").lower() + " " + (self.hla_allele or "").lower()
             if not self.hla_allele and not re.search(
-                r"class[ \-]?ii|hla-?d|\bdr\b|\bdp\b|\bdq\b|drb|dpa|dpb|dqa|dqb|cd4|h-2i|i-[ae]", hay
+                r"class[ \-]?ii|hla-?d|\bdr\b|\bdp\b|\bdq\b|drb|dpa|dpb|dqa|dqb|h-2i|i-[ae]", hay
             ):
                 raise ValueError(
                     f"class-II epitope {self.paper_local_id!r} has neither a named DR/DP/DQ (or "
@@ -1610,6 +1639,67 @@ AssayAntigenFormat = Literal[
 # ref; its lockstep assert still lives in the block below. (definition: see ~VaccinePlatform.)
 
 # ---------------------------------------------------------------------------
+# TCR-seq Literals (schema v2.17 — TCR extraction MVP). Each mirrors a vocab.py
+# tuple (VOCAB LOCKSTEP asserts below). See the TCR entities defined after
+# ScreeningReadout and docs/TCRSEQ_EXTRACTION_DESIGN_2026-07-02_fable_rev.md.
+# ---------------------------------------------------------------------------
+TcrSeqStatus = Literal["none", "mentioned_only", "bulk", "single_cell", "both"]
+TcrLocus = Literal["TRB", "TRA", "TRG", "TRD", "unknown"]
+Cdr3Scheme = Literal["imgt_junction_aa", "cdr3_aa_no_flank", "unspecified"]
+ChainPairing = Literal["paired_ab", "trb_only", "tra_only", "unknown"]
+ReceptorModality = Literal["bulk_tcr_seq", "single_cell_tcr_seq", "unknown"]
+# NARROWER than EvidenceTarget — no 'pool' (a single TCR isn't pool-specific). Its
+# own exactly-one-target validator lives on TcrClonotype / NeoantigenTcrFlag.
+TcrTarget = Literal["epitope", "immunizing_peptide", "candidate"]
+TcrSpecificityEvidence = Literal[
+    "multimer_sort", "functional_tcr_clone", "cdr3_match_to_prior",
+    "inferred_association", "not_established",
+]
+TcrIdentified = Literal["cd4", "cd8", "both", "none", "not_assessed"]
+TcrPlatform = Literal[
+    "10x_5p_vdj", "adaptive_immunoseq", "irepertoire", "takara_smarter", "rhtcrseq",
+    "miltenyi", "inhouse_multiplex_pcr", "inhouse_5race", "plate_based_targeted",
+    "other", "unknown",
+]
+TcrSoftware = Literal[
+    "mixcr", "cellranger_vdj", "immunoseq_analyzer", "irepertoire_pipeline",
+    "tcrdist", "vdjtools", "migec", "inhouse", "other",
+]
+ClonotypeDefinition = Literal[
+    "trb_cdr3_aa", "trb_cdr3_nt", "trb_v_cdr3aa_j", "trb_v_cdr3nt_j",
+    "paired_ab_cdr3", "other", "unknown",
+]
+DepositionRepo = Literal[
+    "geo", "sra", "dbgap", "ena", "ega", "immuneaccess", "zenodo", "figshare", "other",
+]
+DepositionDataType = Literal[
+    "raw_tcr_seq", "processed_clonotypes", "scrna_seq", "paired_scvdj", "wes", "rnaseq", "other",
+]
+AvidityUnit = Literal["nM", "uM", "pM", "unknown"]
+ClonalDynamics = Literal["pre_existing", "de_novo", "persistent", "not_classified"]
+ClonalPhase = Literal["expansion", "contraction", "memory", "unknown"]
+# TcrObservation axes (v2.18).
+TcrTissue = Literal["blood", "tumor", "tumor_relapsed", "lymph_node", "leukapheresis", "other", "unknown"]
+TcrSort = Literal[
+    "cd8_sorted", "cd4_sorted", "whole_pbmc", "tumor_bulk", "multimer_sorted", "unsorted",
+    "other", "unknown",
+]
+FrequencyBasis = Literal["fraction", "percent", "per_million", "unknown"]
+ObservationIdentity = Literal["paper_explicit", "cdr3_match", "not_asserted"]
+
+# Per-repo accession patterns (design §5.8) — an accession is a canonical identifier,
+# regex-validated like every other id in this module. Repos with heterogeneous/URL-
+# style accessions (immuneaccess, zenodo, figshare, other) are intentionally absent
+# here and accept any non-empty string. Confirmed on disk: GSE222011, phs001451.v2.p1.
+_DEPOSITION_ACCESSION_PATTERNS: dict[str, str] = {
+    "geo":   r"^(GSE|GSM|GPL|GDS)\d+$",
+    "sra":   r"^(SRP|SRR|SRX|SRS|SRA|PRJNA)\d+$",
+    "dbgap": r"^phs\d{6}(\.v\d+\.p\d+)?$",
+    "ena":   r"^(PRJEB|ERP|ERR|ERS|ERX)\d+$",
+    "ega":   r"^EGA[SD]\d+$",
+}
+
+# ---------------------------------------------------------------------------
 # VOCAB LOCKSTEP — every controlled-vocabulary Literal MUST equal its vocab.py
 # tuple, or import fails loudly (by design; resolves QV). vocab.py is the single
 # source shared with the Layer-2 prompt builder; editing one side without the
@@ -1671,6 +1761,27 @@ _assert_vocab(LatencyMetric,           "LATENCY_METRICS")
 _assert_vocab(ConcomitantDrugClass,    "CONCOMITANT_DRUG_CLASSES")
 _assert_vocab(ConcomitantTherapyTiming, "CONCOMITANT_THERAPY_TIMING")
 _assert_vocab(MsiStatus,               "MSI_STATUSES")
+# TCR-seq axes (v2.17).
+_assert_vocab(TcrSeqStatus,            "TCR_SEQ_STATUSES")
+_assert_vocab(TcrLocus,                "TCR_LOCI")
+_assert_vocab(Cdr3Scheme,              "CDR3_SCHEMES")
+_assert_vocab(ChainPairing,            "CHAIN_PAIRINGS")
+_assert_vocab(ReceptorModality,        "RECEPTOR_MODALITIES")
+_assert_vocab(TcrTarget,               "TCR_TARGETS")
+_assert_vocab(TcrSpecificityEvidence,  "TCR_SPECIFICITY_EVIDENCE")
+_assert_vocab(TcrIdentified,           "TCR_IDENTIFIED")
+_assert_vocab(TcrPlatform,             "TCR_PLATFORMS")
+_assert_vocab(TcrSoftware,             "TCR_SOFTWARE")
+_assert_vocab(ClonotypeDefinition,     "CLONOTYPE_DEFINITIONS")
+_assert_vocab(DepositionRepo,          "DEPOSITION_REPOS")
+_assert_vocab(DepositionDataType,      "DEPOSITION_DATA_TYPES")
+_assert_vocab(AvidityUnit,             "AVIDITY_UNITS")
+_assert_vocab(ClonalDynamics,          "CLONAL_DYNAMICS")
+_assert_vocab(ClonalPhase,             "CLONAL_PHASES")
+_assert_vocab(TcrTissue,               "TCR_TISSUES")
+_assert_vocab(TcrSort,                 "TCR_SORTS")
+_assert_vocab(FrequencyBasis,          "FREQUENCY_BASES")
+_assert_vocab(ObservationIdentity,     "OBSERVATION_IDENTITIES")
 
 
 class ExtractedEvidence(_Extracted):
@@ -1732,6 +1843,16 @@ class ExtractedEvidence(_Extracted):
     # class_i/class_ii ONLY with a verbatim cue (validator below). Provenance tier (reported_restriction
     # vs inferred_from_subset) is carried by the backfill/ETL, not stored on the row.
     mhc_class: EvidenceMhcClass | None = None
+    # PATCH (v2.17 TCR): functional avidity (EC50) for a tcr_reporter titration row — design §2e
+    # Option B (a measurement lives with its experiment, like `magnitude`). A TcrClonotype reaches it
+    # via validation_evidence_ref -> evidence_local_id. None = not a titration / not reported.
+    functional_avidity: TcrFunctionalAvidity | None = None
+    # PATCH (v2.17 TCR): OPTIONAL stable id so a TcrClonotype can point at THIS row via
+    # validation_evidence_ref (design §5.5 — link the two, count the receptor). Evidence rows are
+    # normally keyed by their (patient,target,assay,timepoint) tuple and need no id; set this ONLY for a
+    # tcr_reporter row a hero clonotype links to. None = un-referenced (default). Uniqueness (where set)
+    # + tcr_reporter-only linkage enforced at the paper level (ExtractedPaper._tcr_cross_reference_check).
+    evidence_local_id: NonEmptyStr | None = None
 
     @model_validator(mode="after")
     def _exactly_one_target(self) -> ExtractedEvidence:
@@ -1779,29 +1900,31 @@ class ExtractedEvidence(_Extracted):
 
     @model_validator(mode="after")
     def _subset_class_have_verbatim_token(self) -> ExtractedEvidence:
-        # PATCH (v2.12; tightened v2.13): a NON-unknown subset/class is a CLAIM about THIS measurement and
-        # must be backed by a verbatim token on the row's OWN fields (quoted_text / assay_detail / the named
-        # hla_allele). 'bulk_or_unknown' / 'not_determined' / None assert nothing and are exempt.
-        # v2.13 faithfulness fixes (Fable review): (1) DROP the sibling-provenance bleed — a cue in a
-        # provenance quote may be about a DIFFERENT target on the same row, so it no longer counts; the cue
-        # must be on quoted_text/assay_detail/hla_allele. (2) Add the murine H-2 terms to the cd8/cd4
-        # branches so a faithful "H-2Kb-restricted, CD8" (or "I-Ab, CD4") row is NOT wrongly rejected.
+        # PATCH (v2.12; tightened v2.13; cue-split v2.19): a NON-unknown subset/class is a CLAIM about
+        # THIS measurement and must be backed by a verbatim token on the row's OWN fields (quoted_text /
+        # assay_detail / the named hla_allele). 'bulk_or_unknown' / 'not_determined' / None assert nothing
+        # and are exempt. Subset cues and restriction cues do not cross: CD4/helper does not license
+        # class_ii, CD8/cytotoxic does not license class_i, and a class I/II phrase does not license
+        # the other subset. Murine H-2I / I-A/I-E still count for CD4 and class_ii; H-2K/D/L for CD8
+        # and class_i (v2.13, a faithful mouse row must not be rejected).
         hay = " ".join(
             t for t in (self.quoted_text, self.assay_detail, self.hla_allele) if t
         ).lower()
-        if self.t_cell_subset == "cd4" and not re.search(r"cd4|helper|\bth\b|class[ \-]?ii|hla-?d|h-2i|i-[ae]", hay):
+        if self.t_cell_subset == "cd4" and not re.search(r"cd4|helper|\bth\b|h-2i|i-[ae]", hay):
             raise ValueError(
-                f"t_cell_subset='cd4' but no CD4/helper/class-II cue in the row's verbatim text"
+                f"t_cell_subset='cd4' but no CD4/helper cue in the row's verbatim text"
             )
-        if self.t_cell_subset == "cd8" and not re.search(r"cd8|cytotoxic|\bctl\b|class[ \-]?i\b|hla-?[abc]\*|h-2[kdlq]", hay):
+        if self.t_cell_subset == "cd8" and not re.search(r"cd8|cytotoxic|\bctl\b|h-2[kdlq]", hay):
             raise ValueError(
-                f"t_cell_subset='cd8' but no CD8/cytotoxic/class-I cue in the row's verbatim text"
+                f"t_cell_subset='cd8' but no CD8/cytotoxic cue in the row's verbatim text"
             )
-        if self.mhc_class == "class_ii" and not re.search(r"class[ \-]?ii|hla-?d|\bdr\b|\bdp\b|\bdq\b|cd4|h-2i|i-[ae]", hay):
+        if self.mhc_class == "class_ii" and not re.search(
+            r"class[ \-]?ii|hla-?d|\bdr\b|\bdp\b|\bdq\b|h-2i|i-[ae]", hay
+        ):
             raise ValueError(
                 f"mhc_class='class_ii' but no class-II restriction cue in the row's verbatim text"
             )
-        if self.mhc_class == "class_i" and not re.search(r"class[ \-]?i\b|hla-?[abc]\*|cd8|h-2[kdlq]", hay):
+        if self.mhc_class == "class_i" and not re.search(r"class[ \-]?i\b|hla-?[abc]\*|h-2[kdlq]", hay):
             raise ValueError(
                 f"mhc_class='class_i' but no class-I restriction cue in the row's verbatim text"
             )
@@ -1876,6 +1999,286 @@ class ScreeningReadout(_Extracted):
             raise ValueError(
                 f"{self.target_kind}-target screening row needs exactly its own *_paper_id set "
                 f"and the others unset"
+            )
+        return self
+
+
+# ===========================================================================
+# TCR-seq entities (schema v2.17 — TCR extraction MVP). AIRR field SEMANTICS at a
+# curated relational grain (NOT the AIRR Rearrangement per-read grain). Captures
+# THAT a study did TCR-seq, HOW, WHERE the data live, and WHICH neoantigens got a
+# TCR — never the repertoire itself (out of scope). Design + two full-text dry-runs
+# (39972124 PDAC, 33479501 melanoma): docs/TCRSEQ_EXTRACTION_DESIGN_2026-07-02_fable_rev.md.
+# ===========================================================================
+_CDR3_AA_PATTERN = r"^[ACDEFGHIKLMNPQRSTVWY]{4,40}$"
+
+
+class TcrChain(_Frozen):
+    """One TCR chain as reported (design §2a). AIRR field NAMES + semantics; gene
+    calls at the resolution the paper gives (usually GENE, occasionally allele).
+
+    junction_aa (INCLUDES the conserved C...F/W) and cdr3_aa (EXCLUDES them) are
+    SEPARATE fields, as in AIRR — the #1 cross-study comparability trap (Hu 2021
+    lists both conventions in one table); `cdr3_scheme` disambiguates a lone string.
+    Gene calls are NOT hard-regexed to IMGT syntax — papers write 'TRBV20-1', 'Vβ20',
+    'BV20' inconsistently, so a soft normalizer belongs downstream, not a drop here.
+    At least one of junction_aa / cdr3_aa / cdr3_nt / raw must be present (lossless).
+    """
+
+    locus: TcrLocus = "unknown"
+    junction_aa: Annotated[str, StringConstraints(pattern=_CDR3_AA_PATTERN)] | None = None
+    cdr3_aa: Annotated[str, StringConstraints(pattern=_CDR3_AA_PATTERN)] | None = None
+    cdr3_nt: Annotated[str, StringConstraints(pattern=r"^[ACGTN]+$")] | None = None
+    cdr3_scheme: Cdr3Scheme = "unspecified"
+    v_call: NonEmptyStr | None = None          # AIRR v_call, gene-level e.g. 'TRBV9'
+    d_call: NonEmptyStr | None = None
+    j_call: NonEmptyStr | None = None
+    raw: ShortText | None = None               # lossless verbatim clonotype token
+
+    @field_validator("junction_aa", "cdr3_aa", "cdr3_nt", mode="before")
+    @classmethod
+    def _upper(cls, v: object) -> object:
+        # StringConstraints applies `pattern` BEFORE any case fold, so normalize
+        # here (same lesson as _PeptideCore._normalize_sequence).
+        return v.upper().strip() if isinstance(v, str) else v
+
+    @model_validator(mode="after")
+    def _lossless(self) -> TcrChain:
+        if not any((self.junction_aa, self.cdr3_aa, self.cdr3_nt, self.raw)):
+            raise ValueError("TcrChain carries no junction_aa / cdr3_aa / cdr3_nt / raw")
+        return self
+
+
+class TcrFunctionalAvidity(_Frozen):
+    """EC50 from a reporter/Jurkat titration of a cloned TCR — FUNCTIONAL AVIDITY,
+    NOT predicted binding affinity (design §2e). Units are CONCENTRATION, kept OFF
+    MeasurementUnit so a functional EC50 can never masquerade as a NetMHCpan nM.
+    Hangs on the `tcr_reporter` ExtractedEvidence row (Option B); a TcrClonotype
+    reaches it via validation_evidence_ref. The mut/WT fold-difference is the
+    immunogenicity-relevant quantity. At least one of ec50_mut_value /
+    fold_difference / raw must be present (lossless)."""
+
+    ec50_mut_value: float | None = Field(default=None, ge=0)
+    ec50_wt_value: float | None = Field(default=None, ge=0)
+    unit: AvidityUnit = "unknown"
+    fold_difference: float | None = Field(default=None, ge=0)   # WT/mut, or as reported
+    # Non-reactive TCRs are often assigned a SENTINEL EC50 (39972124: 1000 uM). This
+    # flags a censored/floored value so it is not read as a real measured avidity.
+    non_reactive: bool = False
+    raw: ShortText | None = None
+    source: Provenance | None = None
+
+    @model_validator(mode="after")
+    def _lossless_and_unit(self) -> TcrFunctionalAvidity:
+        if self.ec50_mut_value is None and self.fold_difference is None and self.raw is None:
+            raise ValueError(
+                "TcrFunctionalAvidity carries no ec50_mut_value / fold_difference / raw"
+            )
+        if self.ec50_mut_value is not None and self.unit == "unknown":
+            raise ValueError("a parsed EC50 value requires a known unit, not 'unknown'")
+        return self
+
+
+class TcrSeqMethod(_Extracted):
+    """One TCR-seq RECIPE the paper ran (design §2d/§5.2). Paper-level list, ONE per
+    DISTINCT recipe = (platform + pipeline + clonotype_definition) — which can be
+    MORE THAN ONE per modality (Hu 2021 ran 10x AND plate-based single-cell on
+    different patients). Consumers reference it by `method_local_id`.
+    `clonotype_definition` is the comparability crux: a MiXCR aa clonotype, an
+    immunoSEQ nt clonotype, and a paired-ab clonotype are not the same object."""
+
+    method_local_id: NonEmptyStr
+    modality: ReceptorModality = "unknown"
+    platform: TcrPlatform = "unknown"
+    software: list[TcrSoftware] = Field(default_factory=list, max_length=6)
+    software_versions: list[ShortText] = Field(default_factory=list, max_length=6)
+    clonotype_definition: ClonotypeDefinition = "unknown"
+    pipeline_name: Annotated[str, StringConstraints(max_length=48)] | None = None  # 'CloneTrack','RevImMo'
+    # design §5.2: which patients THIS recipe covered, when a paper uses different
+    # recipes for different patients. Empty = paper-wide / unspecified.
+    patient_scope: list[NonEmptyStr] = Field(default_factory=list, max_length=200)
+
+
+class DataDeposition(_Extracted):
+    """One deposited-data pointer (design §3c) — WHERE recoverable AIRR/omics data
+    live (usually not in the PDF). _Extracted because an accession is a
+    provenance-linked fact like every other row. `access` controlled-vs-open matters:
+    dbGaP/EGA data can't just be pulled later. Generalizes beyond TCR (WES/RNA-seq)."""
+
+    repository: DepositionRepo
+    accession: NonEmptyStr
+    data_type: DepositionDataType = "other"
+    access: Literal["open", "controlled", "unknown"] = "unknown"
+
+    @model_validator(mode="after")
+    def _accession_format(self) -> DataDeposition:
+        # design §5.8: repos with a canonical accession syntax are regex-checked;
+        # heterogeneous/URL-style repos (immuneaccess/zenodo/figshare/other) accept any.
+        pat = _DEPOSITION_ACCESSION_PATTERNS.get(self.repository)
+        if pat is not None and not re.match(pat, self.accession):
+            raise ValueError(
+                f"{self.repository} accession {self.accession!r} does not match {pat}"
+            )
+        return self
+
+
+class NeoantigenTcrFlag(_Extracted):
+    """Per-target 'was a TCR identified, and CD4 or CD8?' — the flagship (design §3d).
+    A single provenance-anchored cell, nomenclature-immune, directly meta-analyzable.
+    PER-(target, patient): a target can have a TCR in one patient and not another, so
+    this is a standalone entity, NOT a field on the peptide (same reason t_cell_subset
+    lives on ExtractedEvidence). Uses the NARROWER TcrTarget discriminator (no 'pool').
+
+    Orthogonal to ExtractedEvidence.t_cell_subset (design §5.4): 'a TCR was captured'
+    is a different claim from 'a response was seen' — the two may legitimately differ
+    and are NOT cross-checked."""
+
+    target_kind: TcrTarget
+    epitope_paper_id: NonEmptyStr | None = None
+    immunizing_peptide_paper_id: NonEmptyStr | None = None
+    candidate_paper_id: NonEmptyStr | None = None
+    patient_paper_id: NonEmptyStr | None = None   # design §5.6: None = pooled/cohort-level
+    tcr_identified: TcrIdentified
+    method_label: Annotated[str, StringConstraints(max_length=48)] | None = None  # 'RevImMo'
+
+    @model_validator(mode="after")
+    def _exactly_one_target(self) -> NeoantigenTcrFlag:
+        chosen = {
+            "epitope": self.epitope_paper_id,
+            "immunizing_peptide": self.immunizing_peptide_paper_id,
+            "candidate": self.candidate_paper_id,
+        }
+        want = chosen[self.target_kind]
+        others = [v for k, v in chosen.items() if k != self.target_kind]
+        if not want or any(others):
+            raise ValueError(
+                f"{self.target_kind}-target TCR flag needs exactly its own *_paper_id "
+                f"set and the other two unset"
+            )
+        return self
+
+
+class TcrObservation(_Frozen):
+    """One clonotype MEASURED in a tissue at a timepoint (design §2c / v2.18). A clone tracked
+    across timepoints is many observations, nested on its TcrClonotype. Populated ONLY from a
+    curated per-clone tracking table (a "Tet-spec … track" sheet's specific clones, or a cloned
+    clone's origin-timepoint frequency) — NEVER the bulk repertoire (Tier-D, do not digitize).
+
+    `frequency_value` is stored AS-REPORTED (not coerced to a fraction) + a `frequency_basis`
+    tag, mirroring `count_basis` — papers report fraction/percent/per-million interchangeably.
+    `sorted_compartment` + `assay_stimulation` are interpretability-critical: a CD8-sorted ex-vivo
+    frequency and an in-vitro-expanded whole-PBMC frequency are not the same measurement."""
+
+    tissue: TcrTissue = "unknown"
+    sorted_compartment: TcrSort = "unknown"
+    assay_stimulation: AssayStimulation | None = None       # REUSE ex_vivo vs in_vitro_expanded
+    timepoint_phase: TimepointPhase | None = None           # REUSE the Evidence timepoint vocab
+    timepoint_label: Annotated[str, StringConstraints(max_length=64)] | None = None  # 'Week 12','relapse'
+    frequency_value: float | None = Field(default=None, ge=0)   # as-reported (NOT pinned to [0,1])
+    frequency_basis: FrequencyBasis = "unknown"
+    template_count: int | None = Field(default=None, ge=0)      # reads/UMIs/templates/cells
+    count_basis: Literal["templates", "umis", "reads", "cells", "unknown"] = "unknown"
+    raw: ShortText | None = None
+    source: Provenance | None = None
+
+    @model_validator(mode="after")
+    def _lossless(self) -> TcrObservation:
+        # never store an empty observation — at least a frequency, a count, or a raw token.
+        if self.frequency_value is None and self.template_count is None and self.raw is None:
+            raise ValueError("TcrObservation carries no frequency_value / template_count / raw")
+        return self
+
+
+class TcrClonotype(_Extracted):
+    """One TCR clonotype as reported (design §2b; identity + specificity + longitudinal
+    observations). `observations` (v2.18) hold per-tissue/timepoint measurements. `chains` MAY
+    be empty — 39972124 reports clones as opaque IDs with sequences only in the deposit;
+    Hu 2021 lists full paired-ab CDR3s. `patient_paper_id` None = pooled/cohort (§5.6).
+
+    Specificity linkage uses the NARROWER TcrTarget three-way discriminator (§2b), a
+    sibling of ExtractedEvidence's — NOT a reuse (no 'pool'). Strength of the
+    TCR<->antigen edge is a first-class queryable axis; `inferred_association` (a loose
+    narrative link) is forced to needs_review so it can't be laundered into a hard edge."""
+
+    paper_local_id: NonEmptyStr
+    patient_paper_id: NonEmptyStr | None = None
+    receptor_modality: ReceptorModality = "unknown"
+    chain_pairing: ChainPairing = "unknown"
+    chains: list[TcrChain] = Field(default_factory=list, max_length=4)
+    method_ref: NonEmptyStr | None = None          # -> TcrSeqMethod.method_local_id
+    restricting_hla: MhcAllele | None = None       # the presenting pMHC allele, a direct fact
+
+    # clonal dynamics — TWO orthogonal axes (design §6). ORIGIN (where the clone came
+    # from) and PHASE (temporal trajectory) are distinct; 39972124 separates them.
+    # Deferred-populate; paper-specific labels go in the raw tail, not the enum.
+    clonal_dynamics: ClonalDynamics = "not_classified"   # ORIGIN
+    clonal_phase: ClonalPhase = "unknown"                # TEMPORAL trajectory
+    clonal_dynamics_raw: ShortText | None = None
+
+    # specificity linkage — sibling three-way discriminator (design §2b), not EvidenceTarget.
+    specific_for_kind: TcrTarget | None = None
+    epitope_paper_id: NonEmptyStr | None = None
+    immunizing_peptide_paper_id: NonEmptyStr | None = None
+    candidate_paper_id: NonEmptyStr | None = None
+    specificity_evidence: TcrSpecificityEvidence = "not_established"
+    # if this clonotype IS a functionally validated clone, point at its tcr_reporter
+    # evidence row (which carries the TcrFunctionalAvidity/EC50 — §2e Option B).
+    validation_evidence_ref: NonEmptyStr | None = None   # -> ExtractedEvidence.evidence_local_id
+
+    # v2.18: longitudinal / per-tissue trajectory. observations_identity records HOW the paper tied
+    # them together (design decision 5.1): 'paper_explicit'/'cdr3_match' when a tracking table/CDR3
+    # identity asserts sameness; 'not_asserted' = the agent grouped them -> forced needs_review below.
+    observations: list[TcrObservation] = Field(default_factory=list, max_length=24)
+    observations_identity: ObservationIdentity = "not_asserted"
+
+    @field_validator("restricting_hla", mode="before")
+    @classmethod
+    def _normalize_mhc(cls, v: object) -> object:
+        return _canon_mhc(v) if isinstance(v, str) else v
+
+    @model_validator(mode="after")
+    def _specificity_target_and_strength(self) -> TcrClonotype:
+        chosen = {
+            "epitope": self.epitope_paper_id,
+            "immunizing_peptide": self.immunizing_peptide_paper_id,
+            "candidate": self.candidate_paper_id,
+        }
+        if self.specific_for_kind is None:
+            # no target -> no target ids, and no claimed specificity strength
+            if any(chosen.values()):
+                raise ValueError(
+                    "specific_for_kind is unset but a target *_paper_id is set"
+                )
+            if self.specificity_evidence != "not_established":
+                raise ValueError(
+                    "specificity_evidence must be 'not_established' when specific_for_kind is unset"
+                )
+        else:
+            want = chosen[self.specific_for_kind]
+            others = [v for k, v in chosen.items() if k != self.specific_for_kind]
+            if not want or any(others):
+                raise ValueError(
+                    f"{self.specific_for_kind}-target clonotype needs exactly its own "
+                    f"*_paper_id set and the other two unset"
+                )
+        # design §2b: a loose narrative association must be flagged, never laundered
+        # into a hard TCR->neoantigen edge.
+        if self.specificity_evidence == "inferred_association" and not self.needs_review:
+            raise ValueError(
+                "specificity_evidence='inferred_association' must set needs_review=True"
+            )
+        return self
+
+    @model_validator(mode="after")
+    def _observation_identity_discipline(self) -> TcrClonotype:
+        # design decision 5.1: nesting MULTIPLE observations under one clone asserts they are the
+        # SAME clone. That assertion must be the PAPER's (a tracking table / stated CDR3 identity),
+        # never the agent's — so >1 observation with 'not_asserted' is forced to needs_review, the
+        # same discipline as inferred_association. One observation asserts nothing (no grouping).
+        if len(self.observations) > 1 and self.observations_identity == "not_asserted" and not self.needs_review:
+            raise ValueError(
+                "a clonotype with >1 observation and observations_identity='not_asserted' must set "
+                "needs_review=True (the agent grouped observations the paper did not assert are one clone)"
             )
         return self
 
@@ -2052,6 +2455,15 @@ class ExtractedPaper(_Frozen):
     # confirm the override was legitimate (the live test showed a turn-pressured agent overrides rather
     # than do expensive recall, so this is the QC signal that keeps such records from landing silently).
     finalize_overrides_used: list[str] = Field(default_factory=list, max_length=20)
+    # PATCH (v2.17 — TCR extraction MVP). Study-level marker + the four TCR entity lists.
+    # See docs/TCRSEQ_EXTRACTION_DESIGN_2026-07-02_fable_rev.md. All additive/empty-default ->
+    # every pre-2.17 record still validates. tcr_seq_status None = un-tagged (legacy); the rich
+    # sticker ('mentioned_only' etc., design §5.3) is set by the agent from the paper's Methods.
+    tcr_seq_status: TcrSeqStatus | None = None
+    data_depositions: list[DataDeposition] = Field(default_factory=list, max_length=60)
+    tcr_seq_methods: list[TcrSeqMethod] = Field(default_factory=list, max_length=12)
+    neoantigen_tcr_flags: list[NeoantigenTcrFlag] = Field(default_factory=list, max_length=5000)
+    tcr_clonotypes: list[TcrClonotype] = Field(default_factory=list, max_length=5000)
 
     @model_validator(mode="after")
     def _unique_local_ids(self) -> ExtractedPaper:
@@ -2064,6 +2476,7 @@ class ExtractedPaper(_Frozen):
             ("pools", [p.paper_local_id for p in self.pools]),
             ("candidates", [c.paper_local_id for c in self.candidates]),
             ("neoantigen_mutations", [m.paper_local_id for m in self.neoantigen_mutations]),
+            ("tcr_clonotypes", [c.paper_local_id for c in self.tcr_clonotypes]),
         ):
             dupes = [k for k, n in Counter(ids).items() if n > 1]
             if dupes:
@@ -2179,6 +2592,73 @@ class ExtractedPaper(_Frozen):
                 raise ValueError(
                     f"immunizing peptide {imp.paper_local_id!r} references unknown "
                     f"patient {imp.patient_paper_id!r}"
+                )
+        return self
+
+    @model_validator(mode="after")
+    def _tcr_cross_reference_check(self) -> ExtractedPaper:
+        """PATCH (v2.17 TCR): TCR flags/clonotypes resolve to a known patient (when set)
+        and a known specificity target; method refs and validation refs resolve; method
+        and (set) evidence ids are unique. patient_paper_id=None is legal (design §5.6:
+        pooled/cohort-level facts). Skipped cleanly when no TCR entities are present."""
+        patient_ids = {p.paper_local_id for p in self.patients}
+        target_ids = {
+            "epitope": {e.paper_local_id for e in self.epitopes},
+            "immunizing_peptide": {i.paper_local_id for i in self.immunizing_peptides},
+            "candidate": {c.paper_local_id for c in self.candidates},
+        }
+        target_val = {
+            "epitope": lambda o: o.epitope_paper_id,
+            "immunizing_peptide": lambda o: o.immunizing_peptide_paper_id,
+            "candidate": lambda o: o.candidate_paper_id,
+        }
+
+        def _check_target(kind: str, obj: object, ctx: str) -> None:
+            val = target_val[kind](obj)
+            if val not in target_ids[kind]:
+                raise ValueError(f"{ctx} references unknown {kind}_paper_id {val!r}")
+
+        # method_local_id unique; build the resolvable set.
+        method_ids = [m.method_local_id for m in self.tcr_seq_methods]
+        dupe_m = [k for k, n in Counter(method_ids).items() if n > 1]
+        if dupe_m:
+            raise ValueError(f"duplicate method_local_id in tcr_seq_methods: {dupe_m}")
+        method_id_set = set(method_ids)
+
+        # evidence_local_id (where set) unique; tcr_reporter rows are the avidity-link targets.
+        ev_ids = [e.evidence_local_id for e in self.evidence if e.evidence_local_id]
+        dupe_e = [k for k, n in Counter(ev_ids).items() if n > 1]
+        if dupe_e:
+            raise ValueError(f"duplicate evidence_local_id in evidence: {dupe_e}")
+        tcr_reporter_ids = {
+            e.evidence_local_id for e in self.evidence
+            if e.evidence_local_id and e.assay == "tcr_reporter"
+        }
+
+        for fl in self.neoantigen_tcr_flags:
+            if fl.patient_paper_id is not None and fl.patient_paper_id not in patient_ids:
+                raise ValueError(
+                    f"tcr flag references unknown patient {fl.patient_paper_id!r}"
+                )
+            _check_target(fl.target_kind, fl, "tcr flag")
+
+        for cl in self.tcr_clonotypes:
+            ctx = f"clonotype {cl.paper_local_id!r}"
+            if cl.patient_paper_id is not None and cl.patient_paper_id not in patient_ids:
+                raise ValueError(f"{ctx} references unknown patient {cl.patient_paper_id!r}")
+            if cl.specific_for_kind is not None:
+                _check_target(cl.specific_for_kind, cl, ctx)
+            if cl.method_ref is not None and cl.method_ref not in method_id_set:
+                raise ValueError(
+                    f"{ctx} method_ref {cl.method_ref!r} does not resolve to a tcr_seq_method"
+                )
+            if (
+                cl.validation_evidence_ref is not None
+                and cl.validation_evidence_ref not in tcr_reporter_ids
+            ):
+                raise ValueError(
+                    f"{ctx} validation_evidence_ref {cl.validation_evidence_ref!r} does not "
+                    f"resolve to a tcr_reporter evidence row (set evidence_local_id on that row)"
                 )
         return self
 

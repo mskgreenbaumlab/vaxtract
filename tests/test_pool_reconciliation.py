@@ -78,7 +78,8 @@ def test_finalize_blocks_once_then_overrides(tmp_path):
     part.write_text(json.dumps(rec))
     ok, msg = agent_core.finalize_partial(str(out), allow_missing_magnitudes=True)
     assert not ok
-    assert "pool" in msg.lower() and "P25" in msg
+    # finalize now canonicalizes patient ids (P25 -> Pt25) before the nudge renders the message.
+    assert "pool" in msg.lower() and "Pt25" in msg
 
     part.write_text(json.dumps(rec))                    # re-stage (block left it; success deletes it)
     # _run14_style strips the pool-target row, so this degraded record also drops one
@@ -161,7 +162,7 @@ def test_collapse_finalize_blocks_once_then_overrides(tmp_path):
     part = tmp_path / "r.json.partial.json"
     part.write_text(json.dumps(rec))
     ok, msg = agent_core.finalize_partial(str(out), allow_missing_magnitudes=True)
-    assert not ok and "pool" in msg.lower() and "P25" in msg
+    assert not ok and "pool" in msg.lower() and "Pt25" in msg  # patient id canonicalized P25 -> Pt25
     assert "allow_member_level_pool_evidence=true" in msg
     part.write_text(json.dumps(rec))
     # this collapsed variant also diverges from the Rojas immunogenic anchor (25) -> override it too.

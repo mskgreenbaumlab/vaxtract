@@ -36,8 +36,9 @@ pip install "vaxtract[compat]"          # + OpenAI-compatible runtime (Grok / GP
 ```
 
 `pip install vaxtract` pulls only `pydantic`, so you can `import vaxtract.schema` to validate
-records **without** the Claude Agent SDK. Running the agent (the `vaxtract` console script or
-`vaxtract.extract_paper`) needs the `[agent]` extra.
+records, and `vaxtract-report` to render optional curator HTML, **without** the Claude Agent SDK.
+Running the agent (the `vaxtract` console script or `vaxtract.extract_paper`) needs the `[agent]`
+extra. HTML review is optional — not a pipeline gate.
 
 Running the agent also requires Python ≥ 3.10 **and** the Claude Code CLI on your `PATH`
 (the Agent SDK shells out to the `claude` binary):
@@ -61,6 +62,10 @@ export ANTHROPIC_API_KEY=sk-ant-...     # A) API key — pay-per-token
 vaxtract ./my_paper_dir out.json
 vaxtract --subscription ./my_paper_dir out.json   # Claude plan quota
 vaxtract --profile grok ./my_paper_dir out.json   # XAI_API_KEY; experimental
+
+# optional curator HTML (core install; no agent extra)
+vaxtract-report out.json
+vaxtract report out.json [out_review.html]
 ```
 
 `--subscription` is Claude-only. Non-Claude profiles (`grok`, `gpt`, `inkling`,
@@ -82,6 +87,7 @@ The data contract is importable without the SDK:
 
 ```python
 from vaxtract.schema import ExtractedPaper, SCHEMA_VERSION
+from vaxtract.report import build_html, load_record  # optional curator HTML
 ```
 
 ### Run with Docker
@@ -105,9 +111,9 @@ docker run --rm -e XAI_API_KEY \
 ## What it extracts
 
 Per paper: studies, patients, immunizing peptides, minimal epitopes, pools, immunogenicity
-evidence (assay / outcome / magnitude), neoantigen mutations, survival outcomes,
-clinical-benefit signals, safety, and vaccine-delivery covariates — all validated against a
-versioned Pydantic schema (`SCHEMA_VERSION`).
+evidence (assay / outcome / magnitude), neoantigen mutations, TCR clonotypes (when the paper
+reports them), survival outcomes, clinical-benefit signals, safety, and vaccine-delivery
+covariates — all validated against a versioned Pydantic schema (`SCHEMA_VERSION` 2.19).
 
 ## How it works
 
@@ -139,7 +145,7 @@ reproducibility anchor, not byte-identical re-runs. See **[REPRODUCIBILITY.md](R
 
 | Path | What |
 |---|---|
-| `vaxtract/` | schema (core) + tool registry + Claude / OpenAI-compat runtimes |
+| `vaxtract/` | schema 2.19 (core, incl. TCR) + tool registry + `report.py` (optional HTML) + Claude / OpenAI-compat runtimes |
 | `cancervac_packet/` | schema/vocab re-export shims + reporting + the pre-deploy validation gate |
 | `tests/` | the test suite (`pytest`) |
 | `reference_records/` | audited gold extractions — the validation set |

@@ -342,3 +342,107 @@ BENEFIT_DIRECTIONS: tuple[str, ...] = (
 CLONALITY_CLASSES: tuple[str, ...] = ("clonal", "subclonal", "unknown")
 WGD_TIMINGS: tuple[str, ...] = ("pre_wgd", "post_wgd", "unknown")
 ANTIGEN_STATUSES: tuple[str, ...] = ("present", "emerged", "lost", "retained", "unknown")
+
+
+# ===========================================================================
+# TCR-seq / repertoire vocabularies (schema v2.17 — TCR extraction MVP). See
+# docs/TCRSEQ_EXTRACTION_DESIGN_2026-07-02_fable_rev.md. Design principle: AIRR
+# field SEMANTICS at a curated relational grain, NOT the AIRR Rearrangement
+# per-read grain. A document agent captures THAT a study did TCR-seq, HOW, WHERE
+# the data live, and WHICH neoantigens got a TCR — never the repertoire itself
+# (figures / deposited data; out of scope). Validated by dry-runs on 39972124
+# (PDAC) and 33479501 (Hu 2021 melanoma). MUST equal their schema Literals.
+# ===========================================================================
+
+# Study-level marker (design §5.3, the "rich sticker"): did the paper do TCR-seq,
+# and how. 'mentioned_only' = TCR-seq is stated but no recipe/deposition was
+# extractable — a KNOWN gap feeding the QC gateway anchor, NOT a silent 'none'.
+TCR_SEQ_STATUSES: tuple[str, ...] = ("none", "mentioned_only", "bulk", "single_cell", "both")
+
+# One TCR chain's locus (AIRR locus semantics).
+TCR_LOCI: tuple[str, ...] = ("TRB", "TRA", "TRG", "TRD", "unknown")
+# CDR3 nomenclature convention for a lone reported aa string — the #1 cross-study
+# comparability trap: junction_aa INCLUDES the conserved C...F/W, cdr3_aa EXCLUDES
+# them. Recorded, never silently mixed (Hu 2021 lists BOTH conventions in one table).
+CDR3_SCHEMES: tuple[str, ...] = ("imgt_junction_aa", "cdr3_aa_no_flank", "unspecified")
+# Which chains a clonotype record carries.
+CHAIN_PAIRINGS: tuple[str, ...] = ("paired_ab", "trb_only", "tra_only", "unknown")
+# The sequencing modality a clonotype/method came from.
+RECEPTOR_MODALITIES: tuple[str, ...] = ("bulk_tcr_seq", "single_cell_tcr_seq", "unknown")
+
+# Antigenic target of a TCR's specificity (design §5.1/§2b). A SIBLING of
+# EVIDENCE_TARGETS with 'pool' DROPPED: a single TCR recognizes one epitope/peptide,
+# never a delivery pool. Gets its OWN exactly-one-target validator (not EvidenceTarget's).
+TCR_TARGETS: tuple[str, ...] = ("epitope", "immunizing_peptide", "candidate")
+# HOW a TCR<->antigen link was established — the strength of the (most-abused) edge,
+# made a first-class queryable axis. 'inferred_association' forces needs_review.
+TCR_SPECIFICITY_EVIDENCE: tuple[str, ...] = (
+    "multimer_sort",         # pMHC-multimer-sorted single cell (strong)
+    "functional_tcr_clone",  # cloned + reporter/Jurkat EC50 (strong; links to tcr_reporter Evidence)
+    "cdr3_match_to_prior",   # CDR3 matched to a previously-identified specificity (medium)
+    "inferred_association",  # co-enrichment / narrative association only (weak -> needs_review)
+    "not_established",       # clonotype reported without a specificity (bulk repertoire)
+)
+# Per-neoantigen "was a TCR identified, and CD4/CD8?" — the flagship flag (design §3d).
+# A single table cell, nomenclature-immune, directly meta-analyzable.
+TCR_IDENTIFIED: tuple[str, ...] = ("cd4", "cd8", "both", "none", "not_assessed")
+
+# TCR-seq platform (design §2d). rhtcrseq = RNA-amplicon alpha+beta (Hu 2021);
+# plate_based_targeted = 96-well single-cell amplification (Hu 2021 Pts 3-5).
+TCR_PLATFORMS: tuple[str, ...] = (
+    "10x_5p_vdj", "adaptive_immunoseq", "irepertoire", "takara_smarter", "rhtcrseq",
+    "miltenyi", "inhouse_multiplex_pcr", "inhouse_5race", "plate_based_targeted",
+    "other", "unknown",
+)
+TCR_SOFTWARE: tuple[str, ...] = (
+    "mixcr", "cellranger_vdj", "immunoseq_analyzer", "irepertoire_pipeline",
+    "tcrdist", "vdjtools", "migec", "inhouse", "other",
+)
+# How a "clonotype" was defined — the comparability crux (a MiXCR aa clonotype, an
+# immunoSEQ nt clonotype, and a paired-ab clonotype are NOT the same object).
+# trb_v_cdr3nt_j added for 39972124's bulk def (nt-CDR3 + V + J genes).
+CLONOTYPE_DEFINITIONS: tuple[str, ...] = (
+    "trb_cdr3_aa", "trb_cdr3_nt", "trb_v_cdr3aa_j", "trb_v_cdr3nt_j",
+    "paired_ab_cdr3", "other", "unknown",
+)
+
+# Data deposition (design §3c) — WHERE the recoverable AIRR/omics data live (usually
+# not in the PDF). access controlled-vs-open matters (dbGaP/EGA can't just be pulled).
+DEPOSITION_REPOS: tuple[str, ...] = (
+    "geo", "sra", "dbgap", "ena", "ega", "immuneaccess", "zenodo", "figshare", "other",
+)
+DEPOSITION_DATA_TYPES: tuple[str, ...] = (
+    "raw_tcr_seq", "processed_clonotypes", "scrna_seq", "paired_scvdj", "wes", "rnaseq", "other",
+)
+
+# TCR functional avidity (design §2e). CONCENTRATION units (EC50), deliberately kept
+# OFF MeasurementUnit so a functional EC50 can never masquerade as a NetMHCpan nM.
+AVIDITY_UNITS: tuple[str, ...] = ("nM", "uM", "pM", "unknown")
+
+# Clonal dynamics — TWO ORTHOGONAL axes (design §6 dry-run finding). ORIGIN = where the
+# clone came from; PHASE = its temporal trajectory. 39972124 separates them cleanly; Hu
+# 2021 uses only informal origin words. Both DEFERRED-populate (Tier-2): define the vocab,
+# expect the default until a paper tabulates it. Paper-specific labels stay in a raw tail.
+CLONAL_DYNAMICS: tuple[str, ...] = ("pre_existing", "de_novo", "persistent", "not_classified")
+CLONAL_PHASES: tuple[str, ...] = ("expansion", "contraction", "memory", "unknown")
+
+# TcrObservation axes (schema v2.18 — longitudinal / per-tissue clonotype trajectories). One clone
+# MEASURED in a tissue at a timepoint is one observation; a clone tracked across timepoints is many.
+# Populated ONLY from a curated per-clone tracking table (e.g. a "Tet-spec … track" sheet, filtered to
+# the specific clones) or a cloned clone's origin-timepoint frequency — NEVER the full bulk repertoire
+# (Tier-D, do not digitize). MUST equal their schema Literals (VOCAB LOCKSTEP).
+TCR_TISSUES: tuple[str, ...] = (
+    "blood", "tumor", "tumor_relapsed", "lymph_node", "leukapheresis", "other", "unknown",
+)
+TCR_SORTS: tuple[str, ...] = (
+    "cd8_sorted", "cd4_sorted", "whole_pbmc", "tumor_bulk", "multimer_sorted", "unsorted",
+    "other", "unknown",
+)
+# Frequency is stored AS-REPORTED (not coerced to a fraction) + a basis tag, mirroring count_basis —
+# papers report clonotype frequency as a fraction, a percent, or per-million interchangeably.
+FREQUENCY_BASES: tuple[str, ...] = ("fraction", "percent", "per_million", "unknown")
+# How the paper tied a clone's observations together across timepoints/tissues (design decision 5.1).
+# 'paper_explicit' = the paper states/tabulates the same clone across timepoints (a tracking table);
+# 'cdr3_match' = tied by a stated CDR3 identity; 'not_asserted' = the agent grouped them WITHOUT the
+# paper asserting sameness -> forced to needs_review (never launder co-occurrence into one clone).
+OBSERVATION_IDENTITIES: tuple[str, ...] = ("paper_explicit", "cdr3_match", "not_asserted")

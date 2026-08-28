@@ -6,16 +6,16 @@ OpenAI-compatible Chat Completions endpoint (Grok, GPT, Inkling, vLLM).
 
 Public API:
     from vaxtract import extract_paper      # async (paper_dir, out_path) -> None
+    from vaxtract.report import build_html  # optional curator HTML (core extra)
 
 ``extract_paper`` is imported lazily so that ``import vaxtract.schema`` (the
-data contract) and the other SDK-free modules work without a model SDK
-installed.
+data contract) and ``vaxtract.report`` work without a model SDK installed.
 
 Author: Samuel Ahuno (ekwame001@gmail.com)
 """
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __all__ = ["extract_paper", "__version__"]
 
 
